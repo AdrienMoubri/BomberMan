@@ -1,0 +1,11 @@
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\AMO\Desktop\BomberMan\bfm\CLION
+-- Could NOT find SDL (missing:  SDL_LIBRARY SDL_INCLUDE_DIR) 
+-- Could NOT find SDL_ttf (missing:  SDL_TTF_LIBRARIES SDL_TTF_INCLUDE_DIRS) 
+-- Could NOT find SDL_image (missing:  SDL_IMAGE_LIBRARIES SDL_IMAGE_INCLUDE_DIRS) 
+CMake Error at CMakeLists.txt:44 (message):
+  SDL: not found
+
+
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/AMO/Desktop/BomberMan/bfm/CLION/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "C:/Users/AMO/Desktop/BomberMan/bfm/CLION/cmake-build-debug/CMakeFiles/CMakeError.log".

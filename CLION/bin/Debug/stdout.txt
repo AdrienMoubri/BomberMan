@@ -1,0 +1,31 @@
+[34mHero creation in progress...
+[0m[34mHero creation done !
+[0m[34mWelcome [0m[34msacha[0m
+waiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/charmander.png[H[2J[0mYou have 4 magic_ball left
+The creature run away
+waiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mYou have 3 magic_ball left
+waiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/charmander.png[H[2J[0mYou have 2 magic_ball left
+The creature run away
+waiting_for_orders->[H[2J[0m[31mCommande unknow
+[0mwaiting_for_orders->[H[2J[0m[31mCommande unknow
+[0mwaiting_for_orders->[H[2J[0mwaiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/bulbasaur.png[H[2J[0mYou defeated bulbasaur
+You received 112 new rupees! 
+waiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/charmander.png[H[2J[0mYou defeated charmander
+You received 92 new rupees! 
+waiting_for_orders->[H[2J[0mwaiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mThe creature deals you 30 damages and loose 7 mp's
+You'r Digimon have 50pv left! 
+waiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mYou have 1 magic_ball left
+The magic_ball bounce offThe creature inflict itself 3 damages 
+The creature have 
+22pv_left! 
+waiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mYou have 0 magic_ball left
+The magic_ball bounce offThe creature deals you 15 damages and loose 3 mp's 
+You'r Digimon have 35pv left! 
+waiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mThe creature end his turn and recover 10 mp's
+The creature have 31mana left! 
+waiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mThe creature deals you 16 damages
+You'r Digimon have 19pv_left! 
+waiting_for_orders->my_bfm_img/dragonair.png[H[2J[0mYou defeated dragonair
+You received 90 new rupees! 
+waiting_for_orders->[H[2J[0m[31mCommande unknow
+[0mwaiting_for_orders->

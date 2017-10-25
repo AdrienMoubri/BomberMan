@@ -1,0 +1,2 @@
+C:\MinGW\bin\ar.exe qc liblib.a  CMakeFiles/lib.dir/src/lib/readline.c.obj CMakeFiles/lib.dir/src/lib/my_string.c.obj CMakeFiles/lib.dir/src/lib/my_strcat.c.obj CMakeFiles/lib.dir/src/lib/my_rand.c.obj CMakeFiles/lib.dir/src/lib/my_getnbr.c.obj CMakeFiles/lib.dir/src/lib/my_put_nbr.c.obj CMakeFiles/lib.dir/src/lib/my_putchar.c.obj
+C:\MinGW\bin\ranlib.exe liblib.a
