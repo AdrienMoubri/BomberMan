@@ -47,10 +47,10 @@ RM = "C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E remo
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION
+CMAKE_SOURCE_DIR = C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -79,9 +79,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -188,60 +188,6 @@ src/bombes.s: src/bombes.c.s
 src/bombes.c.s:
 	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/bombes.c.s
 .PHONY : src/bombes.c.s
-
-src/creature_order.obj: src/creature_order.c.obj
-
-.PHONY : src/creature_order.obj
-
-# target to build an object file
-src/creature_order.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.obj
-.PHONY : src/creature_order.c.obj
-
-src/creature_order.i: src/creature_order.c.i
-
-.PHONY : src/creature_order.i
-
-# target to preprocess a source file
-src/creature_order.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.i
-.PHONY : src/creature_order.c.i
-
-src/creature_order.s: src/creature_order.c.s
-
-.PHONY : src/creature_order.s
-
-# target to generate assembly for a file
-src/creature_order.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.s
-.PHONY : src/creature_order.c.s
-
-src/display_annim.obj: src/display_annim.c.obj
-
-.PHONY : src/display_annim.obj
-
-# target to build an object file
-src/display_annim.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.obj
-.PHONY : src/display_annim.c.obj
-
-src/display_annim.i: src/display_annim.c.i
-
-.PHONY : src/display_annim.i
-
-# target to preprocess a source file
-src/display_annim.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.i
-.PHONY : src/display_annim.c.i
-
-src/display_annim.s: src/display_annim.c.s
-
-.PHONY : src/display_annim.s
-
-# target to generate assembly for a file
-src/display_annim.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.s
-.PHONY : src/display_annim.c.s
 
 src/drawer.obj: src/drawer.c.obj
 
@@ -378,87 +324,6 @@ src/main.c.s:
 	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/main.c.s
 .PHONY : src/main.c.s
 
-src/map.obj: src/map.c.obj
-
-.PHONY : src/map.obj
-
-# target to build an object file
-src/map.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.obj
-.PHONY : src/map.c.obj
-
-src/map.i: src/map.c.i
-
-.PHONY : src/map.i
-
-# target to preprocess a source file
-src/map.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.i
-.PHONY : src/map.c.i
-
-src/map.s: src/map.c.s
-
-.PHONY : src/map.s
-
-# target to generate assembly for a file
-src/map.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.s
-.PHONY : src/map.c.s
-
-src/merchant.obj: src/merchant.c.obj
-
-.PHONY : src/merchant.obj
-
-# target to build an object file
-src/merchant.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.obj
-.PHONY : src/merchant.c.obj
-
-src/merchant.i: src/merchant.c.i
-
-.PHONY : src/merchant.i
-
-# target to preprocess a source file
-src/merchant.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.i
-.PHONY : src/merchant.c.i
-
-src/merchant.s: src/merchant.c.s
-
-.PHONY : src/merchant.s
-
-# target to generate assembly for a file
-src/merchant.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.s
-.PHONY : src/merchant.c.s
-
-src/mobs_attacks.obj: src/mobs_attacks.c.obj
-
-.PHONY : src/mobs_attacks.obj
-
-# target to build an object file
-src/mobs_attacks.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.obj
-.PHONY : src/mobs_attacks.c.obj
-
-src/mobs_attacks.i: src/mobs_attacks.c.i
-
-.PHONY : src/mobs_attacks.i
-
-# target to preprocess a source file
-src/mobs_attacks.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.i
-.PHONY : src/mobs_attacks.c.i
-
-src/mobs_attacks.s: src/mobs_attacks.c.s
-
-.PHONY : src/mobs_attacks.s
-
-# target to generate assembly for a file
-src/mobs_attacks.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.s
-.PHONY : src/mobs_attacks.c.s
-
 src/order.obj: src/order.c.obj
 
 .PHONY : src/order.obj
@@ -485,60 +350,6 @@ src/order.s: src/order.c.s
 src/order.c.s:
 	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/order.c.s
 .PHONY : src/order.c.s
-
-src/out_of_battle.obj: src/out_of_battle.c.obj
-
-.PHONY : src/out_of_battle.obj
-
-# target to build an object file
-src/out_of_battle.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.obj
-.PHONY : src/out_of_battle.c.obj
-
-src/out_of_battle.i: src/out_of_battle.c.i
-
-.PHONY : src/out_of_battle.i
-
-# target to preprocess a source file
-src/out_of_battle.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.i
-.PHONY : src/out_of_battle.c.i
-
-src/out_of_battle.s: src/out_of_battle.c.s
-
-.PHONY : src/out_of_battle.s
-
-# target to generate assembly for a file
-src/out_of_battle.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.s
-.PHONY : src/out_of_battle.c.s
-
-src/random_catch.obj: src/random_catch.c.obj
-
-.PHONY : src/random_catch.obj
-
-# target to build an object file
-src/random_catch.c.obj:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.obj
-.PHONY : src/random_catch.c.obj
-
-src/random_catch.i: src/random_catch.c.i
-
-.PHONY : src/random_catch.i
-
-# target to preprocess a source file
-src/random_catch.c.i:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.i
-.PHONY : src/random_catch.c.i
-
-src/random_catch.s: src/random_catch.c.s
-
-.PHONY : src/random_catch.s
-
-# target to generate assembly for a file
-src/random_catch.c.s:
-	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.s
-.PHONY : src/random_catch.c.s
 
 src/socket.obj: src/socket.c.obj
 
@@ -610,12 +421,6 @@ help:
 	@echo ... src/bombes.obj
 	@echo ... src/bombes.i
 	@echo ... src/bombes.s
-	@echo ... src/creature_order.obj
-	@echo ... src/creature_order.i
-	@echo ... src/creature_order.s
-	@echo ... src/display_annim.obj
-	@echo ... src/display_annim.i
-	@echo ... src/display_annim.s
 	@echo ... src/drawer.obj
 	@echo ... src/drawer.i
 	@echo ... src/drawer.s
@@ -631,24 +436,9 @@ help:
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
-	@echo ... src/map.obj
-	@echo ... src/map.i
-	@echo ... src/map.s
-	@echo ... src/merchant.obj
-	@echo ... src/merchant.i
-	@echo ... src/merchant.s
-	@echo ... src/mobs_attacks.obj
-	@echo ... src/mobs_attacks.i
-	@echo ... src/mobs_attacks.s
 	@echo ... src/order.obj
 	@echo ... src/order.i
 	@echo ... src/order.s
-	@echo ... src/out_of_battle.obj
-	@echo ... src/out_of_battle.i
-	@echo ... src/out_of_battle.s
-	@echo ... src/random_catch.obj
-	@echo ... src/random_catch.i
-	@echo ... src/random_catch.s
 	@echo ... src/socket.obj
 	@echo ... src/socket.i
 	@echo ... src/socket.s

@@ -7,19 +7,12 @@ add_subdirectory(src/lib)
 set(SOURCE_FILES
         src/main.c
         src/team.c
-        src/random_catch.c
-        src/out_of_battle.c
         src/order.c
-        src/mobs_attacks.c
-        src/merchant.c
         src/init_sdl.c
         src/game.c
-        src/display_annim.c
-        src/creature_order.c
-        src/heroes_images.c
         src/bombes.c
-        src/map.c
         src/Engine.c
+        src/heroes_images.c
         src/drawer.c
         src/socket.c)
 
