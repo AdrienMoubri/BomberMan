@@ -9,11 +9,10 @@
 */
 
 #include "bfm.h"
+
 /*
  * obtention des addresses des ressources pour SDL
  */
-
-
 t_env			*init_game()
 {
     t_env			*env;
@@ -33,7 +32,9 @@ char *readStringSDL(char *s_dst, size_t n)
 {
     return s_dst;
 }
-
+/*
+ * lancement du menu et selection entre client ou server
+ */
 void                launch_menu(t_env *env, SDL_Event *event)
 {
     int play = 0;
@@ -68,6 +69,7 @@ void                launch_menu(t_env *env, SDL_Event *event)
     SDL_EnableUNICODE(1);
     env->socketInfo = 0;
     env->socketReponse= 0;
+    //définition des port par défaut du server et du client
     int defaultportInfo = 4249;
     int defaultportResponse = 4250;
     env->server = 0;
@@ -86,6 +88,7 @@ void                launch_menu(t_env *env, SDL_Event *event)
             env->server = 1;
         }
         draw_Menu(env);
+        //création du server
         if (env->server == 1)
         {
             if (env->socketInfo == 0) {
@@ -97,38 +100,41 @@ void                launch_menu(t_env *env, SDL_Event *event)
             SDL_WaitEvent(event);
             play = 0;
         }
-        SDL_WaitEvent(event);
-        while (event->type != SDL_KEYDOWN)
-        {
+        //TODO créer des méthode pour mieux visualiser les échanges
+        else{
             SDL_WaitEvent(event);
-        }
-        switch (event->type)
-        {
-            case SDL_KEYDOWN:
-                switch (event->key.keysym.sym)
-                {
-                    case SDLK_RETURN:
-                        connect_to_Server(text,defaultportInfo,&(env->socketInfo));
-                        SDL_Delay(10);
-                        connect_to_Server(text,defaultportResponse,&(env->socketReponse));
-                        play = 0;
-                        break;
-                    default:
-                        unicode = event->key.keysym.unicode;
-                        if (unicode == 8 && pos > 0)
-                        {
-                            text[pos] = '\0';
-                            pos--;
-                        }
-                        else
-                        if (unicode >= 32 && unicode <= 127 && pos < 20)
-                        {
-                            text[pos] = (char)unicode;
-                            pos++;
-                        }
-                        break;
-                }
-                break;
+            while (event->type != SDL_KEYDOWN)
+            {
+                SDL_WaitEvent(event);
+            }
+            switch (event->type)
+            {
+                case SDL_KEYDOWN:
+                    switch (event->key.keysym.sym)
+                    {
+                        case SDLK_RETURN:
+                            connect_to_Server(text,defaultportInfo,&(env->socketInfo));
+                            SDL_Delay(10);
+                            connect_to_Server(text,defaultportResponse,&(env->socketReponse));
+                            play = 0;
+                            break;
+                        default:
+                            unicode = event->key.keysym.unicode;
+                            if (unicode == 8 && pos > 0)
+                            {
+                                text[pos] = '\0';
+                                pos--;
+                            }
+                            else
+                            if (unicode >= 32 && unicode <= 127 && pos < 20)
+                            {
+                                text[pos] = (char)unicode;
+                                pos++;
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
     }
     SDL_EnableUNICODE(0);
@@ -139,6 +145,11 @@ void                launch_menu(t_env *env, SDL_Event *event)
         env->hero = env->nb_heroes -1;
     }
 }
+
+/*
+ * explose une case
+ * TODO ajouter l'image
+ */
 
 int exploseCase(t_case *case1, t_hero_list * hero_l)
 {
@@ -156,6 +167,10 @@ int exploseCase(t_case *case1, t_hero_list * hero_l)
     return resultat;
 }
 
+
+/*
+ * explose les cases autour de la case bombe
+ */
 void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WIDTH_MAP][HEIGHT_MAP])
 {
     int debutX = bomb_i_y->bomb->positionCase->x - bomb_i_y->bomb->portee;
@@ -189,7 +204,9 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
     }
 }
 
-
+/*
+ * envoie l'initialisation au client
+ */
 
 void                set_env_to_client(t_env *env)
 {
@@ -221,6 +238,10 @@ void                set_env_to_client(t_env *env)
     }
     send_env_to_player(env->socketInfo,env->socketReponse, env_simple);
 }
+
+/*
+ * le client recois les ino du server et les interprette
+ */
 
 void                get_env(t_env *env)
 {
@@ -268,6 +289,10 @@ void                get_env(t_env *env)
     }
 }
 
+/*
+ * envoie les actions du hero client au server
+ */
+
 void                set_hero_to_server(t_env *env)
 {
     t_hero *hero;
@@ -295,6 +320,10 @@ void                set_hero_to_server(t_env *env)
     send_player_to_server(env->socketInfo,env->socketReponse, hero_simple);
 }
 
+/*
+ * le server reçois les infos client
+ */
+
 void                get_hero_from_client(t_env* env)
 {
     t_hero *hero;
@@ -317,6 +346,10 @@ void                get_hero_from_client(t_env* env)
     }
 }
 
+
+/*
+ * lancement du serveret ouvertur des sockets
+ */
 void                launch_gameServer(t_env *env, SDL_Event *event) {
     int play = 1;
     init_game_resources(env);
@@ -354,6 +387,10 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
     }
 }
 
+
+/*
+ * lancement du jeu pour un client
+ */
 void                launch_gameClient(t_env *env, SDL_Event *event) {
     int play = 1;
     init_game_resources(env);
@@ -369,6 +406,9 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
     }
 }
 
+/*
+ * fait bouger le curseur dans le menu
+ */
 void change_select(t_env *env) {
     if (env->screen->positionSelector.y == env->screen->positionSelectorBas.y)
         env->screen->positionSelector = env->screen->positionSelectorHaut;

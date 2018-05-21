@@ -379,7 +379,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 SDL_IMAGE_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SDL_IMAGE_LIBRARY
 SDL_IMAGE_LIBRARY-ADVANCED:INTERNAL=1
-SDL_LIBRARY_TEMP:INTERNAL=mingw32;mingw32;mingw32;C:/Program Files (x86)/libSdl/SDL-1.2.15/lib/libSDLmain.a;C:/Program Files (x86)/libSdl/SDL-1.2.15/lib/libSDL.dll.a;-lpthread;-lpthread;-lpthread
+SDL_LIBRARY_TEMP:INTERNAL=mingw32;mingw32;mingw32;mingw32;C:/Program Files (x86)/libSdl/SDL-1.2.15/lib/libSDLmain.a;C:/Program Files (x86)/libSdl/SDL-1.2.15/lib/libSDL.dll.a;-lpthread;-lpthread;-lpthread;-lpthread
 //ADVANCED property for variable: SDL_TTF_INCLUDE_DIR
 SDL_TTF_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SDL_TTF_LIBRARY
