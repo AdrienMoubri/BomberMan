@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void		creature_killed(t_env *env)
 {
   if (env->hero->team->selected->digimon->pv <= 0)
@@ -44,3 +44,4 @@ void		mob_random(t_env *env)
   else
     mob_attacking(env, i);
 }
+*/

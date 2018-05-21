@@ -10,7 +10,7 @@
 
 #include <unistd.h>
 #include "bfm.h"
-
+/*
 void		display_screen(t_env *env)
 {
   if (env->fight)

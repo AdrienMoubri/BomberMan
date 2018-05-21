@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void			slash(t_env *env)
 {
   //int			*pv_left;
@@ -89,3 +89,4 @@ void			rest(t_env *env)
     my_strcat(str, "No Digimon selected! \n");
 
 }
+*/

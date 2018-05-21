@@ -1,0 +1,8 @@
+il me faut les images des personnages vu, face, du dos, et vue de droite et une réfexion pour la vue de gauche
+chaque nouvelle image du personnage doit faire 20 pixel sur 33 et le personnage doit-être au milieu de son image.
+
+tu peux prendre exemple sur l'image black_front_Model.
+normalement, c'est : 3 pixels vide le personnage 3 pixels vide, 3 pixel vide le personnage 3 pixels vide ...
+les images doivent être alligner grâce à l'ombre au niveau des pieds.
+ce n'est pas grâve si la bande d'image est plus large(si il y a plus d'image pour l'annimation), 
+mais sa largeur doit-être un multiple de 20. (black_front_Model a 6 images de 20 pixel, elle fait 120 pixel de large.)

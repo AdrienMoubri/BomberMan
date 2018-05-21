@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void		creature_slash(t_env *env)
 {
   int		*pv_left;
@@ -79,3 +79,4 @@ void		creature_rest(t_env *env)
   my_put_nbr(*mana_left);
   my_putstr("mana left! \n");
 }
+*/

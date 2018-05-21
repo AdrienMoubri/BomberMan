@@ -10,82 +10,81 @@
 
 #include "bfm.h"
 
-int		add_team_to_hero(t_hero *hero)
+int		create_hero_list(t_env *env)
 {
-  t_team	*team;
-  t_digimon	*digimon;
+  t_hero_list	    *hero_l;
+  t_hero_elem	    *hero_e;
 
-  team = malloc(sizeof (t_team));
-  if (team)
+  hero_l = malloc(sizeof (t_hero_list));
+  if (hero_l)
     {
-      digimon = NULL;
-      team->first = digimon;
-      team->last = digimon;
-      team->nb_elem = 0;
-      team->selected = NULL;
-      hero->team = team;
+      hero_e = NULL;
+      hero_l->first = hero_e;
+      hero_l->last = hero_e;
+      hero_l->nb_elem = 0;
+      env->heroes = hero_l;
       return (1);
     }
   return (0);
 }
 
-void		del_elem(t_hero *hero, t_digimon *digimon)
+void		del_elem(t_hero_list *hero_l, t_hero_elem *hero_e)
 {
-  if (digimon != NULL)
+  if (hero_e != NULL)
     {
-      if (digimon->prev)
+      if (hero_e->prev)
         {
-          digimon->prev->next = digimon->next;
-          if (digimon->next)
-            digimon->next->prev = digimon->prev;
+          hero_e->prev->next = hero_e->next;
+          if (hero_e->next)
+            hero_e->next->prev = hero_e->prev;
           else
-	    hero->team->last = digimon->prev;
+	    hero_l->last = hero_e->prev;
         }
-      else if (digimon->next)
+      else if (hero_e->next)
         {
-          hero->team->first = digimon->next;
-          digimon->next->prev = NULL;
+          hero_l->first = hero_e->next;
+          hero_e->next->prev = NULL;
         }
       else
         {
-          hero->team->first = NULL;
-	  hero->team->last = NULL;
+          hero_l->first = NULL;
+	  hero_l->last = NULL;
         }
-      hero->team->nb_elem -= 1;
-      free(digimon);
+      hero_l->nb_elem -= 1;
+      free(hero_e);
     }
 }
 
-void		add_digimon_to_team(t_digimon *node, t_hero *hero)
+void		add_hero_to_list(t_hero_elem *hero_e, t_hero_list *hero_l)
 {
-  if (node)
+  if (hero_e)
     {
-      node->next = NULL;
-      if (!hero->team->first)
+      hero_e->next = NULL;
+      if (!hero_l->first)
         {
-          hero->team->first = node;
-          node->prev = NULL;
+          hero_l->first = hero_e;
+          hero_e->prev = NULL;
         }
       else
         {
-          hero->team->last->next = node;
-          node->prev = hero->team->last;
+          hero_l->last->next = hero_e;
+          hero_e->prev = hero_l->last;
         }
-      hero->team->last = node;
-      hero->team->nb_elem += 1;
+      hero_l->last = hero_e;
+      hero_l->nb_elem += 1;
     }
 }
 
-void		del_digimon_from_team(t_digimon *node, t_hero *hero)
+void		del_hero_from_list(t_hero_elem *node, t_hero_list *hero)
 {
-  t_digimon	*digimon;
+    t_hero_elem	*hero_e;
 
-  digimon = hero->team->first;
-  while (digimon != NULL && node != digimon)
+  hero_e = hero->first;
+  while (hero_e != NULL && node != hero_e)
     {
-      digimon = digimon->next;
+      hero_e = hero_e->next;
     }
-  free(digimon->digimon->name);
-  free(digimon->digimon);
-  del_elem(hero, digimon);
+  free(hero_e->hero->name);
+  free(hero_e->hero);
+  del_elem(hero, hero_e);
 }

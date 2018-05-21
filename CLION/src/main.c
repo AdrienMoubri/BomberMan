@@ -13,24 +13,15 @@
 
 void		free_universe(t_env *env)
 {
-  while (env->hero->team->first)
-    {
-      del_digimon_from_team(env->hero->team->first, env->hero);
-    }
-  free(env->hero->team);
-  free(env->hero->name);
-  free(env->hero);
-  free(env->creature->name);
-  free(env->creature);
+  free_sdl(env);
   free(env);
 }
 
-int		main(int argc, char** argv)
+int		main(int argc, char* argv[])
 {
   t_env		*env;
   char		*name;
   SDL_Event	*event;
-
   name = "sacha";
   srand(time(NULL));
   event = malloc (sizeof(SDL_Event));
@@ -42,13 +33,13 @@ int		main(int argc, char** argv)
   if (env && event)
     {
       init_screen(env);
-      while (event->type != SDL_KEYUP)
-        {
-          SDL_WaitEvent(event);
-        }
-      play(env, event);
+      launch_menu(env, event);
+        if (env->server)
+            launch_gameServer(env, event);
+        else
+            launch_gameClient(env, event);
       free(event);
       free_universe(env);
-      }
+    }
   return (0);
 }

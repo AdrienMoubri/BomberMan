@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void				quit(t_env *env)
 {
   env->play = 0;
@@ -100,3 +100,4 @@ void				order_out_battle(t_env *env, SDL_Event *event)
     }
   my_putstr_color("red", "Commande unknow\n");
 }
+*/

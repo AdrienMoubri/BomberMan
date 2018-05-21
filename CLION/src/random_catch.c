@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void				magic_catch(t_env *env)
 {
   t_digimon			*node;
@@ -80,3 +80,4 @@ void				chance_catch(t_env *env)
   else
     set_text("You don't have a magic ball", env);
 }
+*/

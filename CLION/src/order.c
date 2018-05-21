@@ -10,53 +10,85 @@
 
 #include "bfm.h"
 
-void				quit_battle(t_env *env)
+void				quit_battle(t_hero *hero)
 {
-  env->play = 0;
+  hero->play = 0;
+}
+void                create_bomb(t_hero *hero)
+{
+    t_bomb_elem *bomb_e = malloc(sizeof(t_bomb_elem));
+    bomb_e->bomb = malloc(sizeof(t_bomb));
+    //bomb_e->bomb->Sprite = ;
+    bomb_e->bomb->coord = hero->position;
+    bomb_e->bomb->positionCase = hero->positionCase;
+    bomb_e->bomb->chrono = SDL_GetTicks();
+    bomb_e->bomb->portee = hero->porteeBomb;
+    add_bomb_to_list(bomb_e, hero->bombes);
+}
+void                drop_bomb(t_hero *hero)
+{
+    t_bomb_elem *bomb_i = hero->bombes->first;
+    if (hero->bombes->nb_elem !=0)
+    {
+        for(int i = 0; i < hero->bombes->nb_elem; i++, bomb_i = bomb_i->next)
+        {
+            if (hero->positionCase != bomb_i->bomb->positionCase)
+            {
+                create_bomb(hero);
+            }
+        }
+    }
+    else
+        create_bomb(hero);
 }
 
-void				help_me(t_env *env)
+void                down(t_hero *hero)
 {
-  free(env->creature->name);
-  free(env->creature);
-  env->creature = get_creature();
-  env->fight = 0;
+    hero->direction = 0;
+    hero->orientation = 0;
 }
+void                left(t_hero *hero)
+{
+    hero->direction = 1;
+    hero->orientation = 1;
+}
+void                right(t_hero *hero)
+{
+    hero->direction = 2;
+    hero->orientation= 2;
+
+}
+
+void                up(t_hero *hero)
+{
+    hero->direction = 3;
+    hero->orientation = 3;
+}
+
+
 
 static const t_hero_order	g_order[] =
   {
-    {SDLK_SPACE, chance_catch},
-    {SDLK_w, help_me},
+    {SDLK_SPACE, drop_bomb},
     {SDLK_ESCAPE, quit_battle},
-    {SDLK_a, slash},
-    {SDLK_z, fire},
-    {SDLK_e, gamble},
-    {SDLK_r, rest},
+    {SDLK_a, left},
+    {SDLK_w, up},
+    {SDLK_d, right},
+    {SDLK_s, down},
     {0, NULL}
   };
 
-void				hero_order(t_env *env, SDL_Event *event)
+void				hero_order(t_hero *hero, SDL_Event *event)
 {
   int				i;
-
   i = 0;
-  my_putstr("waiting_for_orders->");
-  display_screen(env);
-  SDL_WaitEvent(event);
-  while (event->type != SDL_KEYUP)
-    {
-      SDL_WaitEvent(event);
-    }
-  my_putstr_color("clear", "");
   while (g_order[i].key)
     {
       if (event->key.keysym.sym == g_order[i].key)
 	{
-	  g_order[i].order(env);
+	  g_order[i].order(hero);
 	  return ;
 	}
       i += 1;
     }
-  my_putstr_color("red", "Commande unknow\n");
-  hero_order(env, event);
 }

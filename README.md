@@ -1,1 +1,1 @@
-# BomberMan
+# ETNA-bomberman

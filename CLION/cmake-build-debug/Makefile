@@ -47,10 +47,10 @@ RM = "C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E remo
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\AMO\Desktop\BomberMan\bfm\CLION
+CMAKE_SOURCE_DIR = C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\AMO\Desktop\BomberMan\bfm\CLION\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -79,9 +79,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Desktop\BomberMan\bfm\CLION\cmake-build-debug\CMakeFiles C:\Users\AMO\Desktop\BomberMan\bfm\CLION\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Desktop\BomberMan\bfm\CLION\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan2\ETNA-bomberman\CLION\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -110,57 +110,84 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named untitled1
+# Target rules for targets named BomberMan
 
 # Build rule for target.
-untitled1: cmake_check_build_system
-	$(MAKE) -f CMakeFiles\Makefile2 untitled1
-.PHONY : untitled1
+BomberMan: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 BomberMan
+.PHONY : BomberMan
 
 # fast build rule for target.
-untitled1/fast:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/build
-.PHONY : untitled1/fast
+BomberMan/fast:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/build
+.PHONY : BomberMan/fast
 
 #=============================================================================
-# Target rules for targets named lib
+# Target rules for targets named my_lib
 
 # Build rule for target.
-lib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles\Makefile2 lib
-.PHONY : lib
+my_lib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 my_lib
+.PHONY : my_lib
 
 # fast build rule for target.
-lib/fast:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/build
-.PHONY : lib/fast
+my_lib/fast:
+	$(MAKE) -f src\lib\CMakeFiles\my_lib.dir\build.make src/lib/CMakeFiles/my_lib.dir/build
+.PHONY : my_lib/fast
 
-src/attacks.obj: src/attacks.c.obj
+src/Engine.obj: src/Engine.c.obj
 
-.PHONY : src/attacks.obj
+.PHONY : src/Engine.obj
 
 # target to build an object file
-src/attacks.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/attacks.c.obj
-.PHONY : src/attacks.c.obj
+src/Engine.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/Engine.c.obj
+.PHONY : src/Engine.c.obj
 
-src/attacks.i: src/attacks.c.i
+src/Engine.i: src/Engine.c.i
 
-.PHONY : src/attacks.i
+.PHONY : src/Engine.i
 
 # target to preprocess a source file
-src/attacks.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/attacks.c.i
-.PHONY : src/attacks.c.i
+src/Engine.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/Engine.c.i
+.PHONY : src/Engine.c.i
 
-src/attacks.s: src/attacks.c.s
+src/Engine.s: src/Engine.c.s
 
-.PHONY : src/attacks.s
+.PHONY : src/Engine.s
 
 # target to generate assembly for a file
-src/attacks.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/attacks.c.s
-.PHONY : src/attacks.c.s
+src/Engine.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/Engine.c.s
+.PHONY : src/Engine.c.s
+
+src/bombes.obj: src/bombes.c.obj
+
+.PHONY : src/bombes.obj
+
+# target to build an object file
+src/bombes.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/bombes.c.obj
+.PHONY : src/bombes.c.obj
+
+src/bombes.i: src/bombes.c.i
+
+.PHONY : src/bombes.i
+
+# target to preprocess a source file
+src/bombes.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/bombes.c.i
+.PHONY : src/bombes.c.i
+
+src/bombes.s: src/bombes.c.s
+
+.PHONY : src/bombes.s
+
+# target to generate assembly for a file
+src/bombes.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/bombes.c.s
+.PHONY : src/bombes.c.s
 
 src/creature_order.obj: src/creature_order.c.obj
 
@@ -168,7 +195,7 @@ src/creature_order.obj: src/creature_order.c.obj
 
 # target to build an object file
 src/creature_order.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/creature_order.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.obj
 .PHONY : src/creature_order.c.obj
 
 src/creature_order.i: src/creature_order.c.i
@@ -177,7 +204,7 @@ src/creature_order.i: src/creature_order.c.i
 
 # target to preprocess a source file
 src/creature_order.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/creature_order.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.i
 .PHONY : src/creature_order.c.i
 
 src/creature_order.s: src/creature_order.c.s
@@ -186,7 +213,7 @@ src/creature_order.s: src/creature_order.c.s
 
 # target to generate assembly for a file
 src/creature_order.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/creature_order.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/creature_order.c.s
 .PHONY : src/creature_order.c.s
 
 src/display_annim.obj: src/display_annim.c.obj
@@ -195,7 +222,7 @@ src/display_annim.obj: src/display_annim.c.obj
 
 # target to build an object file
 src/display_annim.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/display_annim.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.obj
 .PHONY : src/display_annim.c.obj
 
 src/display_annim.i: src/display_annim.c.i
@@ -204,7 +231,7 @@ src/display_annim.i: src/display_annim.c.i
 
 # target to preprocess a source file
 src/display_annim.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/display_annim.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.i
 .PHONY : src/display_annim.c.i
 
 src/display_annim.s: src/display_annim.c.s
@@ -213,8 +240,35 @@ src/display_annim.s: src/display_annim.c.s
 
 # target to generate assembly for a file
 src/display_annim.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/display_annim.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/display_annim.c.s
 .PHONY : src/display_annim.c.s
+
+src/drawer.obj: src/drawer.c.obj
+
+.PHONY : src/drawer.obj
+
+# target to build an object file
+src/drawer.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/drawer.c.obj
+.PHONY : src/drawer.c.obj
+
+src/drawer.i: src/drawer.c.i
+
+.PHONY : src/drawer.i
+
+# target to preprocess a source file
+src/drawer.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/drawer.c.i
+.PHONY : src/drawer.c.i
+
+src/drawer.s: src/drawer.c.s
+
+.PHONY : src/drawer.s
+
+# target to generate assembly for a file
+src/drawer.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/drawer.c.s
+.PHONY : src/drawer.c.s
 
 src/game.obj: src/game.c.obj
 
@@ -222,7 +276,7 @@ src/game.obj: src/game.c.obj
 
 # target to build an object file
 src/game.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/game.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/game.c.obj
 .PHONY : src/game.c.obj
 
 src/game.i: src/game.c.i
@@ -231,7 +285,7 @@ src/game.i: src/game.c.i
 
 # target to preprocess a source file
 src/game.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/game.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/game.c.i
 .PHONY : src/game.c.i
 
 src/game.s: src/game.c.s
@@ -240,8 +294,35 @@ src/game.s: src/game.c.s
 
 # target to generate assembly for a file
 src/game.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/game.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/game.c.s
 .PHONY : src/game.c.s
+
+src/heroes_images.obj: src/heroes_images.c.obj
+
+.PHONY : src/heroes_images.obj
+
+# target to build an object file
+src/heroes_images.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/heroes_images.c.obj
+.PHONY : src/heroes_images.c.obj
+
+src/heroes_images.i: src/heroes_images.c.i
+
+.PHONY : src/heroes_images.i
+
+# target to preprocess a source file
+src/heroes_images.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/heroes_images.c.i
+.PHONY : src/heroes_images.c.i
+
+src/heroes_images.s: src/heroes_images.c.s
+
+.PHONY : src/heroes_images.s
+
+# target to generate assembly for a file
+src/heroes_images.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/heroes_images.c.s
+.PHONY : src/heroes_images.c.s
 
 src/init_sdl.obj: src/init_sdl.c.obj
 
@@ -249,7 +330,7 @@ src/init_sdl.obj: src/init_sdl.c.obj
 
 # target to build an object file
 src/init_sdl.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/init_sdl.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/init_sdl.c.obj
 .PHONY : src/init_sdl.c.obj
 
 src/init_sdl.i: src/init_sdl.c.i
@@ -258,7 +339,7 @@ src/init_sdl.i: src/init_sdl.c.i
 
 # target to preprocess a source file
 src/init_sdl.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/init_sdl.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/init_sdl.c.i
 .PHONY : src/init_sdl.c.i
 
 src/init_sdl.s: src/init_sdl.c.s
@@ -267,197 +348,8 @@ src/init_sdl.s: src/init_sdl.c.s
 
 # target to generate assembly for a file
 src/init_sdl.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/init_sdl.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/init_sdl.c.s
 .PHONY : src/init_sdl.c.s
-
-src/lib/my_getnbr.obj: src/lib/my_getnbr.c.obj
-
-.PHONY : src/lib/my_getnbr.obj
-
-# target to build an object file
-src/lib/my_getnbr.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_getnbr.c.obj
-.PHONY : src/lib/my_getnbr.c.obj
-
-src/lib/my_getnbr.i: src/lib/my_getnbr.c.i
-
-.PHONY : src/lib/my_getnbr.i
-
-# target to preprocess a source file
-src/lib/my_getnbr.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_getnbr.c.i
-.PHONY : src/lib/my_getnbr.c.i
-
-src/lib/my_getnbr.s: src/lib/my_getnbr.c.s
-
-.PHONY : src/lib/my_getnbr.s
-
-# target to generate assembly for a file
-src/lib/my_getnbr.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_getnbr.c.s
-.PHONY : src/lib/my_getnbr.c.s
-
-src/lib/my_put_nbr.obj: src/lib/my_put_nbr.c.obj
-
-.PHONY : src/lib/my_put_nbr.obj
-
-# target to build an object file
-src/lib/my_put_nbr.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_put_nbr.c.obj
-.PHONY : src/lib/my_put_nbr.c.obj
-
-src/lib/my_put_nbr.i: src/lib/my_put_nbr.c.i
-
-.PHONY : src/lib/my_put_nbr.i
-
-# target to preprocess a source file
-src/lib/my_put_nbr.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_put_nbr.c.i
-.PHONY : src/lib/my_put_nbr.c.i
-
-src/lib/my_put_nbr.s: src/lib/my_put_nbr.c.s
-
-.PHONY : src/lib/my_put_nbr.s
-
-# target to generate assembly for a file
-src/lib/my_put_nbr.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_put_nbr.c.s
-.PHONY : src/lib/my_put_nbr.c.s
-
-src/lib/my_putchar.obj: src/lib/my_putchar.c.obj
-
-.PHONY : src/lib/my_putchar.obj
-
-# target to build an object file
-src/lib/my_putchar.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_putchar.c.obj
-.PHONY : src/lib/my_putchar.c.obj
-
-src/lib/my_putchar.i: src/lib/my_putchar.c.i
-
-.PHONY : src/lib/my_putchar.i
-
-# target to preprocess a source file
-src/lib/my_putchar.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_putchar.c.i
-.PHONY : src/lib/my_putchar.c.i
-
-src/lib/my_putchar.s: src/lib/my_putchar.c.s
-
-.PHONY : src/lib/my_putchar.s
-
-# target to generate assembly for a file
-src/lib/my_putchar.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_putchar.c.s
-.PHONY : src/lib/my_putchar.c.s
-
-src/lib/my_rand.obj: src/lib/my_rand.c.obj
-
-.PHONY : src/lib/my_rand.obj
-
-# target to build an object file
-src/lib/my_rand.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_rand.c.obj
-.PHONY : src/lib/my_rand.c.obj
-
-src/lib/my_rand.i: src/lib/my_rand.c.i
-
-.PHONY : src/lib/my_rand.i
-
-# target to preprocess a source file
-src/lib/my_rand.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_rand.c.i
-.PHONY : src/lib/my_rand.c.i
-
-src/lib/my_rand.s: src/lib/my_rand.c.s
-
-.PHONY : src/lib/my_rand.s
-
-# target to generate assembly for a file
-src/lib/my_rand.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_rand.c.s
-.PHONY : src/lib/my_rand.c.s
-
-src/lib/my_strcat.obj: src/lib/my_strcat.c.obj
-
-.PHONY : src/lib/my_strcat.obj
-
-# target to build an object file
-src/lib/my_strcat.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_strcat.c.obj
-.PHONY : src/lib/my_strcat.c.obj
-
-src/lib/my_strcat.i: src/lib/my_strcat.c.i
-
-.PHONY : src/lib/my_strcat.i
-
-# target to preprocess a source file
-src/lib/my_strcat.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_strcat.c.i
-.PHONY : src/lib/my_strcat.c.i
-
-src/lib/my_strcat.s: src/lib/my_strcat.c.s
-
-.PHONY : src/lib/my_strcat.s
-
-# target to generate assembly for a file
-src/lib/my_strcat.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_strcat.c.s
-.PHONY : src/lib/my_strcat.c.s
-
-src/lib/my_string.obj: src/lib/my_string.c.obj
-
-.PHONY : src/lib/my_string.obj
-
-# target to build an object file
-src/lib/my_string.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_string.c.obj
-.PHONY : src/lib/my_string.c.obj
-
-src/lib/my_string.i: src/lib/my_string.c.i
-
-.PHONY : src/lib/my_string.i
-
-# target to preprocess a source file
-src/lib/my_string.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_string.c.i
-.PHONY : src/lib/my_string.c.i
-
-src/lib/my_string.s: src/lib/my_string.c.s
-
-.PHONY : src/lib/my_string.s
-
-# target to generate assembly for a file
-src/lib/my_string.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/my_string.c.s
-.PHONY : src/lib/my_string.c.s
-
-src/lib/readline.obj: src/lib/readline.c.obj
-
-.PHONY : src/lib/readline.obj
-
-# target to build an object file
-src/lib/readline.c.obj:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/readline.c.obj
-.PHONY : src/lib/readline.c.obj
-
-src/lib/readline.i: src/lib/readline.c.i
-
-.PHONY : src/lib/readline.i
-
-# target to preprocess a source file
-src/lib/readline.c.i:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/readline.c.i
-.PHONY : src/lib/readline.c.i
-
-src/lib/readline.s: src/lib/readline.c.s
-
-.PHONY : src/lib/readline.s
-
-# target to generate assembly for a file
-src/lib/readline.c.s:
-	$(MAKE) -f CMakeFiles\lib.dir\build.make CMakeFiles/lib.dir/src/lib/readline.c.s
-.PHONY : src/lib/readline.c.s
 
 src/main.obj: src/main.c.obj
 
@@ -465,7 +357,7 @@ src/main.obj: src/main.c.obj
 
 # target to build an object file
 src/main.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/main.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/main.c.obj
 .PHONY : src/main.c.obj
 
 src/main.i: src/main.c.i
@@ -474,7 +366,7 @@ src/main.i: src/main.c.i
 
 # target to preprocess a source file
 src/main.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/main.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/main.c.i
 .PHONY : src/main.c.i
 
 src/main.s: src/main.c.s
@@ -483,8 +375,35 @@ src/main.s: src/main.c.s
 
 # target to generate assembly for a file
 src/main.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/main.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/main.c.s
 .PHONY : src/main.c.s
+
+src/map.obj: src/map.c.obj
+
+.PHONY : src/map.obj
+
+# target to build an object file
+src/map.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.obj
+.PHONY : src/map.c.obj
+
+src/map.i: src/map.c.i
+
+.PHONY : src/map.i
+
+# target to preprocess a source file
+src/map.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.i
+.PHONY : src/map.c.i
+
+src/map.s: src/map.c.s
+
+.PHONY : src/map.s
+
+# target to generate assembly for a file
+src/map.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/map.c.s
+.PHONY : src/map.c.s
 
 src/merchant.obj: src/merchant.c.obj
 
@@ -492,7 +411,7 @@ src/merchant.obj: src/merchant.c.obj
 
 # target to build an object file
 src/merchant.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/merchant.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.obj
 .PHONY : src/merchant.c.obj
 
 src/merchant.i: src/merchant.c.i
@@ -501,7 +420,7 @@ src/merchant.i: src/merchant.c.i
 
 # target to preprocess a source file
 src/merchant.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/merchant.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.i
 .PHONY : src/merchant.c.i
 
 src/merchant.s: src/merchant.c.s
@@ -510,7 +429,7 @@ src/merchant.s: src/merchant.c.s
 
 # target to generate assembly for a file
 src/merchant.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/merchant.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/merchant.c.s
 .PHONY : src/merchant.c.s
 
 src/mobs_attacks.obj: src/mobs_attacks.c.obj
@@ -519,7 +438,7 @@ src/mobs_attacks.obj: src/mobs_attacks.c.obj
 
 # target to build an object file
 src/mobs_attacks.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/mobs_attacks.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.obj
 .PHONY : src/mobs_attacks.c.obj
 
 src/mobs_attacks.i: src/mobs_attacks.c.i
@@ -528,7 +447,7 @@ src/mobs_attacks.i: src/mobs_attacks.c.i
 
 # target to preprocess a source file
 src/mobs_attacks.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/mobs_attacks.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.i
 .PHONY : src/mobs_attacks.c.i
 
 src/mobs_attacks.s: src/mobs_attacks.c.s
@@ -537,7 +456,7 @@ src/mobs_attacks.s: src/mobs_attacks.c.s
 
 # target to generate assembly for a file
 src/mobs_attacks.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/mobs_attacks.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/mobs_attacks.c.s
 .PHONY : src/mobs_attacks.c.s
 
 src/order.obj: src/order.c.obj
@@ -546,7 +465,7 @@ src/order.obj: src/order.c.obj
 
 # target to build an object file
 src/order.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/order.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/order.c.obj
 .PHONY : src/order.c.obj
 
 src/order.i: src/order.c.i
@@ -555,7 +474,7 @@ src/order.i: src/order.c.i
 
 # target to preprocess a source file
 src/order.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/order.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/order.c.i
 .PHONY : src/order.c.i
 
 src/order.s: src/order.c.s
@@ -564,7 +483,7 @@ src/order.s: src/order.c.s
 
 # target to generate assembly for a file
 src/order.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/order.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/order.c.s
 .PHONY : src/order.c.s
 
 src/out_of_battle.obj: src/out_of_battle.c.obj
@@ -573,7 +492,7 @@ src/out_of_battle.obj: src/out_of_battle.c.obj
 
 # target to build an object file
 src/out_of_battle.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/out_of_battle.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.obj
 .PHONY : src/out_of_battle.c.obj
 
 src/out_of_battle.i: src/out_of_battle.c.i
@@ -582,7 +501,7 @@ src/out_of_battle.i: src/out_of_battle.c.i
 
 # target to preprocess a source file
 src/out_of_battle.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/out_of_battle.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.i
 .PHONY : src/out_of_battle.c.i
 
 src/out_of_battle.s: src/out_of_battle.c.s
@@ -591,7 +510,7 @@ src/out_of_battle.s: src/out_of_battle.c.s
 
 # target to generate assembly for a file
 src/out_of_battle.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/out_of_battle.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/out_of_battle.c.s
 .PHONY : src/out_of_battle.c.s
 
 src/random_catch.obj: src/random_catch.c.obj
@@ -600,7 +519,7 @@ src/random_catch.obj: src/random_catch.c.obj
 
 # target to build an object file
 src/random_catch.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/random_catch.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.obj
 .PHONY : src/random_catch.c.obj
 
 src/random_catch.i: src/random_catch.c.i
@@ -609,7 +528,7 @@ src/random_catch.i: src/random_catch.c.i
 
 # target to preprocess a source file
 src/random_catch.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/random_catch.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.i
 .PHONY : src/random_catch.c.i
 
 src/random_catch.s: src/random_catch.c.s
@@ -618,8 +537,35 @@ src/random_catch.s: src/random_catch.c.s
 
 # target to generate assembly for a file
 src/random_catch.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/random_catch.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/random_catch.c.s
 .PHONY : src/random_catch.c.s
+
+src/socket.obj: src/socket.c.obj
+
+.PHONY : src/socket.obj
+
+# target to build an object file
+src/socket.c.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/socket.c.obj
+.PHONY : src/socket.c.obj
+
+src/socket.i: src/socket.c.i
+
+.PHONY : src/socket.i
+
+# target to preprocess a source file
+src/socket.c.i:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/socket.c.i
+.PHONY : src/socket.c.i
+
+src/socket.s: src/socket.c.s
+
+.PHONY : src/socket.s
+
+# target to generate assembly for a file
+src/socket.c.s:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/socket.c.s
+.PHONY : src/socket.c.s
 
 src/team.obj: src/team.c.obj
 
@@ -627,7 +573,7 @@ src/team.obj: src/team.c.obj
 
 # target to build an object file
 src/team.c.obj:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/team.c.obj
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/team.c.obj
 .PHONY : src/team.c.obj
 
 src/team.i: src/team.c.i
@@ -636,7 +582,7 @@ src/team.i: src/team.c.i
 
 # target to preprocess a source file
 src/team.c.i:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/team.c.i
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/team.c.i
 .PHONY : src/team.c.i
 
 src/team.s: src/team.c.s
@@ -645,7 +591,7 @@ src/team.s: src/team.c.s
 
 # target to generate assembly for a file
 src/team.c.s:
-	$(MAKE) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/src/team.c.s
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/src/team.c.s
 .PHONY : src/team.c.s
 
 # Help Target
@@ -654,49 +600,40 @@ help:
 	@echo ... all (the default if no target is provided)
 	@echo ... clean
 	@echo ... depend
-	@echo ... untitled1
-	@echo ... lib
+	@echo ... BomberMan
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... src/attacks.obj
-	@echo ... src/attacks.i
-	@echo ... src/attacks.s
+	@echo ... my_lib
+	@echo ... src/Engine.obj
+	@echo ... src/Engine.i
+	@echo ... src/Engine.s
+	@echo ... src/bombes.obj
+	@echo ... src/bombes.i
+	@echo ... src/bombes.s
 	@echo ... src/creature_order.obj
 	@echo ... src/creature_order.i
 	@echo ... src/creature_order.s
 	@echo ... src/display_annim.obj
 	@echo ... src/display_annim.i
 	@echo ... src/display_annim.s
+	@echo ... src/drawer.obj
+	@echo ... src/drawer.i
+	@echo ... src/drawer.s
 	@echo ... src/game.obj
 	@echo ... src/game.i
 	@echo ... src/game.s
+	@echo ... src/heroes_images.obj
+	@echo ... src/heroes_images.i
+	@echo ... src/heroes_images.s
 	@echo ... src/init_sdl.obj
 	@echo ... src/init_sdl.i
 	@echo ... src/init_sdl.s
-	@echo ... src/lib/my_getnbr.obj
-	@echo ... src/lib/my_getnbr.i
-	@echo ... src/lib/my_getnbr.s
-	@echo ... src/lib/my_put_nbr.obj
-	@echo ... src/lib/my_put_nbr.i
-	@echo ... src/lib/my_put_nbr.s
-	@echo ... src/lib/my_putchar.obj
-	@echo ... src/lib/my_putchar.i
-	@echo ... src/lib/my_putchar.s
-	@echo ... src/lib/my_rand.obj
-	@echo ... src/lib/my_rand.i
-	@echo ... src/lib/my_rand.s
-	@echo ... src/lib/my_strcat.obj
-	@echo ... src/lib/my_strcat.i
-	@echo ... src/lib/my_strcat.s
-	@echo ... src/lib/my_string.obj
-	@echo ... src/lib/my_string.i
-	@echo ... src/lib/my_string.s
-	@echo ... src/lib/readline.obj
-	@echo ... src/lib/readline.i
-	@echo ... src/lib/readline.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/map.obj
+	@echo ... src/map.i
+	@echo ... src/map.s
 	@echo ... src/merchant.obj
 	@echo ... src/merchant.i
 	@echo ... src/merchant.s
@@ -712,6 +649,9 @@ help:
 	@echo ... src/random_catch.obj
 	@echo ... src/random_catch.i
 	@echo ... src/random_catch.s
+	@echo ... src/socket.obj
+	@echo ... src/socket.i
+	@echo ... src/socket.s
 	@echo ... src/team.obj
 	@echo ... src/team.i
 	@echo ... src/team.s

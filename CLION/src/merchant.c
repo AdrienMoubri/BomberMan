@@ -9,7 +9,7 @@
 */
 
 #include "bfm.h"
-
+/*
 void				buy_magic_box(int *argent, int *box, t_env *env)
 {
   int				i;
@@ -108,3 +108,4 @@ void				eat_shroom(t_env *env)
   else
     my_putstr("please select a digimon.\n");
 }
+*/
