@@ -9,11 +9,18 @@
 */
 
 #include "bfm.h"
-
+/*
+ * tue le hero
+ */
 void				quit_battle(t_hero *hero)
 {
   hero->play = 0;
 }
+
+/*
+ * dépose une bombe
+ * TODO rajouter les sprites
+ */
 void                create_bomb(t_hero *hero)
 {
     t_bomb_elem *bomb_e = malloc(sizeof(t_bomb_elem));
@@ -25,6 +32,11 @@ void                create_bomb(t_hero *hero)
     bomb_e->bomb->portee = hero->porteeBomb;
     add_bomb_to_list(bomb_e, hero->bombes);
 }
+
+/*
+ * l'action lancé par le perso
+ */
+
 void                drop_bomb(t_hero *hero)
 {
     t_bomb_elem *bomb_i = hero->bombes->first;
@@ -41,6 +53,10 @@ void                drop_bomb(t_hero *hero)
     else
         create_bomb(hero);
 }
+
+/*
+ * changement de direstion des hero
+ */
 
 void                down(t_hero *hero)
 {
@@ -65,7 +81,9 @@ void                up(t_hero *hero)
     hero->orientation = 3;
 }
 
-
+/*
+ * tableau de pointeur sur fonction des action des hero
+ */
 
 static const t_hero_order	g_order[] =
   {
@@ -77,6 +95,10 @@ static const t_hero_order	g_order[] =
     {SDLK_s, down},
     {0, NULL}
   };
+
+/*
+ * détecte la touche lancé par le joueur
+ */
 
 void				hero_order(t_hero *hero, SDL_Event *event)
 {

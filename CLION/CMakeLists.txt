@@ -33,8 +33,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${project_SOURCE_DIR}/cmake")
 find_package (SDL)
 find_package (SDL_ttf)
 find_package (SDL_image)
-find_package(Threads REQUIRED)
-
+find_package (Threads REQUIRED)
 
 if (SDL_FOUND AND SDL_TTF_FOUND AND SDL_IMAGE_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${SDL_INCLUDE_DIR})

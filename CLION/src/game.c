@@ -9,7 +9,9 @@
 */
 
 #include "bfm.h"
-
+/*
+ * obtention des addresses des ressources pour SDL
+ */
 
 
 t_env			*init_game()
@@ -29,8 +31,6 @@ t_env			*init_game()
 
 char *readStringSDL(char *s_dst, size_t n)
 {
-
-
     return s_dst;
 }
 

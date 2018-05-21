@@ -16,7 +16,10 @@ void		free_universe(t_env *env)
   free_sdl(env);
   free(env);
 }
-
+/*
+ * initialisation du jeu puis lancement de la boucle principal
+ * on free toutes le ressources à la fin du jeu
+ */
 int		main(int argc, char* argv[])
 {
   t_env		*env;

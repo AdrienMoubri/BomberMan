@@ -10,6 +10,9 @@
 
 #include "bfm.h"
 
+/*
+ * création de la list d'image du hero permettant l'annimation
+ */
 int		    create_hero_img_list(t_env *env)
 {
   t_hero_img_list	    *hero_l;
@@ -74,6 +77,10 @@ void		add_hero_img_to_list(t_hero_img_elem *hero_e, t_hero_img_list *hero_l)
       hero_l->nb_elem += 1;
     }
 }
+
+/*
+ * trouve l'image du hero en fonction de l'environnement
+ */
 
 t_hero_img_elem *find_hero_img(int num, int dir, t_hero_img_list *list)
 {

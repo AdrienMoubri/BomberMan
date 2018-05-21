@@ -3,6 +3,12 @@
 //
 // Created by AMO on 04/12/2017.
 //
+
+/*
+ * détection des collisions entre objet
+ * TODO rajouter la collision entre les personnages
+ */
+
 int collisionObject(SDL_Rect box, SDL_Rect wall)
 {
     int leftW, leftB;
@@ -35,7 +41,10 @@ int collisionObject(SDL_Rect box, SDL_Rect wall)
     return 1;
 }
 
-
+/*
+ * détection des collisions entre le hero et les murs
+ * TODO rajouter la collision entre les personnages
+ */
 int collisionCase(t_hero *hero, t_case map[WIDTH_MAP][HEIGHT_MAP])
 {
     int posX = hero->positionCase->x;
@@ -57,7 +66,9 @@ int collisionCase(t_hero *hero, t_case map[WIDTH_MAP][HEIGHT_MAP])
     if (map[posX][posY].type == 0)
         hero->positionCase = &(map[posX][posY]);
 }
-
+/*
+ * une fois que le hero est sur la case suivante
+ */
 int finishedMovement(t_hero *hero)
 {
     if (hero->position.x == hero->positionCase->position.x && hero->position.y == hero->positionCase->position.y)
@@ -65,6 +76,9 @@ int finishedMovement(t_hero *hero)
     return 0;
 }
 
+/*
+ * définit la direction de tout les heros
+ */
 void setDirections(t_env *env)
 {
     t_hero_elem *hero_it = env->heroes->first;
@@ -79,6 +93,9 @@ void setDirections(t_env *env)
     }
 }
 
+/*
+ * déplace le héro dans sa direction
+ */
 void move_hero(t_hero* hero)
 {
     int deplacementX = 0;

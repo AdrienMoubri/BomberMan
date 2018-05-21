@@ -9,53 +9,9 @@
 */
 
 #include "bfm.h"
-/*
-static const t_load_img       g_img_map[] =
-  {
-    {"bulbasaur", "my_bfm_img/bulbasaur.png", "my_bfm_img/bulbasaur_back.png"},
-    {"charmander", "my_bfm_img/charmander.png", "my_bfm_img/charmander_back.png"},
-    {"dragonair", "my_bfm_img/dragonair.png", "my_bfm_img/dragonair_back.png"},
-    {"mewtwo", "my_bfm_img/mewtwo.png", "my_bfm_img/mewtwo_back.png"},
-    {"squirtle", "my_bfm_img/squirtle.png", "my_bfm_img/squirtle_back.png"},
-    {"pikachu", "my_bfm_img/pikachu.png", "my_bfm_img/pikachu_back.png"},
-    {"torchic", "my_bfm_img/torchic.png", "my_bfm_img/torchic_back.png"},
-    {NULL, NULL, NULL}
-  };
-/*
-void	select_img(t_env *env)
-{
-  int	i;
 
-  i = 0;
-
-  if (env->screen->hero != NULL)
-    free(env->screen->hero);
-  if (env->screen->creature!= NULL)
-    free(env->screen->creature);
-  if (!env->hero->team->selected)
-    env->screen->hero = IMG_Load("my_bfm_img/hero.png");
-  else
-    {
-      while (g_img_map[i].key)
-	{
-	  if (my_strcmp(env->hero->team->selected->digimon->name, g_img_map[i].key) == 0)
-	    {
-	      env->screen->hero = IMG_Load(g_img_map[i].back);
-	    }
-	  i += 1;
-	}
-    }
-  i = 0;
-  while (g_img_map[i].key)
-    {
-      if (my_strcmp(env->creature->name, g_img_map[i].key) == 0)
-	{
-	  env->screen->creature = IMG_Load(g_img_map[i].front);
-	  my_putstr(g_img_map[i].front);
-	}
-      i += 1;
-    }
-}
+/*
+ * initialise les images du menu  pour SDL
  */
 
 void	init_screen(t_env *env)
@@ -80,8 +36,8 @@ void	init_screen(t_env *env)
       env->screen->map = IMG_Load("my_bfm_img/map.png");
       env->screen->selector = IMG_Load("my_bfm_img/selector2.png");
       env->screen->text = TTF_RenderText_Blended(env->screen->police, "Press enter to start a game ", env->screen->couleurBomber);
-      env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Here to play alone ", env->screen->couleurBomber);
-      env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "Here to play Multi ", env->screen->couleurBomber);
+      env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Here to play as Server ", env->screen->couleurBomber);
+      env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "Here to play as Client ", env->screen->couleurBomber);
       env->screen->positionMenu.x = 0;
       env->screen->positionMenu.y = 0;
       env->screen->positionBackground.x = 0;
@@ -99,6 +55,10 @@ void	init_screen(t_env *env)
       env->screen->positionSelector = env->screen->positionSelectorHaut;
     }
 }
+
+/*
+ * initialise les sprite du hero en fonction de son numéro
+ */
 
 t_hero_img_elem    *load_hero_img(t_hero_img_list *list_img, int num, char* file)
 {
@@ -133,6 +93,10 @@ t_hero_img_elem    *load_hero_img(t_hero_img_list *list_img, int num, char* file
         add_hero_img_to_list(h1_e, list_img);
     }
 }
+
+/*
+ * initialise la map
+ */
 int             init_map(t_env *env)
 {
     for(int i = 0; i < WIDTH_MAP; i++)
@@ -152,6 +116,9 @@ int             init_map(t_env *env)
         }
     }
 }
+/*
+ * lance l'initialisation des 4 héros
+ */
 void    init_hero_ressources(t_env *env)
 {
     create_hero_img_list(env);
@@ -160,6 +127,11 @@ void    init_hero_ressources(t_env *env)
     load_hero_img(env->heroes_img,2 , strdup("Red/Red"));
     load_hero_img(env->heroes_img,3 , strdup("White/white"));
 }
+
+/*
+ * initialise les ressources des bombes
+ */
+
 t_bomb_image    init_bomb_ressources()
 {
     t_bomb_image *b1 = malloc(sizeof(t_bomb_image));
@@ -170,6 +142,10 @@ t_bomb_image    init_bomb_ressources()
     b1->explo_top_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_top.png");
     b1->explo_bot_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_bottom.png");
 }
+
+/*
+ * initialise toutes les ressources demandé par la boucle de jeu
+ */
 
 void	init_game_resources(t_env *env) {
     init_hero_ressources(env);
@@ -206,7 +182,9 @@ void	init_game_resources(t_env *env) {
     env->sizeHero.x = 0;
     env->sizeHero.y = 0;
 }
-
+/*
+ * libère toutes la place mémoire utilisé
+ */
 
 void	free_sdl(t_env *env)
 {

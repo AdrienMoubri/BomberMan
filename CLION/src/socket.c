@@ -37,6 +37,7 @@
 #include "bfm.h"
 
 #endif
+
 typedef struct info
 {
     int     *i;
@@ -70,6 +71,10 @@ void	die(char *str)
     perror(str);
     exit(1);
 }
+
+/*
+ * trust me im a  an ingeneer
+ */
 
 int	connect_to(char *hostname, int port)
 {
@@ -113,6 +118,7 @@ void myMemCpy(void *dest, void *src, size_t n)
     for (int i=0; i<n; i++)
         cdest[i] = csrc[i];
 }
+
 void send_info_to_player(int s, int *info)
 {
     int size = sizeof(int);

@@ -1,5 +1,5 @@
 /*
-** team.c for bfm in /home/mathieu/Desktop/prog_c/Battle_For_Midgard
+** team.c for bomberman
 ** 
 ** Made by MOUBRI Adrien
 ** Login   <moubri_a@etna-alternance.net>
@@ -10,6 +10,9 @@
 
 #include "bfm.h"
 
+/*
+ * gestion de la list des hero
+ */
 int		create_hero_list(t_env *env)
 {
   t_hero_list	    *hero_l;
