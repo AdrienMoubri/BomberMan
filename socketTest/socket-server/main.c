@@ -60,20 +60,21 @@ typedef struct      s_data_env
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
-/*
-typedef struct      s_player
+
+typedef struct      s_client
 {
     int             socket_recv;
     int             socket_send;
+    int             portEnv;
+    int             portCmd;
     int             commande;
-};*/
+}                   t_client;
 
 typedef struct      s_simple_env
 {
     t_data_env      *data_env;
-    int             socket_recv;
-    int             socket_send;
-    int             commande;
+    t_client        client[4];
+    int             nbClient;
     pthread_mutex_t mutexSend;
     pthread_mutex_t mutexRecv;
 }                   t_simple_env;
@@ -145,14 +146,6 @@ void    send_port_to_player(int s, int port)
     if (send(s, data, size, 0) < 0)
         die("send");
 }
-int     sendServeurPort(int port, int portPlayable, int* socket)
-{
-    init();
-    *socket = accept_client(create_server(port));
-    send_port_to_player(*socket, portPlayable);
-    end(*socket);
-}
-
 
 /*
  * trust me im a  an ingeneer
@@ -225,7 +218,8 @@ void*   thread_send_env(void *arg) {
     while (1)
     {
         wait (500);
-        send_env(env->socket_send, &(env->mutexSend), env->data_env);
+        for (int i =0; i < env->nbClient; i++)
+            send_env(env->client[i].socket_send, &(env->mutexSend), env->data_env);
     }
 }
 
@@ -247,7 +241,7 @@ void*   thread_recv_env (void* arg) {
     while (1)
     {
         wait(500);
-        recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+        //recv_env(env->client[i].socket_recv, &(env->mutexRecv), env->data_env);
     }
 }
 
@@ -268,7 +262,8 @@ void*   thread_recv_commande (void* arg) {
     while (1)
     {
         wait(500);
-        recv_commande(env->socket_recv, &(env->mutexRecv), &(env->commande));
+        for (int i =0; i < env->nbClient; i++)
+            recv_commande(env->client[i].socket_recv, &(env->mutexRecv), &(env->client[i].commande));
     }
 }
 
@@ -284,21 +279,44 @@ void    recv_commande(int s, pthread_mutex_t *mutex, int *commande)
 }
 
 int     main(int argv, char **argc) {
+    //initialisation globale
     pthread_t t1;
     pthread_t t2;
     t_simple_env *env;
     env = malloc(sizeof(t_simple_env));
     env->data_env = malloc(sizeof(t_data_env));
-    env->socket_recv = 0;
-    env->socket_send = 0;
-    env->commande = 0;
+    env->nbClient = 1;
+    env->client[0].socket_recv = 0;
+    env->client[0].socket_send = 0;
+    env->client[0].commande = 0;
+    env->client[0].portEnv = 4344;
+    env->client[0].portCmd = 4345;
     env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
     env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
+    /*
+     * initialisation par client
+     * tant qu'il n' y a pas plus de 4 client
+     * 1/ garder server ouvert
+     * 2/ a chaque connection envoyer le port d'environnement
+     * 3/ une fois le client connecté envoyer le port de commande
+     * 4/ fermer le server
+     */
+    int base_socket = 0;
+    int base_port = 4343;
+    printf("creation de la socket 4343 :\n");
+    create_Server(base_port, &(base_socket));
+    send_port_to_player(env->client[0].portEnv, base_socket);
+    create_Server(env->client[0].portEnv, env->client[0].socket_send);
+    send_port_to_player(env->client[0].portCmd, base_socket);
+    create_Server(env->client[0].portCmd, env->client[0].socket_recv);
+    close(base_port);
+
+
     printf("creation du server :\n");
     printf("creation de la socker 4249 :\n");
-    create_Server(4249, &(env->socket_send));
+    create_Server(4249, &(env->client[0].socket_send));
     printf("creation de la socker 4250 :\n");
-    create_Server(4250, &(env->socket_recv));
+    create_Server(4250, &(env->client[0].socket_recv));
     /*
     connect_to_Server("192.168.1.7", 4249,&s);
     connect_to_Server("192.168.1.7", 4250,&y);
@@ -312,7 +330,8 @@ int     main(int argv, char **argc) {
         printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
     }
     printf("envoie des info sur la socket s \n");
-    send_env(env->socket_send, &(env->mutexSend), env->data_env);
+    for (int i =0; i < env->nbClient; i++)
+        send_env(env->client[i].socket_send, &(env->mutexSend), env->data_env);
     pthread_create(&t1, NULL, thread_send_env, (void *) env);
     pthread_create(&t2, NULL, thread_recv_commande, (void *) env);
     while (1)
@@ -322,7 +341,7 @@ int     main(int argv, char **argc) {
         for(int i = 0; i < MAXHERO; i++)
         {
             env->data_env->heroes[i].alive++;
-            env->data_env->heroes[i].direction += env->commande;
+            env->data_env->heroes[i].direction += env->client[0].commande;
             env->data_env->heroes[i].orientation++;
             printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
         }

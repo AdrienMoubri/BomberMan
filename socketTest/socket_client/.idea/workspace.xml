@@ -26,8 +26,8 @@
       <file leaf-file-name="main.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="243" column="69" lean-forward="true" selection-start-line="243" selection-start-column="69" selection-end-line="243" selection-end-column="69" />
+            <state relative-caret-position="367">
+              <caret line="301" column="46" lean-forward="true" selection-start-line="301" selection-start-column="46" selection-end-line="301" selection-end-column="46" />
               <folding>
                 <element signature="e#389#409#0" expanded="true" />
                 <element signature="e#478#493#0" expanded="true" />
@@ -247,12 +247,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1527007391688</updated>
-      <workItem from="1527007393111" duration="573000" />
+      <workItem from="1527007393111" duration="4427000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="573000" />
+    <option name="totallyTimeSpent" value="4427000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="965" y="0" width="962" height="1047" extended-state="0" />
@@ -260,11 +260,11 @@
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14270613" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.34083602" />
+      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.34083602" />
       <window_info anchor="bottom" id="CMake" order="7" weight="0.28774616" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33226153" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33226153" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32932165" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -290,17 +290,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/main.c</url>
-          <line>222</line>
+          <line>228</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/main.c</url>
-          <line>278</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/main.c</url>
-          <line>245</line>
+          <line>251</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
@@ -412,8 +407,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="243" column="69" lean-forward="true" selection-start-line="243" selection-start-column="69" selection-end-line="243" selection-end-column="69" />
+        <state relative-caret-position="367">
+          <caret line="301" column="46" lean-forward="true" selection-start-line="301" selection-start-column="46" selection-end-line="301" selection-end-column="46" />
           <folding>
             <element signature="e#389#409#0" expanded="true" />
             <element signature="e#478#493#0" expanded="true" />

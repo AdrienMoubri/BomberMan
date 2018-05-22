@@ -60,13 +60,19 @@ typedef struct      s_data_env
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
+typedef struct      s_client
+{
+    int             socket_recv;
+    int             socket_send;
+    int             portEnv;
+    int             portCmd;
+    int             commande;
+}                   t_client;
 
 typedef struct      s_simple_env
 {
+    t_client        my_config;
     t_data_env      *data_env;
-    int             socket_recv;
-    int             socket_send;
-    int             commande;
     pthread_mutex_t mutexRecv;
     pthread_mutex_t mutexSend;
 }                   t_simple_env;
@@ -199,7 +205,7 @@ void*   thread_send_env (void* arg) {
     while (1)
     {
         wait(500);
-        send_env(env->socket_send, &(env->mutexSend), env->data_env);
+        send_env(env->my_config.socket_send, &(env->mutexSend), env->data_env);
     }
 }
 
@@ -220,7 +226,7 @@ void*   thread_send_commande (void* arg) {
     while (1)
     {
         wait(500);
-        send_commande(env->socket_send, &(env->mutexSend), &(env->commande));
+        send_commande(env->my_config.socket_send, &(env->mutexSend), &(env->my_config.commande));
     }
 }
 
@@ -241,7 +247,7 @@ void*   thread_recv_env (void* arg) {
     while (1)
     {
         wait(500);
-        recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+        recv_env(env->my_config.socket_recv, &(env->mutexRecv), env->data_env);
     }
 }
 
@@ -262,19 +268,23 @@ int     main(int argv, char **argc) {
     env->data_env = malloc(sizeof(t_data_env));
     env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
     env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
-    env->socket_recv = 0;
-    env->socket_send = 0;
-    env->commande = 0;
+    env->my_config.socket_recv = 0;
+    env->my_config.socket_send = 0;
+    env->my_config.commande = 0;
     pthread_t t1;
     pthread_t t2;
-
+    int base_socket = 0;
+    int base_port = 4343;
     printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.56.1\0", 4249, &(env->socket_recv));
+    connect_to_Server("192.168.56.1\0", base_port, &(base_socket));
     printf("connexion socket 4249 : Réussi\n");
     printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.56.1\0", 4250, &(env->socket_send));
+    //recv mycfg port Env
+    //recv mycfg port cmd
+    connect_to_Server("192.168.56.1\0", env->my_config.portEnv, &(env->my_config.socket_recv));
+    connect_to_Server("192.168.56.1\0", env->my_config.portCmd, &(env->my_config.socket_send));
     printf("connexion socket 4250 : Réussi\n");
-    recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+    recv_env(env->my_config.socket_recv, &(env->mutexRecv), env->data_env);
     pthread_create(&t1, NULL, thread_recv_env, (void *) env);
     pthread_create(&t2, NULL, thread_send_commande, (void *) env);
 
@@ -287,10 +297,10 @@ int     main(int argv, char **argc) {
             printf("Hero %d : alive : %d, ", i,  env->data_env->heroes[i].alive);
             printf("direction : %d, ", env->data_env->heroes[i].direction);
             printf("orientation : %d, ", env->data_env->heroes[i].orientation);
-            printf("commande : %d \n", env->commande);
+            printf("commande : %d \n", env->my_config.commande);
         }
         pthread_mutex_lock(&(env->mutexSend));
-        env->commande = 5;
+        env->my_config.commande = 5;
         pthread_mutex_unlock(&(env->mutexSend));
         pthread_mutex_unlock(&(env->mutexRecv));
         printf("end \n\n");
