@@ -1,0 +1,58 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_1493f/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_1493f.dir\build.make CMakeFiles/cmTC_1493f.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1493f.dir/CheckSymbolExists.c.obj
+C:\MinGW\bin\gcc.exe     -o CMakeFiles\cmTC_1493f.dir\CheckSymbolExists.c.obj   -c C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\socketTest\socket-server\cmake-build-debug\CMakeFiles\CMakeTmp\CheckSymbolExists.c
+Linking C executable cmTC_1493f.exe
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_1493f.dir\link.txt --verbose=1
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_1493f.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_1493f.dir/objects.a @CMakeFiles\cmTC_1493f.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe       -Wl,--whole-archive CMakeFiles\cmTC_1493f.dir/objects.a -Wl,--no-whole-archive  -o cmTC_1493f.exe -Wl,--out-implib,libcmTC_1493f.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_1493f.dir\linklibs.rsp
+CMakeFiles\cmTC_1493f.dir/objects.a(CheckSymbolExists.c.obj):CheckSymbolExists.c:(.text+0x12): undefined reference to `pthread_create'
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_1493f.dir\build.make:98: recipe for target 'cmTC_1493f.exe' failed
+mingw32-make.exe[1]: *** [cmTC_1493f.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_1493f/fast' failed
+mingw32-make.exe: *** [cmTC_1493f/fast] Error 2
+
+File C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_3f11c/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_3f11c.dir\build.make CMakeFiles/cmTC_3f11c.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3f11c.dir/CheckFunctionExists.c.obj
+C:\MinGW\bin\gcc.exe    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles\cmTC_3f11c.dir\CheckFunctionExists.c.obj   -c "C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\share\cmake-3.7\Modules\CheckFunctionExists.c"
+Linking C executable cmTC_3f11c.exe
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_3f11c.dir\link.txt --verbose=1
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_3f11c.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_3f11c.dir/objects.a @CMakeFiles\cmTC_3f11c.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe   -DCHECK_FUNCTION_EXISTS=pthread_create    -Wl,--whole-archive CMakeFiles\cmTC_3f11c.dir/objects.a -Wl,--no-whole-archive  -o cmTC_3f11c.exe -Wl,--out-implib,libcmTC_3f11c.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_3f11c.dir\linklibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/6.3.0/../../../../mingw32/bin/ld.exe: cannot find -lpthreads
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_3f11c.dir\build.make:98: recipe for target 'cmTC_3f11c.exe' failed
+mingw32-make.exe[1]: *** [cmTC_3f11c.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_3f11c/fast' failed
+mingw32-make.exe: *** [cmTC_3f11c/fast] Error 2
+
+

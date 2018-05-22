@@ -1,0 +1,3 @@
+C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/cmake-build-debug/CMakeFiles/bomberman.dir
+C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/cmake-build-debug/CMakeFiles/rebuild_cache.dir

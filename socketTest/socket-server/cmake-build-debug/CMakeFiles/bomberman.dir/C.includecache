@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/main.c
+pthread.h
+-
+io.h
+-
+stdio.h
+-
+stdlib.h
+-
+windows.h
+-
+winsock2.h
+-
+ws2tcpip.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+stdlib.h
+-
+stdio.h
+-
+string.h
+-
+

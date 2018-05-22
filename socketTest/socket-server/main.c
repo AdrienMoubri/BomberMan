@@ -13,6 +13,7 @@
 #define         MAXHERO 4
 #define         WIDTH_MAP     15
 #define         HEIGHT_MAP     13
+#include <pthread.h>
 #ifdef WIN32 /* si vous êtes sous Windows */
 
 #include <io.h>
@@ -91,11 +92,12 @@ char *get_ip()
     close(-1);
     return ip;
 }
+void myMemCpy(void *dest, void *src, size_t n);
 void    send_player_to_server(int s, t_hero_simple* player);
 void    send_env_to_player(int s, t_simple_env* env);
 void    recv_player_from_player(int s, t_hero_simple* player);
 void    recv_env_from_server(int s, t_simple_env* env);
-
+int     create_server(int port);
 int     listenServeurInfo(char*, int,t_simple_env* );
 int     sendServeurInfo(int port, t_simple_env*);
 
@@ -107,6 +109,39 @@ void	die(char *str)
     perror(str);
     exit(1);
 }
+int sendServeurPort(int port, int portPlayable, int* socket);
+
+typedef struct info
+{
+    int     *i;
+    int     socket;
+    void    *info;
+}   t_info;
+
+
+int     accept_client(int s);
+
+void send_port_to_player(int s, int port)
+{
+    int size = sizeof(int);
+    unsigned char data [size];
+    myMemCpy(data, &port, size);
+    if (send(s, data, size, 0) < 0)
+        die("send");
+}
+int sendServeurPort(int port, int portPlayable, int* socket)
+{
+    init();
+    *socket = accept_client(create_server(port));
+    send_port_to_player(*socket, portPlayable);
+    end(*socket);
+}
+
+
+/*
+ * trust me im a  an ingeneer
+ */
+
 
 int	connect_to(char *hostname, int port)
 {
@@ -151,49 +186,162 @@ void myMemCpy(void *dest, void *src, size_t n)
         cdest[i] = csrc[i];
 }
 
-void send_port_to_player(int s, int port)
+void send_info_to_player(int s, int *info)
 {
     int size = sizeof(int);
     unsigned char data [size];
-    myMemCpy(data, &port, size);
+    myMemCpy(data, info, size);
     if (send(s, data, size, 0) < 0)
         die("send");
 }
 
-void recv_port_from_server(int s,int* port)
+void recv_info_from_server(int s,int* info)
 {
     int size = sizeof(int);
     unsigned char data [size];
     if ((recv(s, data, size, 0)) < 0)
         die("recv");
-    myMemCpy(port, data, size);
+    myMemCpy(info, data, size);
 }
 
-int sendServeurPort(int port, int portPlayable, int* socket)
+
+void connect_to_Server(char *ip, int port, int* socket)
+{
+
+    init();
+    *socket = connect_to(ip, port);
+}
+void create_Server(int port, int* socket)
 {
     init();
     *socket = accept_client(create_server(port));
-    send_port_to_player(*socket, portPlayable);
-    end(*socket);
 }
 
-int listenServeurPort(char *ip, int port, int* portPlayable, int* socket)
+
+void* thread_send_env_to_player (void* arg) {
+
+    t_info *inf = arg;
+    int size = sizeof(t_simple_env);
+    unsigned char data [size];
+    myMemCpy(data, inf->info, size);
+    while (*(inf->i))
+    {
+        if (send(inf->socket, data, size, 0) < 0)
+            die("send");
+    }
+    pthread_exit(NULL);
+}
+
+void* thread_res_env_to_player (void* arg) {
+    t_info *inf = arg;
+    int res =0;
+    int size = sizeof(int);
+    unsigned char data [size];
+    if (recv(inf->socket, data, size, 0) < 0)
+        die("recv");
+    myMemCpy(&(res), data, size);
+    if (res == 1) {
+        *(inf->i) = 0;
+    }
+    pthread_exit(NULL); /* Fin du thread */
+}
+
+void send_env_to_player(int s, t_simple_env* env)
 {
-    init();
-    *socket = connect_to(ip, port);
-    recv_port_from_server(*socket, portPlayable);
-    end(*socket);
+    pthread_t t1;
+    pthread_t t2;
+    int i =1;
+    t_info *inf = malloc(sizeof(t_info));
+    inf->socket = s;
+    inf->info = env;
+    inf->i = &i;
+    pthread_create (&t1, NULL, thread_send_env_to_player, (void*)inf);
 }
 
+void recv_env_from_server(int s, t_simple_env* env)
+{
+    int i=1;
+    int size = sizeof(t_simple_env);
+    unsigned char data[size];
+    if ((recv(s, data, size, 0)) < 0)
+        die("recv");
+    myMemCpy(env, data, size);
+    size = sizeof(int);
+}
 
+void* thread_send_player_to_server (void* arg) {
+
+    t_info *inf = arg;
+    int size = sizeof(t_hero_simple);
+    unsigned char data [size];
+    myMemCpy(data, inf->info, size);
+    while (*(inf->i))
+    {
+        if (send(inf->socket, data, size, 0) < 0)
+            die("send");
+    }
+    pthread_exit(NULL);
+}
+
+void* thread_res_player_to_server (void* arg) {
+    t_info *inf = arg;
+    int res =0;
+    int size = sizeof(int);
+    unsigned char data [size];
+    if (recv(inf->socket, data, size, 0) < 0)
+        die("recv");
+    myMemCpy(&(res), data, size);
+    if (res == 1) {
+        *(inf->i) = 0;
+    }
+    pthread_exit(NULL); /* Fin du thread */
+}
+
+void send_player_to_server(int s, t_hero_simple* player)
+{
+    pthread_t t1;
+    pthread_t t2;
+    t_info *inf = malloc(sizeof(t_info));
+    inf->socket  =s;
+    inf->info  =player;
+    int i =1;
+    inf->i = &i;
+    pthread_create (&t1, NULL, thread_send_player_to_server, (void*)inf);
+}
+
+void recv_player_from_player(int s, t_hero_simple* player)
+{
+    int size = sizeof(t_hero_simple);
+    unsigned char data [size];
+    if ((recv(s, data, size, 0)) < 0)
+        die("recv");
+    myMemCpy(player, data, size);
+}
+
+int accept_client(int s)
+{
+    int     c;
+    struct  sockaddr_in sin;
+    int     size;
+
+    size = sizeof(sin);
+    if ((c = accept(s, (struct sockaddr *)&sin, &size)) < 0)
+    {
+        die("accept");
+    }
+    return (c);
+}
 int main(int argv, char **argc) {
 
     int s =0;
-    int portPlayable =0;
-    sendServeurPort(4247,4222,&s);
+    int y =0;
+    create_Server(4249, &s);
+    create_Server(4250, &y);
     printf("socket : %d", s);
-    //listenServeurPort("10.234.1.175",4242,&portPlayable, &i);
-
+    /*
+    connect_to_Server("192.168.1.7", 4249,&s);
+    connect_to_Server("192.168.1.7", 4250,&y);
+    */
     t_simple_env *env;
     env = malloc(sizeof(t_simple_env));
     t_hero_simple *hero = &(env->heroes[0]);
@@ -204,8 +352,8 @@ int main(int argv, char **argc) {
         env->heroes[i].direction = 10;
         env->heroes[i].orientation = 100;
     }
-    sendServeurInfo(4246, env);
-    
+    send_env_to_player(4246, env);
+
     /*
     for(int i = 0; i < 4; i++)
     {
@@ -238,93 +386,4 @@ int main(int argv, char **argc) {
     printf("Direction  : %d\n", hero->direction);
     return (0);
      */
-}
-
-
-int sendServeurInfo(int port, t_simple_env *env)
-{
-    int 		s;
-    init();
-    s = accept_client(create_server(port));
-    send_env_to_player(s, env);
-    end(s);
-}
-
-int sendPlayerInfo(char* host, int port, t_hero_simple *hero)
-{
-    int 		s;
-    init();
-    s = connect_to(host, port);
-    send_player_to_server(s, hero);
-    end(s);
-}
-
-int listenPlayerInfo(int port, t_hero_simple* hero)
-{
-    int 		s;
-    init();
-    s = accept_client(create_server(port));
-    recv_player_from_player(s, hero);
-    end(s);
-}
-
-int listenServeurInfo(char *ip, int port, t_simple_env* env)
-{
-    int 		s;
-    init();
-    s = connect_to(ip, port);
-    recv_env_from_server(s, env);
-    end(s);
-}
-
-
-
-void send_env_to_player(int s, t_simple_env* env)
-{
-    int size = sizeof(t_simple_env);
-    unsigned char data [size];
-    myMemCpy(data, env, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-
-void recv_env_from_server(int s,t_simple_env* env)
-{
-    int size = sizeof(t_simple_env);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(env, data, size);
-}
-
-void send_player_to_server(int s, t_hero_simple* player)
-{
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    myMemCpy(data, player, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-
-void recv_player_from_player(int s,t_hero_simple* player)
-{
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(player, data, size);
-}
-
-int accept_client(int s)
-{
-    int     c;
-    struct  sockaddr_in sin;
-    int     size;
-
-    size = sizeof(sin);
-    if ((c = accept(s, (struct sockaddr *)&sin, &size)) < 0)
-    {
-        die("accept");
-    }
-    return (c);
 }

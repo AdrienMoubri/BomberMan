@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2017.1.3\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\bomberman.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\bomberman.dir/objects.a @CMakeFiles\bomberman.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe  -g   -Wl,--whole-archive CMakeFiles\bomberman.dir/objects.a -Wl,--no-whole-archive  -o bomberman.exe -Wl,--out-implib,libbomberman.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\bomberman.dir\linklibs.rsp
