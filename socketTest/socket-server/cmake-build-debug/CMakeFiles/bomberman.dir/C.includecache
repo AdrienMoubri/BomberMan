@@ -9,6 +9,8 @@
 C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/main.c
 pthread.h
 -
+sys/time.h
+-
 io.h
 -
 stdio.h

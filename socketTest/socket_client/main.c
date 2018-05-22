@@ -14,6 +14,7 @@
 #define         WIDTH_MAP     15
 #define         HEIGHT_MAP     13
 #include <pthread.h>
+#include <sys/time.h>
 #ifdef WIN32 /* si vous êtes sous Windows */
 
 #include <io.h>
@@ -54,11 +55,40 @@ typedef struct		s_hero_simple
     int             orientation;
     t_bomb_simple	bombes[MAXBOMBES];
 }			        t_hero_simple;
-typedef struct      s_simple_env
+typedef struct      s_data_env
 {
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
+}                   t_data_env;
+
+typedef struct      s_simple_env
+{
+    t_data_env      *data_env;
+    int             socket_recv;
+    int             socket_send;
+    int             commande;
+    pthread_mutex_t mutexRecv;
+    pthread_mutex_t mutexSend;
 }                   t_simple_env;
+typedef struct info
+{
+    int     *i;
+    int     socket;
+    void    *info;
+}   t_info;
+
+
+void    myMemCpy(void *dest, void *src, size_t n);
+void    send_commande(int s, pthread_mutex_t *mutex, int* commande);
+void*   thread_send_commande (void* arg);
+void    send_env(int s, pthread_mutex_t *mutex, t_data_env* env);
+void*   thread_send_env (void* arg);
+void    recv_env(int s, pthread_mutex_t *mutex, t_data_env *env);
+void*   thread_recv_env (void* arg);
+void    create_Server(int port, int* socket);
+void    create_server(int port);
+int     accept_client(int s);
+void    wait (int ms);
 static void init(void)
 {
 #ifdef WIN32
@@ -79,7 +109,7 @@ static void end(int s)
     WSACleanup();
 #endif
 }
-char *get_ip()
+char    *get_ip()
 {
     init();
     char s[256] = {0}, **pp = NULL;
@@ -92,58 +122,43 @@ char *get_ip()
     close(-1);
     return ip;
 }
-void myMemCpy(void *dest, void *src, size_t n);
-void    send_player_to_server(int s, t_hero_simple* player);
-void    send_env_to_player(int s, t_simple_env* env);
-void    recv_player_from_player(int s, t_hero_simple* player);
-void    recv_env_from_server(int s, t_simple_env* env);
-int     create_server(int port);
-int     listenServeurInfo(char*, int,t_simple_env* );
-int     sendServeurInfo(int port, t_simple_env*);
 
-int     listenPlayerInfo(int, t_hero_simple*);
-int     sendPlayerInfo(char* ,int port, t_hero_simple*);
-int     accept_client(int s);
+
 void	die(char *str)
 {
     perror(str);
     exit(1);
 }
-int sendServeurPort(int port, int portPlayable, int* socket);
 
-typedef struct info
+void    wait (int ms)
 {
-    int     *i;
-    int     socket;
-    void    *info;
-}   t_info;
-
-
-int     accept_client(int s);
-
-void send_port_to_player(int s, int port)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    myMemCpy(data, &port, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-int sendServeurPort(int port, int portPlayable, int* socket)
-{
-    init();
-    *socket = accept_client(create_server(port));
-    send_port_to_player(*socket, portPlayable);
-    end(*socket);
+    pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t mutexCond = PTHREAD_COND_INITIALIZER;
+    struct timespec timeToWait;
+    struct timeval now;
+    gettimeofday(&now,NULL);
+    timeToWait.tv_sec = now.tv_sec;
+    timeToWait.tv_nsec = (now.tv_usec+1000UL*ms)*1000UL;
+    pthread_mutex_lock(&fakeMutex);
+    pthread_cond_timedwait(&(mutexCond), &fakeMutex, &timeToWait);
+    pthread_mutex_unlock(&fakeMutex);
 }
 
+int     accept_client(int s)
+{
+    int     c;
+    struct  sockaddr_in sin;
+    int     size;
 
-/*
- * trust me im a  an ingeneer
- */
+    size = sizeof(sin);
+    if ((c = accept(s, (struct sockaddr *)&sin, &size)) < 0)
+    {
+        die("accept");
+    }
+    return (c);
+}
 
-
-int	connect_to(char *hostname, int port)
+int	    connect_to(char *hostname, int port)
 {
     int			s;
     struct sockaddr_in	sin;
@@ -158,24 +173,7 @@ int	connect_to(char *hostname, int port)
     return (s);
 }
 
-int create_server(int port)
-{
-    int s;
-    struct sockaddr_in sin;
-
-    if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        die("socket");
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = INADDR_ANY;
-    if (bind(s, (struct sockaddr *)&sin, sizeof(sin)) < 0)
-        die("bind");
-    if (listen(s, 42) < 0)
-        die("listen");
-    return (s);
-}
-
-void myMemCpy(void *dest, void *src, size_t n)
+void    myMemCpy(void *dest, void *src, size_t n)
 {
     // cast src and dest addresses to (char *)
     char *csrc = (char *)src;
@@ -186,196 +184,161 @@ void myMemCpy(void *dest, void *src, size_t n)
         cdest[i] = csrc[i];
 }
 
-void send_info_to_player(int s, int *info)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    myMemCpy(data, info, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-
-void recv_info_from_server(int s,int* info)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(info, data, size);
-}
-
-
-void connect_to_Server(char *ip, int port, int* socket)
+void    connect_to_Server(char *ip, int port, int* socket)
 {
 
     init();
     *socket = connect_to(ip, port);
 }
-void create_Server(int port, int* socket)
-{
-    init();
-    *socket = accept_client(create_server(port));
-}
 
 
-void* thread_send_env_to_player (void* arg) {
 
-    t_info *inf = arg;
-    int size = sizeof(t_simple_env);
-    unsigned char data [size];
-    myMemCpy(data, inf->info, size);
-    while (*(inf->i))
+void*   thread_send_env (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread send \n");
+    while (1)
     {
-        if (send(inf->socket, data, size, 0) < 0)
-            die("send");
+        wait(500);
+        send_env(env->socket_send, &(env->mutexSend), env->data_env);
     }
-    pthread_exit(NULL);
 }
 
-void* thread_res_env_to_player (void* arg) {
-    t_info *inf = arg;
-    int res =0;
+void    send_env(int s, pthread_mutex_t *mutex, t_data_env *env)
+{
+    int size = sizeof(t_data_env);
+    unsigned char data [size];
+    pthread_mutex_lock(mutex);
+    myMemCpy(data, env, size);
+    pthread_mutex_unlock(mutex);
+    if (send(s, data, size, 0) < 0)
+        die("send");
+}
+
+void*   thread_send_commande (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread send \n");
+    while (1)
+    {
+        wait(500);
+        send_commande(env->socket_send, &(env->mutexSend), &(env->commande));
+    }
+}
+
+void    send_commande(int s, pthread_mutex_t *mutex, int *commande)
+{
     int size = sizeof(int);
     unsigned char data [size];
-    if (recv(inf->socket, data, size, 0) < 0)
-        die("recv");
-    myMemCpy(&(res), data, size);
-    if (res == 1) {
-        *(inf->i) = 0;
+    pthread_mutex_lock(mutex);
+    myMemCpy(data, commande, size);
+    myMemCpy(commande, data, size);
+    printf("COMMANDE %d", commande);
+    pthread_mutex_unlock(mutex);
+    if (send(s, data, size, 0) < 0)
+        die("send");
+}
+
+void*   thread_recv_env (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread \n");
+    while (1)
+    {
+        wait(500);
+        recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
     }
-    pthread_exit(NULL); /* Fin du thread */
 }
 
-void send_env_to_player(int s, t_simple_env* env)
+void    recv_env(int s, pthread_mutex_t *mutex, t_data_env *env)
 {
-    pthread_t t1;
-    pthread_t t2;
-    int i =1;
-    t_info *inf = malloc(sizeof(t_info));
-    inf->socket = s;
-    inf->info = env;
-    inf->i = &i;
-    pthread_create (&t1, NULL, thread_send_env_to_player, (void*)inf);
-}
-
-void recv_env_from_server(int s, t_simple_env* env)
-{
-    int i=1;
-    int size = sizeof(t_simple_env);
+    int size = sizeof(t_data_env);
     unsigned char data[size];
     if ((recv(s, data, size, 0)) < 0)
         die("recv");
+    pthread_mutex_lock(mutex);
     myMemCpy(env, data, size);
-    size = sizeof(int);
+    pthread_mutex_unlock(mutex);
 }
 
-void* thread_send_player_to_server (void* arg) {
-
-    t_info *inf = arg;
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    myMemCpy(data, inf->info, size);
-    while (*(inf->i))
-    {
-        if (send(inf->socket, data, size, 0) < 0)
-            die("send");
-    }
-    pthread_exit(NULL);
-}
-
-void* thread_res_player_to_server (void* arg) {
-    t_info *inf = arg;
-    int res =0;
-    int size = sizeof(int);
-    unsigned char data [size];
-    if (recv(inf->socket, data, size, 0) < 0)
-        die("recv");
-    myMemCpy(&(res), data, size);
-    if (res == 1) {
-        *(inf->i) = 0;
-    }
-    pthread_exit(NULL); /* Fin du thread */
-}
-
-void send_player_to_server(int s, t_hero_simple* player)
-{
-    pthread_t t1;
-    pthread_t t2;
-    t_info *inf = malloc(sizeof(t_info));
-    inf->socket  =s;
-    inf->info  =player;
-    int i =1;
-    inf->i = &i;
-    pthread_create (&t1, NULL, thread_send_player_to_server, (void*)inf);
-}
-
-void recv_player_from_player(int s, t_hero_simple* player)
-{
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(player, data, size);
-}
-
-int accept_client(int s)
-{
-    int     c;
-    struct  sockaddr_in sin;
-    int     size;
-
-    size = sizeof(sin);
-    if ((c = accept(s, (struct sockaddr *)&sin, &size)) < 0)
-    {
-        die("accept");
-    }
-    return (c);
-}
-int main(int argv, char **argc) {
-
-    int s =0;
-    int y =0;
-    create_Server(4249, &s);
-    create_Server(4250, &y);
-    printf("socket : %d", s);
-    /*
-    connect_to_Server("192.168.1.7", 4249,&s);
-    connect_to_Server("192.168.1.7", 4250,&y);
-    */
+int     main(int argv, char **argc) {
     t_simple_env *env;
     env = malloc(sizeof(t_simple_env));
-    t_hero_simple *hero = &(env->heroes[0]);
+    env->data_env = malloc(sizeof(t_data_env));
+    env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
+    env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
+    env->socket_recv = 0;
+    env->socket_send = 0;
+    env->commande = 0;
+    pthread_t t1;
+    pthread_t t2;
+    pthread_t t3;
+    pthread_t t4;
 
-    for(int i = 0; i < MAXHERO; i++)
+    printf("ecoute de la socket 4249 :\n");
+    connect_to_Server("192.168.1.7\0", 4249, &(env->socket_recv));
+    printf("connexion socket 4249 : Réussi\n");
+    printf("ecoute de la socket 4249 :\n");
+    connect_to_Server("192.168.1.7\0", 4250, &(env->socket_send));
+    printf("connexion socket 4250 : Réussi\n");
+    recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+    pthread_create(&t1, NULL, thread_recv_env, (void *) env);
+    pthread_create(&t2, NULL, thread_send_commande, (void *) env);
+    pthread_create(&t3, NULL, thread_send_commande, (void *) env);
+    pthread_create(&t4, NULL, thread_send_commande, (void *) env);
+
+    while (1)
     {
-        env->heroes[i].alive = 1;
-        env->heroes[i].direction = 10;
-        env->heroes[i].orientation = 100;
+        wait(500);
+        pthread_mutex_lock(&(env->mutexRecv));
+        for(int i = 0; i < MAXHERO; i++)
+        {
+            printf("Hero %d : alive : %d, ", i,  env->data_env->heroes[i].alive);
+            printf("direction : %d, ", env->data_env->heroes[i].direction);
+            printf("orientation : %d, ", env->data_env->heroes[i].orientation);
+            printf("commande : %d \n", env->commande);
+        }
+        pthread_mutex_lock(&(env->mutexSend));
+        env->commande = 5;
+        pthread_mutex_unlock(&(env->mutexSend));
+        pthread_mutex_unlock(&(env->mutexRecv));
+        printf("end \n\n");
     }
-    send_env_to_player(4246, env);
 
     /*
-    for(int i = 0; i < 4; i++)
-    {
-        hero->bombes[i].x = 1;
-        hero->bombes[i].y = 1;
-        hero->bombes[i].chrono = 1;
-        hero->direction = 10;
-        hero->orientation = 100;
-    }
-    sendPlayerInfo("10.234.1.81", 4247, &(env->heroes[0]));
-    */
-    /*
-    listenServeurInfo("10.234.1.81", 4246,env);
-
-    //écrit le resultat on devrait le retourner
     for(int i = 0; i < MAXHERO; i++)
     {
-        printf("%d\n", env->heroes[i].alive);
-        printf("%d\n", env->heroes[i].direction);
-        printf("%d\n", env->heroes[i].orientation);
+        env->data_env->heroes[i].alive = 100+v;
+        env->data_env->heroes[i].direction = 100+v;
+        env->data_env->heroes[i].orientation = 100+v;
+        printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
     }
+    printf("envoie des info sur la socket s \n");
+    send_env(env->socket_send, &(env->mutexRecv), env->data_env);
+    struct timespec timeToWait;
+    struct timeval now;
+    pthread_create (&t1, NULL, thread_send_env_to_player, (void*)env);
+    while (1)
+    {
+        gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+        pthread_mutex_lock(&fakeMutex);
+        pthread_cond_timedwait(&(env->mutexCond), &fakeMutex, &timeToWait);
+        pthread_mutex_unlock(&fakeMutex);
+        v++;
+
+        pthread_mutex_lock(&(env->mutexRecv));
+        for(int i = 0; i < MAXHERO; i++)
+        {
+            env->data_env->heroes[i].alive = 100+v;
+            env->data_env->heroes[i].direction = 100+v;
+            env->data_env->heroes[i].orientation = 100+v;
+            printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
+        }
+        printf("Done\n\n");
+
+        pthread_mutex_unlock(&(env->mutexRecv));
     */
+
+
     /*
     listenPlayerInfo(4247, &(env->heroes[0]));
     printf("Etape : %d\n", 0);
