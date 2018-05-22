@@ -60,13 +60,13 @@ typedef struct      s_data_env
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
-
+/*
 typedef struct      s_player
 {
     int             socket_recv;
     int             socket_send;
     int             commande;
-};
+};*/
 
 typedef struct      s_simple_env
 {

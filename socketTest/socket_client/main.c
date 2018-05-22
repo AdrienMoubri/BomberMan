@@ -230,8 +230,6 @@ void    send_commande(int s, pthread_mutex_t *mutex, int *commande)
     unsigned char data [size];
     pthread_mutex_lock(mutex);
     myMemCpy(data, commande, size);
-    myMemCpy(commande, data, size);
-    printf("COMMANDE %d", commande);
     pthread_mutex_unlock(mutex);
     if (send(s, data, size, 0) < 0)
         die("send");
@@ -269,20 +267,16 @@ int     main(int argv, char **argc) {
     env->commande = 0;
     pthread_t t1;
     pthread_t t2;
-    pthread_t t3;
-    pthread_t t4;
 
     printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.1.7\0", 4249, &(env->socket_recv));
+    connect_to_Server("192.168.56.1\0", 4249, &(env->socket_recv));
     printf("connexion socket 4249 : Réussi\n");
     printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.1.7\0", 4250, &(env->socket_send));
+    connect_to_Server("192.168.56.1\0", 4250, &(env->socket_send));
     printf("connexion socket 4250 : Réussi\n");
     recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
     pthread_create(&t1, NULL, thread_recv_env, (void *) env);
     pthread_create(&t2, NULL, thread_send_commande, (void *) env);
-    pthread_create(&t3, NULL, thread_send_commande, (void *) env);
-    pthread_create(&t4, NULL, thread_send_commande, (void *) env);
 
     while (1)
     {

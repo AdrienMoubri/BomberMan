@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/main.c
+C:/Users/Tozh/Documents/BomberMan/BomberMan/socketTest/socket-server/main.c
 pthread.h
 -
 sys/time.h
