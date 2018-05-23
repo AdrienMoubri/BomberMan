@@ -66,6 +66,8 @@ typedef struct      s_simple_env
     t_data_env      *data_env;
     int             socket_recv;
     int             socket_send;
+    struct sockaddr_in si_client_recv;
+    struct sockaddr_in si_client_send;
     int             commande;
     pthread_mutex_t mutexRecv;
     pthread_mutex_t mutexSend;
@@ -79,14 +81,14 @@ typedef struct info
 
 
 void    myMemCpy(void *dest, void *src, size_t n);
-void    send_commande(int s, pthread_mutex_t *mutex, int* commande);
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int* commande);
 void*   thread_send_commande (void* arg);
-void    send_env(int s, pthread_mutex_t *mutex, t_data_env* env);
+void    send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env* env);
 void*   thread_send_env (void* arg);
-void    recv_env(int s, pthread_mutex_t *mutex, t_data_env *env);
+void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env);
 void*   thread_recv_env (void* arg);
-void    create_Server(int port, int* socket);
-void    create_server(int port);
+void    create_Server(int port, int* socket, struct sockaddr_in	*sin);
+void    create_server(int port, struct sockaddr_in	*sin);
 int     accept_client(int s);
 void    wait (int ms);
 static void init(void)
@@ -109,6 +111,7 @@ static void end(int s)
     WSACleanup();
 #endif
 }
+
 char    *get_ip()
 {
     init();
@@ -122,7 +125,6 @@ char    *get_ip()
     close(-1);
     return ip;
 }
-
 
 void	die(char *str)
 {
@@ -146,7 +148,7 @@ void    wait (int ms)
 
 int     accept_client(int s)
 {
-    int     c;
+    /*int     c;
     struct  sockaddr_in sin;
     int     size;
 
@@ -156,21 +158,24 @@ int     accept_client(int s)
         die("accept");
     }
     return (c);
+
+    struct sockaddr_in sin = { 0 };
+    int size_si_client = sizeof (sin);
+    int nb_octet = recvfrom (s, data, sizeof data - 1, 0, (struct sockaddr *) &sin, size_si_client);*/
+
 }
 
-int	    connect_to(char *hostname, int port)
+int	    connect_to(char *hostname, int port, struct sockaddr_in	*sin)
 {
-    int			s;
-    struct sockaddr_in	sin;
-
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = inet_addr(hostname);
-    if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    SOCKET sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == SOCKET_ERROR)
         die("socket");
-    if (connect(s, (struct sockaddr *)&sin, sizeof(struct sockaddr_in)) < 0)
+    sin->sin_family = AF_INET;
+    sin->sin_port = htons(port);
+    sin->sin_addr.s_addr = inet_addr(hostname);
+    if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
         die("connect");
-    return (s);
+    return (sock);
 }
 
 void    myMemCpy(void *dest, void *src, size_t n)
@@ -184,57 +189,56 @@ void    myMemCpy(void *dest, void *src, size_t n)
         cdest[i] = csrc[i];
 }
 
-void    connect_to_Server(char *ip, int port, int* socket)
+void    connect_to_Server(char *ip, int port, int* socket, struct sockaddr *sin)
 {
-
     init();
-    *socket = connect_to(ip, port);
+    *socket = connect_to(ip, port, (struct sockaddr_in *)sin);
 }
-
-
 
 void*   thread_send_env (void* arg) {
     t_simple_env *env = arg;
     printf("début thread send \n");
+    struct sockaddr_in si_client = { 0 };
     while (1)
     {
-        wait(500);
-        send_env(env->socket_send, &(env->mutexSend), env->data_env);
+        wait (500);
+        send_env(env->socket_send, (struct sockaddr *) &si_client, &(env->mutexSend), env->data_env);
     }
 }
 
-void    send_env(int s, pthread_mutex_t *mutex, t_data_env *env)
+void send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
 {
-    int size = sizeof(t_data_env);
-    unsigned char data [size];
+    int sizedata = sizeof(t_data_env);
+    int sizesock = sizeof(struct sockaddr);
+    unsigned char data [sizedata];
+
     pthread_mutex_lock(mutex);
-    myMemCpy(data, env, size);
+    myMemCpy(data, env, sizedata);
     pthread_mutex_unlock(mutex);
-    if (send(s, data, size, 0) < 0)
-        die("send");
+    sendto(s, data, sizedata, 0, si_client, sizesock);
 }
 
 void*   thread_send_commande (void* arg) {
     t_simple_env *env = arg;
     printf("début thread send \n");
+    struct sockaddr_in si_client = { 0 };
     while (1)
     {
         wait(500);
-        send_commande(env->socket_send, &(env->mutexSend), &(env->commande));
+        send_commande(env->socket_send, (struct sockaddr *) &(env->si_client_send), &(env->mutexSend), &(env->commande));
     }
 }
 
-void    send_commande(int s, pthread_mutex_t *mutex, int *commande)
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *commande)
 {
-    int size = sizeof(int);
-    unsigned char data [size];
+    int sizedata = sizeof(int);
+    int sizesocket = sizeof(struct sockaddr);
+    unsigned char data [sizedata];
+
     pthread_mutex_lock(mutex);
-    myMemCpy(data, commande, size);
-    myMemCpy(commande, data, size);
-    printf("COMMANDE %d", commande);
+    myMemCpy(data, commande, sizedata);
     pthread_mutex_unlock(mutex);
-    if (send(s, data, size, 0) < 0)
-        die("send");
+    sendto(s, data, sizedata, 0, si_client, sizesocket);
 }
 
 void*   thread_recv_env (void* arg) {
@@ -242,24 +246,26 @@ void*   thread_recv_env (void* arg) {
     printf("début thread \n");
     while (1)
     {
-        wait(500);
-        recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+        recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
     }
 }
 
-void    recv_env(int s, pthread_mutex_t *mutex, t_data_env *env)
+void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
 {
-    int size = sizeof(t_data_env);
-    unsigned char data[size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    pthread_mutex_lock(mutex);
-    myMemCpy(env, data, size);
-    pthread_mutex_unlock(mutex);
+    int sizedata = sizeof(t_data_env);
+    int sizesock = sizeof(struct sockaddr);
+    unsigned char data[sizedata];
+    if (recvfrom(s, data, sizedata, 0, si_client, &sizesock) >= 0)
+    {
+        pthread_mutex_lock(mutex);
+        myMemCpy(env, data, sizedata);
+        pthread_mutex_unlock(mutex);
+    }
 }
 
 int     main(int argv, char **argc) {
     t_simple_env *env;
+    init();
     env = malloc(sizeof(t_simple_env));
     env->data_env = malloc(sizeof(t_data_env));
     env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
@@ -267,23 +273,32 @@ int     main(int argv, char **argc) {
     env->socket_recv = 0;
     env->socket_send = 0;
     env->commande = 0;
+    for(int i = 0; i < MAXHERO; i++)
+    {
+        env->data_env->heroes[i].alive = 100;
+        env->data_env->heroes[i].direction = 100;
+        env->data_env->heroes[i].orientation = 100;
+        printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
+    }
+    int size_si = sizeof(env->si_client_send);
     pthread_t t1;
     pthread_t t2;
-    pthread_t t3;
-    pthread_t t4;
-
-    printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.1.7\0", 4249, &(env->socket_recv));
-    printf("connexion socket 4249 : Réussi\n");
-    printf("ecoute de la socket 4249 :\n");
-    connect_to_Server("192.168.1.7\0", 4250, &(env->socket_send));
-    printf("connexion socket 4250 : Réussi\n");
-    recv_env(env->socket_recv, &(env->mutexRecv), env->data_env);
+    printf("ecoute de la socket 4343 :\n");
+    connect_to_Server("127.0.0.1\0", 4343, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
+    int nb_octet = sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_recv()");
+    }
+    printf("ecoute de la socket 4444 :\n");
+    connect_to_Server("127.0.0.1\0", 4444, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
+    nb_octet = sendto(env->socket_send, "salut2", strlen("salut2"), 0,(struct sockaddr *) &(env->si_client_send), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_send()");
+    }
     pthread_create(&t1, NULL, thread_recv_env, (void *) env);
     pthread_create(&t2, NULL, thread_send_commande, (void *) env);
-    pthread_create(&t3, NULL, thread_send_commande, (void *) env);
-    pthread_create(&t4, NULL, thread_send_commande, (void *) env);
-
     while (1)
     {
         wait(500);
