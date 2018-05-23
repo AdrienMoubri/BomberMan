@@ -125,6 +125,8 @@ void    myMemCpy(void *dest, void *src, size_t n);
 void    send_env(int s, struct sockaddr *si_server, pthread_mutex_t *mutex, t_data_env* env);
 void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env);
 void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *env);
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int* commande);
+void*   thread_send_commande (void* arg);
 void*   thread_recv_commande (void* arg);
 void*   thread_send_env (void* arg);
 void*   thread_recv_env (void* arg);
@@ -160,6 +162,24 @@ int     sendServeurPort(int port, int portPlayable, int* socket)
 /*
  * trust me im a  an ingeneer
  */
+
+int	    connect_to(char *hostname, int port, struct sockaddr_in	*sin)
+{
+    SOCKET sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == SOCKET_ERROR)
+        die("socket");
+    sin->sin_family = AF_INET;
+    sin->sin_port = htons(port);
+    sin->sin_addr.s_addr = inet_addr(hostname);
+    if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+        die("connect");
+    return (sock);
+}
+void    connect_to_Server(char *ip, int port, int* socket, struct sockaddr *sin)
+{
+    init();
+    *socket = connect_to(ip, port, (struct sockaddr_in *)sin);
+}
 
 void    wait (int ms)
 {
@@ -215,7 +235,7 @@ void*   thread_send_env (void* arg) {
     FD_SET(env->socket_send, &writefds);*/
     while (1)
     {
-        //wait (250);
+        wait (250);
         /*gettimeofday(&now,NULL);
         timeToWait.tv_sec = now.tv_sec;
         timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
@@ -255,15 +275,12 @@ void*   thread_recv_env (void* arg) {
         timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
 
 
-        /* ignorer writefds et exceptfds: */
         select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
 
         if (FD_ISSET(env->socket_recv, &readfds))
             recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
-
         else
             printf("Timed out.\n");
-
     }
 }
 
@@ -277,8 +294,45 @@ void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_da
         pthread_mutex_lock(mutex);
         myMemCpy(env, data, sizedata);
         pthread_mutex_unlock(mutex);
-
     }
+}
+
+void*   thread_send_commande (void* arg) {
+    t_simple_env *env = arg;
+    /*printf("début thread send \n");
+    struct timeval tv;
+    fd_set writefds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&writefds);
+    FD_SET(env->socket_send, &writefds);*/
+    while (1)
+    {
+        wait (250);
+        /*gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+
+
+        select(env->socket_send+1, &writefds, NULL, NULL, &tv);
+
+        if (FD_ISSET(env->socket_send, &writefds))*/
+        send_commande(env->socket_send, (struct sockaddr *) &env->si_client_send, &(env->mutexSend), &(env->commande));
+        /*else
+            printf("Timed out send.\n");*/
+    }
+}
+
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *commande)
+{
+    int sizedata = sizeof(int);
+    int sizesocket = sizeof(struct sockaddr);
+    unsigned char data [sizedata];
+
+    pthread_mutex_lock(mutex);
+    myMemCpy(data, commande, sizedata);
+    pthread_mutex_unlock(mutex);
+    sendto(s, data, sizedata, 0, si_client, sizesocket);
 }
 
 void*   thread_recv_commande (void* arg) {
@@ -318,8 +372,8 @@ void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex,
         pthread_mutex_unlock(mutex);
     }
 }
-
-int     main(int argv, char **argc) {
+void server()
+{
     pthread_t t1;
     pthread_t t2;
     init();
@@ -327,8 +381,8 @@ int     main(int argv, char **argc) {
     char buffer[1024];
     env = malloc(sizeof(t_simple_env));
     env->data_env = malloc(sizeof(t_data_env));
-    struct sockaddr_in si_recv = { 0 };
-    struct sockaddr_in si_send = { 0 };
+    struct sockaddr_in si_recv = {0};
+    struct sockaddr_in si_send = {0};
     env->si_client_send = si_send;
     env->si_client_recv = si_recv;
     int size_si = sizeof(env->si_client_send);
@@ -343,10 +397,10 @@ int     main(int argv, char **argc) {
 
     printf("waiting on 4343 :\n");
     while (!fin) {
-        int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0, (struct sockaddr *) &(env->si_client_send),
-                 &size_si);
-        if (nb_octet > 0)
-        {
+        int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
+                                (struct sockaddr *) &(env->si_client_send),
+                                &size_si);
+        if (nb_octet > 0) {
             fin = 1;
         }
     }
@@ -354,13 +408,63 @@ int     main(int argv, char **argc) {
     fin = 0;
     printf("waiting on 4444 :\n");
     while (!fin) {
-        int nb_octet = recvfrom(env->socket_recv, buffer, sizeof buffer - 1, 0, (struct sockaddr *) &(env->si_client_recv),
+        int nb_octet = recvfrom(env->socket_recv, buffer, sizeof buffer - 1, 0,
+                                (struct sockaddr *) &(env->si_client_recv),
                                 &size_si);
-        if (nb_octet > 0)
-        {
+        if (nb_octet > 0) {
             fin = 1;
         }
     }
+    for (int i = 0; i < MAXHERO; i++) {
+        env->data_env->heroes[i].alive = 100;
+        env->data_env->heroes[i].direction = 100;
+        env->data_env->heroes[i].orientation = 100;
+        printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive,
+               env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
+    }
+    printf("envoie des info sur la socket s \n");
+    //send_env(env->socket_send, (struct sockaddr *) &si_client, &(env->mutexSend), env->data_env);
+    pthread_create(&t1, NULL, thread_send_env, (void *) env);
+    pthread_create(&t2, NULL, thread_recv_commande, (void *) env);
+    t_hero_simple *hero;
+    while (1) {
+        wait(500);
+        pthread_mutex_lock(&(env->mutexSend));
+        pthread_mutex_lock(&(env->mutexRecv));
+        for (int i = 0; i < MAXHERO; i++) {
+            env->data_env->heroes[i].alive++;
+            env->data_env->heroes[i].direction += env->commande;
+            env->data_env->heroes[i].orientation++;
+            printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive,
+                   env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
+              hero = &(env->data_env->heroes[i]);
+            for (int i = 0; i < 4; i++) {
+                hero->bombes[i].x = 1;
+                hero->bombes[i].y = 1;
+                hero->bombes[i].chrono = 1;
+                printf("x %d y : %d, chrono : %d \n", hero->bombes[i].x ,  hero->bombes[i].y ,
+                       hero->bombes[i].chrono);
+            }
+        }
+        pthread_mutex_unlock(&(env->mutexSend));
+        pthread_mutex_unlock(&(env->mutexRecv));
+        printf("Done\n\n");
+
+
+
+    }
+}
+void client()
+{
+    t_simple_env *env;
+    init();
+    env = malloc(sizeof(t_simple_env));
+    env->data_env = malloc(sizeof(t_data_env));
+    env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
+    env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
+    env->socket_recv = 0;
+    env->socket_send = 0;
+    env->commande = 0;
     for(int i = 0; i < MAXHERO; i++)
     {
         env->data_env->heroes[i].alive = 100;
@@ -368,57 +472,51 @@ int     main(int argv, char **argc) {
         env->data_env->heroes[i].orientation = 100;
         printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
     }
-    printf("envoie des info sur la socket s \n");
-    //send_env(env->socket_send, (struct sockaddr *) &si_client, &(env->mutexSend), env->data_env);
-    pthread_create(&t1, NULL, thread_send_env, (void *) env);
-    pthread_create(&t2, NULL, thread_recv_commande, (void *) env);
+    int size_si = sizeof(env->si_client_send);
+    pthread_t t1;
+    pthread_t t2;
+    printf("ecoute de la socket 4343 :\n");
+    connect_to_Server("127.0.0.1\0", 4343, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
+    int nb_octet = sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_recv()");
+    }
+    printf("ecoute de la socket 4444 :\n");
+    connect_to_Server("127.0.0.1\0", 4444, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
+    nb_octet = sendto(env->socket_send, "salut2", strlen("salut2"), 0,(struct sockaddr *) &(env->si_client_send), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_send()");
+    }
+    pthread_create(&t1, NULL, thread_recv_env, (void *) env);
+    pthread_create(&t2, NULL, thread_send_commande, (void *) env);
+    t_hero_simple *hero;
     while (1)
     {
         wait(500);
-        pthread_mutex_lock(&(env->mutexSend));
         pthread_mutex_lock(&(env->mutexRecv));
         for(int i = 0; i < MAXHERO; i++)
         {
-            env->data_env->heroes[i].alive++;
-            env->data_env->heroes[i].direction += env->commande;
-            env->data_env->heroes[i].orientation++;
-            printf("hero %d alive : %d, direction : %d, orientation : %d \n", i, env->data_env->heroes[i].alive, env->data_env->heroes[i].direction, env->data_env->heroes[i].orientation);
+            printf("Hero %d : alive : %d, ", i,  env->data_env->heroes[i].alive);
+            printf("direction : %d, ", env->data_env->heroes[i].direction);
+            printf("orientation : %d, ", env->data_env->heroes[i].orientation);
+            printf("commande : %d \n", env->commande);
+            hero = &(env->data_env->heroes[i]);
+            for (int i = 0; i < 4; i++) {
+                printf("x %d y : %d, chrono : %d \n", hero->bombes[i].x ,  hero->bombes[i].y ,
+                       hero->bombes[i].chrono);
+            }
         }
+        pthread_mutex_lock(&(env->mutexSend));
+        env->commande = 8;
         pthread_mutex_unlock(&(env->mutexSend));
         pthread_mutex_unlock(&(env->mutexRecv));
-        printf("Done\n\n");
+        printf("end \n\n");
     }
+}
 
-/*
-    for(int i = 0; i < 4; i++)
-    {
-        hero->bombes[i].x = 1;
-        hero->bombes[i].y = 1;
-        hero->bombes[i].chrono = 1;
-        hero->direction = 10;
-        hero->orientation = 100;
-    }
-    send_env(4246, env);
-
-    /*
-    listenServeurInfo("10.234.1.81", 4246,env);
-
-    //écrit le resultat on devrait le retourner
-    for(int i = 0; i < MAXHERO; i++)
-    {
-        printf("%d\n", env->heroes[i].alive);
-        printf("%d\n", env->heroes[i].direction);
-        printf("%d\n", env->heroes[i].orientation);
-    }
-    */
-    /*
-    listenPlayerInfo(4247, &(env->heroes[0]));
-    printf("Etape : %d\n", 0);
-    printf("bombe x : %d\n", hero->bombes[0].x);
-    printf("bombe x : %d\n", hero->bombes[0].y);
-    printf("bombe chrono : %d\n", hero->bombes[0].chrono);
-    printf("Orientation : %d\n", hero->orientation);
-    printf("Direction  : %d\n", hero->direction);
-    return (0);
-     */
+int     main(int argv, char **argc) {
+    server();
+    //client();
 }
