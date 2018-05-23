@@ -15,6 +15,7 @@
 #define         HEIGHT_MAP     13
 #include <pthread.h>
 #include <sys/time.h>
+#include <unistd.h>
 #ifdef WIN32 /* si vous êtes sous Windows */
 
 #include <io.h>
@@ -203,18 +204,30 @@ void    create_Server(int port, int* socket, struct sockaddr_in *si_client)
     *socket = create_server(port, si_client);
 }
 
-void*   thread_send_env(void *arg) {
+void*   thread_send_env (void* arg) {
     t_simple_env *env = arg;
     printf("début thread send \n");
-    struct sockaddr_in si_client = { 0 };
+    /*struct timeval tv;
+    fd_set writefds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&writefds);
+    FD_SET(env->socket_send, &writefds);*/
     while (1)
     {
-        wait (500);
-        send_env(env->socket_send, (struct sockaddr *) &(env->si_client_send), &(env->mutexSend), env->data_env);
+        //wait (250);
+        /*gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+        select(env->socket_send+1, &writefds, NULL, NULL, &tv);
+        if (FD_ISSET(env->socket_send, &writefds))*/
+            send_env(env->socket_send, (struct sockaddr *) &env->si_client_send, &(env->mutexSend), env->data_env);
+        /*else
+            printf("Timed out send.\n");*/
     }
 }
 
-void send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
+void    send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
 {
     int sizedata = sizeof(t_data_env);
     int sizesock = sizeof(struct sockaddr);
@@ -229,11 +242,28 @@ void send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_
 void*   thread_recv_env (void* arg) {
     t_simple_env *env = arg;
     printf("début thread \n");
-    struct sockaddr_in si_client = { 0 };
+    struct timeval tv;
+    fd_set readfds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
     while (1)
     {
-        wait(500);
-        recv_env(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv),env->data_env);
+        gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+
+
+        /* ignorer writefds et exceptfds: */
+        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+
+        if (FD_ISSET(env->socket_recv, &readfds))
+            recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
+
+        else
+            printf("Timed out.\n");
+
     }
 }
 
@@ -254,10 +284,25 @@ void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_da
 void*   thread_recv_commande (void* arg) {
     t_simple_env *env = arg;
     printf("début thread recv\n");
+    struct timeval tv;
+    fd_set readfds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
     while (1)
     {
-        wait(500);
-        recv_commande(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), &(env->commande));
+        gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+
+
+        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+
+        if (FD_ISSET(env->socket_recv, &readfds))
+            recv_commande(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), &(env->commande));
+        else
+            printf("Timed out.\n");
     }
 }
 
