@@ -35,6 +35,7 @@ int		main(int argc, char* argv[])
   env = init_game(name);
   if (env && event)
     {
+      init(env->simple_env);
       init_screen(env);
       launch_menu(env, event);
         if (env->server)

@@ -9,12 +9,12 @@
 */
 
 
-#define         MAXBOMBES 4
-#define         MAXHERO 4
-#define         WIDTH_MAP     15
-#define         HEIGHT_MAP     13
-#define         PORT_SERV_RECV 4343
-#define         PORT_SERV_SEND 4444
+#define         MAXBOMBES       4
+#define         MAXHERO         4
+#define         WIDTH_MAP       15
+#define         HEIGHT_MAP      13
+#define         PORT_SERV_RECV  4343
+#define         PORT_SERV_SEND  4444
 
 #include <pthread.h>
 #include <sys/time.h>
@@ -380,6 +380,11 @@ void init_connect_to_client(t_simple_env *env)
         }
     }
 }
+void start_server(t_simple_env *env)
+{
+    pthread_create(&(env->thread_send), NULL, thread_send_env, (void *) env);
+    pthread_create(&(env->thread_recv), NULL, thread_recv_commande, (void *) env);
+}
 
 void server(t_simple_env *env)
 {
@@ -391,8 +396,7 @@ void server(t_simple_env *env)
 
     //lancement
     printf("envoie des info sur la socket s \n");
-    pthread_create(&(env->thread_send), NULL, thread_send_env, (void *) env);
-    pthread_create(&(env->thread_recv), NULL, thread_recv_commande, (void *) env);
+    start_server(env);
     //lecture
     for (int i = 0; i < MAXHERO; i++) {
         env->data_env->heroes[i].alive = 100;
@@ -446,6 +450,13 @@ void init_connect_to_server(t_simple_env *env, char ip[])
     }
 }
 
+
+void start_client(t_simple_env *env)
+{
+    pthread_create(&(env->thread_recv), NULL, thread_recv_env, (void *) env);
+    pthread_create(&(env->thread_send), NULL, thread_send_commande, (void *) env);
+}
+
 void client(t_simple_env *env)
 {
     //init
@@ -454,9 +465,7 @@ void client(t_simple_env *env)
     init_connect_to_server(env, "127.0.0.1\0");
 
     // lancement
-    pthread_create(&(env->thread_recv), NULL, thread_recv_env, (void *) env);
-    pthread_create(&(env->thread_send), NULL, thread_send_commande, (void *) env);
-
+    start_client(env);
 
     // lecture
     t_hero_simple *hero;

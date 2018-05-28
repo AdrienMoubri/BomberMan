@@ -9,12 +9,12 @@
 */
 
 
-#define         MAXBOMBES 4
-#define         MAXHERO 4
-#define         WIDTH_MAP     15
-#define         HEIGHT_MAP     13
-#define         PORT_SERV_RECV 4343
-#define         PORT_SERV_SEND 4444
+#define         MAXBOMBES       4
+#define         MAXHERO         4
+#define         WIDTH_MAP       15
+#define         HEIGHT_MAP      13
+#define         PORT_SERV_RECV  4343
+#define         PORT_SERV_SEND  4444
 
 #include <pthread.h>
 #include <sys/time.h>

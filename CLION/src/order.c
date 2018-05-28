@@ -114,3 +114,22 @@ void				hero_order(t_hero *hero, SDL_Event *event)
       i += 1;
     }
 }
+
+/*
+ * détecte la touche lancé par les joueurs a distances
+ */
+
+void				other_order(t_hero *hero, int commande)
+{
+    int				i;
+    i = 0;
+    while (g_order[i].key)
+    {
+        if (commande == g_order[i].key)
+        {
+            g_order[i].order(hero);
+            return ;
+        }
+        i += 1;
+    }
+}

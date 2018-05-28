@@ -17,6 +17,36 @@
 #include <SDL_ttf.h>
 #include <pthread.h>
 
+#include <pthread.h>
+#include <sys/time.h>
+#include <unistd.h>
+#ifdef WIN32 /* si vous êtes sous Windows */
+
+
+#include <io.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+#pragma comment(lib, "ws2_32.lib")
+
+#elif defined (linux) /* si vous êtes sous Linux */
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#endif
+
+#define         PORT_SERV_RECV  4343
+#define         PORT_SERV_SEND  4444
 #define         WIDTH_CASE     16
 #define         SPEED_HERO     4
 #define         HEIGHT_CASE    16
@@ -192,29 +222,39 @@ typedef struct		s_hero_simple
     int             orientation;
     t_bomb_simple	bombes[MAXBOMBES];
 }			        t_hero_simple;
-typedef struct      s_simple_env
+typedef struct      s_data_env
 {
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
+}                   t_data_env;
+
+typedef struct      s_simple_env
+{
+    t_data_env      *data_env;
+    SOCKET          socket_recv;
+    SOCKET          socket_send;
+    struct sockaddr_in si_client_recv;
+    struct sockaddr_in si_client_send;
+    int             commande;
+    pthread_t       thread_recv;
+    pthread_t       thread_send;
+    pthread_mutex_t mutexSend;
+    pthread_mutex_t mutexRecv;
 }                   t_simple_env;
 
 typedef struct		s_env
 {
-    t_hero_list		*heroes;
-    t_screen		    *screen;
+    t_hero_list		  *heroes;
+    t_screen		  *screen;
     int               hero;
     pthread_mutex_t   mutex;
     int               nb_heroes;
     int               server;
-    int               socketInfo;
-    int               socketReponse;
     t_map             *map;
     SDL_Rect          sizeHero;
     t_hero_img_list   *heroes_img;
     t_bomb_image      *bomb_image;
-    t_simple_env      simple_env;
-    t_connection      *connection_client;
-    t_connection      *connection_server[MAXHERO];
+    t_simple_env      *simple_env;
 }			        t_env;
 
 
@@ -242,7 +282,7 @@ void			    init_game_resources(t_env *env);
 void		        del_bomb_from_list(t_bomb_elem *node, t_bomb_list *hero);
 
 
-void                connect_to_Server(char *ip, int port, int* socket);
+void				other_order(t_hero *hero, int commande);
 void				hero_order(t_hero *hero, SDL_Event *event);
 int                 collisionObject(SDL_Rect, SDL_Rect);
 int                 collisionCase(t_hero *hero, t_case map[WIDTH_MAP][HEIGHT_MAP]);
@@ -251,19 +291,14 @@ void                launch_menu(t_env *env, SDL_Event *event);
 void                launch_gameServer(t_env *env, SDL_Event *event);
 void                launch_gameClient(t_env *env, SDL_Event *event);
 char*               get_ip();
-int                 listenPlayerInfo(int, t_hero_simple*);
-void                send_env_to_player(int s,int s2, t_simple_env* env);
 
-void                recv_env_from_server(int s,int s2,t_simple_env* env);
-void                send_player_to_server(int s,int s2, t_hero_simple* player);
-void                recv_player_from_player(int s,int s2, t_hero_simple* player);
-void                connect_to_Server(char *ip, int port, int* socket);
-void                create_Server(int port, int* socket);
-//void			    del_digimon_from_team(t_digimon *node, t_hero *hero);
-//void			    chance_catch(t_env *env);
-//void			    merchant(t_env *env, SDL_Event *event);
-//void			    eat_shroom(t_env *env);
-//void			    rand_rupees(t_env *env);
+void                init_connect_to_client(t_simple_env *env);
+void                start_server(t_simple_env *env);
+
+void                init_connect_to_server(t_simple_env *env, char ip[]);
+void                start_client(t_simple_env *env);
+
+void                init(t_simple_env *env);
 void                move_hero(t_hero* hero);
 void			    init_screen(t_env *env);
 void			    free_sdl(t_env *env);

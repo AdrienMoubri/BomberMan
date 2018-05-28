@@ -1,50 +1,16 @@
-/*
-** main.c for bomberman in /home/login_p/delivery/bomberman/main.c
-**
-** Made by CHASSAIGNE Romain
-** Login   <chassa_r@etna-alternance.net>
-**
-** Started on  jeu. oct. 05 10:43:31 2017 CHASSAIGNE Romain
-** Last update jeu. oct. 05 10:43:31 2017 CHASSAIGNE Romain
-*/
-
-
-#define         MAXBOMBES 4
-#define         MAXHERO 4
-#define         WIDTH_MAP     15
-#define         HEIGHT_MAP     13
-#ifdef WIN32 /* si vous êtes sous Windows */
-
-#include <io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include "bfm.h"
-#pragma comment(lib, "ws2_32.lib")
-
-#elif defined (linux) /* si vous êtes sous Linux */
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <netdb.h>
 #include "bfm.h"
 
-#endif
+void    myMemCpy(void *dest, void *src, size_t n);
+void    send_env(int s, struct sockaddr *si_server, pthread_mutex_t *mutex, t_data_env* env);
+void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env);
+void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *env);
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int* commande);
+void*   thread_send_commande (void* arg);
+void*   thread_recv_commande (void* arg);
+void*   thread_send_env (void* arg);
+void*   thread_recv_env (void* arg);
 
-typedef struct info
-{
-    int     *i;
-    int     socket;
-    void    *info;
-}   t_info;
-static void init(void)
+void init(t_simple_env *env)
 {
 #ifdef WIN32
     WSADATA wsa;
@@ -55,240 +21,26 @@ static void init(void)
         exit(EXIT_FAILURE);
     }
 #endif
+    struct sockaddr_in si_recv = {0};
+    struct sockaddr_in si_send = {0};
+    env->si_client_send = si_send;
+    env->si_client_recv = si_recv;
+    env->socket_recv = 0;
+    env->socket_send = 0;
+    env->commande = 0;
+    env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
+    env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
 }
 
-static void end(int s)
+void end(int s)
 {
-    if (s >=0)
-        close(s);
+    close(s);
 #ifdef WIN32
     WSACleanup();
 #endif
 }
-int     accept_client(int s);
-void	die(char *str)
-{
-    perror(str);
-    exit(1);
-}
-
-/*
- * trust me im a  an ingeneer
- */
-
-int	connect_to(char *hostname, int port)
-{
-    int			s;
-    struct sockaddr_in	sin;
-
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = inet_addr(hostname);
-    if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        die("socket");
-    if (connect(s, (struct sockaddr *)&sin, sizeof(struct sockaddr_in)) < 0)
-        die("connect");
-    return (s);
-}
-
-int create_server(int port)
-{
-    int s;
-    struct sockaddr_in sin;
-
-    if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        die("socket");
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = INADDR_ANY;
-    if (bind(s, (struct sockaddr *)&sin, sizeof(sin)) < 0)
-        die("bind");
-    if (listen(s, 42) < 0)
-        die("listen");
-    return (s);
-}
-
-void myMemCpy(void *dest, void *src, size_t n)
-{
-    // cast src and dest addresses to (char *)
-    char *csrc = (char *)src;
-    char *cdest = (char *)dest;
-
-    // Copy contents of src[] to dest[]
-    for (int i=0; i<n; i++)
-        cdest[i] = csrc[i];
-}
-
-void send_info_to_player(int s, int *info)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    myMemCpy(data, info, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-
-void recv_info_from_server(int s,int* info)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(info, data, size);
-}
-
-
-void connect_to_Server(char *ip, int port, int* socket)
-{
-
-    init();
-    *socket = connect_to(ip, port);
-}
-void create_Server(int port, int* socket)
-{
-    init();
-    *socket = accept_client(create_server(port));
-}
-
-
-void* thread_send_env_to_player (void* arg) {
-
-    t_info *inf = arg;
-    int size = sizeof(t_simple_env);
-    unsigned char data [size];
-    myMemCpy(data, inf->info, size);
-    while (*(inf->i))
-    {
-        if (send(inf->socket, data, size, 0) < 0)
-            die("send");
-    }
-    pthread_exit(NULL);
-}
-
-void* thread_res_env_to_player (void* arg) {
-    t_info *inf = arg;
-    int res =0;
-    int size = sizeof(int);
-    unsigned char data [size];
-        if (recv(inf->socket, data, size, 0) < 0)
-            die("recv");
-        myMemCpy(&(res), data, size);
-        if (res == 1) {
-            *(inf->i) = 0;
-        }
-        pthread_exit(NULL); /* Fin du thread */
-}
-
-void send_env_to_player(int s, int s2, t_simple_env* env)
-{
-    pthread_t t1;
-    pthread_t t2;
-    int i =1;
-    t_info *inf = malloc(sizeof(t_info));
-    inf->socket = s;
-    inf->info = env;
-    inf->i = &i;
-    pthread_create (&t1, NULL, thread_send_env_to_player, (void*)inf);
-    t_info *inf2 = malloc(sizeof(t_info));
-    inf2->socket = s2;
-    inf2->i = &i;
-    pthread_create (&t2, NULL, thread_res_env_to_player, (void*)inf2); // Création des threads
-
-}
-
-
-
-void recv_env_from_server(int s,int s2, t_simple_env* env)
-{
-    int i=1;
-    int size = sizeof(t_simple_env);
-    unsigned char data[size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(env, data, size);
-    size = sizeof(int);
-    myMemCpy(data, &i, sizeof(int));
-    if ((send(s2,data,size,0))< 0)
-        die("send");
-
-}
-
-void* thread_send_player_to_server (void* arg) {
-
-    t_info *inf = arg;
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    myMemCpy(data, inf->info, size);
-    while (*(inf->i))
-    {
-        if (send(inf->socket, data, size, 0) < 0)
-            die("send");
-    }
-    pthread_exit(NULL);
-}
-
-void* thread_res_player_to_server (void* arg) {
-    t_info *inf = arg;
-    int res =0;
-    int size = sizeof(int);
-    unsigned char data [size];
-        if (recv(inf->socket, data, size, 0) < 0)
-            die("recv");
-        myMemCpy(&(res), data, size);
-        if (res == 1) {
-            *(inf->i) = 0;
-        }
-    pthread_exit(NULL); /* Fin du thread */
-}
-
-void send_player_to_server(int s, int s2, t_hero_simple* player)
-{
-    pthread_t t1;
-    pthread_t t2;
-    t_info *inf = malloc(sizeof(t_info));
-    inf->socket  =s;
-    inf->info  =player;
-    int i =1;
-    inf->i = &i;
-    pthread_create (&t1, NULL, thread_send_player_to_server, (void*)inf);
-    t_info *inf2 = malloc(sizeof(t_info));
-    inf2->socket = s2;
-    inf2->i = &i;
-    pthread_create (&t2, NULL, thread_res_player_to_server, (void*)inf2); // Création des threads
-
-}
-
-void recv_player_from_player(int s,int s2, t_hero_simple* player)
-{
-    int size = sizeof(t_hero_simple);
-    unsigned char data [size];
-    if ((recv(s, data, size, 0)) < 0)
-        die("recv");
-    myMemCpy(player, data, size);
-    int i = 1;
-    size = sizeof(int);
-    myMemCpy(data,&i, size);
-    if ((send(s2,data,size,0))< 0)
-        die("send");
-}
-
-int accept_client(int s)
-{
-    int     c;
-    struct  sockaddr_in sin;
-    int     size;
-
-    size = sizeof(sin);
-    if ((c = accept(s, (struct sockaddr *)&sin, &size)) < 0)
-    {
-        die("accept");
-    }
-    return (c);
-}
-
 char *get_ip()
 {
-    init();
     char s[256] = {0}, **pp = NULL;
     char *ip;
     struct hostent *host = NULL;
@@ -299,3 +51,278 @@ char *get_ip()
     close(-1);
     return ip;
 }
+SOCKET     create_server(int port, struct sockaddr_in *si_client);
+
+void	die(char *str)
+{
+    perror(str);
+    exit(1);
+}
+
+int     sendServeurPort(int port, int portPlayable, int* socket);
+
+
+void    send_port_to_player(int s, int port)
+{
+    int size = sizeof(int);
+    unsigned char data [size];
+    myMemCpy(data, &port, size);
+    if (send(s, data, size, 0) < 0)
+        die("send");
+}
+/*
+int     sendServeurPort(int port, int portPlayable, int* socket)
+{
+    init();
+    *socket = accept_client(create_server(port));
+    send_port_to_player(*socket, portPlayable);
+    end(*socket);
+}*/
+
+
+/*
+ * trust me im a  an ingeneer
+ */
+
+int	    connect_to(char *hostname, int port, struct sockaddr_in	*sin)
+{
+    SOCKET sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == SOCKET_ERROR)
+        die("socket");
+    sin->sin_family = AF_INET;
+    sin->sin_port = htons(port);
+    sin->sin_addr.s_addr = inet_addr(hostname);
+    if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+        die("connect");
+    return (sock);
+}
+void    connect_to_Server(char *ip, int port, int* socket, struct sockaddr *sin)
+{
+    *socket = connect_to(ip, port, (struct sockaddr_in *)sin);
+}
+
+void    wait (int ms)
+{
+    pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;
+    struct timespec timeToWait;
+    struct timeval now;
+    gettimeofday(&now,NULL);
+    timeToWait.tv_sec = now.tv_sec;
+    timeToWait.tv_nsec = (now.tv_usec+1000UL*ms)*1000UL;
+    pthread_mutex_lock(&fakeMutex);
+    pthread_cond_timedwait(&fakeCond, &fakeMutex, &timeToWait);
+    pthread_mutex_unlock(&fakeMutex);
+}
+
+SOCKET     create_server(int port, struct sockaddr_in *sin)
+{
+    SOCKET sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == INVALID_SOCKET)
+        die("sock");
+    sin->sin_family = AF_INET;
+    sin->sin_port = htons(port);
+    sin->sin_addr.s_addr = htonl(INADDR_ANY);
+    if (bind(sock, (struct sockaddr *) sin, sizeof(struct sockaddr)) == SOCKET_ERROR)
+        die("bind");
+    return (sock);
+}
+
+void    myMemCpy(void *dest, void *src, size_t n)
+{
+    // cast src and dest addresses to (char *)
+    char *csrc = (char *)src;
+    char *cdest = (char *)dest;
+
+    // Copy contents of src[] to dest[]
+    for (int i=0; i<n; i++)
+        cdest[i] = csrc[i];
+}
+void    create_Server(int port, int* socket, struct sockaddr_in *si_client)
+{
+    *socket = create_server(port, si_client);
+}
+
+void*   thread_send_env (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread send \n");
+    while (1)
+    {
+        wait (250);
+        send_env(env->socket_send, (struct sockaddr *) &env->si_client_send, &(env->mutexSend), env->data_env);
+    }
+}
+
+void    send_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
+{
+    int sizedata = sizeof(t_data_env);
+    int sizesock = sizeof(struct sockaddr);
+    unsigned char data [sizedata];
+
+    pthread_mutex_lock(mutex);
+    myMemCpy(data, env, sizedata);
+    pthread_mutex_unlock(mutex);
+    sendto(s, data, sizedata, 0, si_client, sizesock);
+}
+
+void*   thread_recv_env (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread \n");
+    struct timeval tv;
+    fd_set readfds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
+    while (1)
+    {
+        gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+
+
+        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+
+        if (FD_ISSET(env->socket_recv, &readfds))
+            recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
+        else
+            printf("Timed out.\n");
+    }
+}
+
+void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env)
+{
+    int sizedata = sizeof(t_data_env);
+    int sizesock = sizeof(struct sockaddr);
+    unsigned char data[sizedata];
+    if (recvfrom(s, data, sizedata, 0, si_client, &sizesock) >= 0)
+    {
+        pthread_mutex_lock(mutex);
+        myMemCpy(env, data, sizedata);
+        pthread_mutex_unlock(mutex);
+    }
+}
+
+void*   thread_send_commande (void* arg) {
+    t_simple_env *env = arg;
+    while (1)
+    {
+        wait (250);
+        send_commande(env->socket_send, (struct sockaddr *) &env->si_client_send, &(env->mutexSend), &(env->commande));
+    }
+}
+
+void    send_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *commande)
+{
+    int sizedata = sizeof(int);
+    int sizesocket = sizeof(struct sockaddr);
+    unsigned char data [sizedata];
+
+    pthread_mutex_lock(mutex);
+    myMemCpy(data, commande, sizedata);
+    pthread_mutex_unlock(mutex);
+    sendto(s, data, sizedata, 0, si_client, sizesocket);
+}
+
+void*   thread_recv_commande (void* arg) {
+    t_simple_env *env = arg;
+    printf("début thread recv\n");
+    struct timeval tv;
+    fd_set readfds;
+    struct timespec timeToWait;
+    struct timeval now;
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
+    while (1)
+    {
+        gettimeofday(&now,NULL);
+        timeToWait.tv_sec = now.tv_sec;
+        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
+
+
+        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+
+        if (FD_ISSET(env->socket_recv, &readfds))
+            recv_commande(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), &(env->commande));
+        else
+            printf("Timed out.\n");
+    }
+}
+
+void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, int *commande)
+{
+    int sizedata = sizeof(int);
+    int sizesock = sizeof(struct sockaddr);
+    unsigned char data[sizedata];
+    if (recvfrom(s, data, sizedata, 0, si_client, &sizesock) >= 0)
+    {
+        pthread_mutex_lock(mutex);
+        myMemCpy(commande, data, sizedata);
+        pthread_mutex_unlock(mutex);
+    }
+}
+
+void init_connect_to_client(t_simple_env *env)
+{
+    char buffer[1024];
+    int size_si = sizeof(env->si_client_send);
+    printf("creation du server :\n");
+    create_Server(PORT_SERV_SEND, &(env->socket_send), &(env->si_client_send));
+    int fin = 0;
+
+    printf("waiting on 4343 :\n");
+    while (!fin) {
+        int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
+                                (struct sockaddr *) &(env->si_client_send),
+                                &size_si);
+        if (nb_octet > 0) {
+            fin = 1;
+        }
+    }
+    create_Server(PORT_SERV_RECV, &(env->socket_recv), &(env->si_client_recv));
+    fin = 0;
+    printf("waiting on 4444 :\n");
+    while (!fin) {
+        int nb_octet = recvfrom(env->socket_recv, buffer, sizeof buffer - 1, 0,
+                                (struct sockaddr *) &(env->si_client_recv),
+                                &size_si);
+        if (nb_octet > 0) {
+            fin = 1;
+        }
+    }
+}
+
+
+
+void start_server(t_simple_env *env)
+{
+    pthread_create(&(env->thread_send), NULL, thread_send_env, (void *) env);
+    pthread_create(&(env->thread_recv), NULL, thread_recv_commande, (void *) env);
+}
+
+void init_connect_to_server(t_simple_env *env, char ip[])
+{
+    int size_si = sizeof(env->si_client_send);
+    printf("ecoute de la socket 4343 :\n");
+    connect_to_Server(ip, PORT_SERV_SEND, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
+    int nb_octet = sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_recv()");
+    }
+    printf("ecoute de la socket 4444 :\n");
+    connect_to_Server(ip, PORT_SERV_RECV, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
+    nb_octet = sendto(env->socket_send, "salut2", strlen("salut2"), 0,(struct sockaddr *) &(env->si_client_send), size_si);
+    if ( nb_octet < 0)
+    {
+        die("send_send()");
+    }
+}
+
+void start_client(t_simple_env *env)
+{
+    pthread_create(&(env->thread_recv), NULL, thread_recv_env, (void *) env);
+    pthread_create(&(env->thread_send), NULL, thread_send_commande, (void *) env);
+}
+
+

@@ -166,11 +166,11 @@ void	init_game_resources(t_env *env) {
         h1->position.y = h1->positionCase->position.y;
         h1->porteeBomb = 4;
         //a modifier
-        env->simple_env.heroes[h1->numHero].orientation = h1->orientation;
-        env->simple_env.heroes[h1->numHero].direction = h1->direction;
-        env->simple_env.heroes[h1->numHero].x = h1->position.x;
-        env->simple_env.heroes[h1->numHero].y = h1->position.y;
-        env->simple_env.heroes[h1->numHero].alive = 1;
+        env->simple_env->data_env->heroes[h1->numHero].orientation = h1->orientation;
+        env->simple_env->data_env->heroes[h1->numHero].direction = h1->direction;
+        env->simple_env->data_env->heroes[h1->numHero].x = h1->position.x;
+        env->simple_env->data_env->heroes[h1->numHero].y = h1->position.y;
+        env->simple_env->data_env->heroes[h1->numHero].alive = 1;
         //utiliser un générateur
         create_bomb_list(h1);
         t_hero_elem *h1_e = malloc(sizeof(t_hero_elem));

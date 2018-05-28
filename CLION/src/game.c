@@ -24,6 +24,8 @@ t_env			*init_game()
         env->heroes = malloc(sizeof (t_hero_list));
         env->screen = malloc(sizeof(t_screen));
         env->map = malloc(sizeof (t_map));
+        env->simple_env = malloc(sizeof(t_simple_env));
+        env->simple_env->data_env = malloc(sizeof(t_data_env));
     }
     return (env);
 }
@@ -67,11 +69,6 @@ void                launch_menu(t_env *env, SDL_Event *event)
     size_t pos = 0;
     int unicode;
     SDL_EnableUNICODE(1);
-    env->socketInfo = 0;
-    env->socketReponse= 0;
-    //définition des port par défaut du server et du client
-    int defaultportInfo = 4249;
-    int defaultportResponse = 4250;
     env->server = 0;
     env->nb_heroes = 1;
     while (play)
@@ -91,12 +88,8 @@ void                launch_menu(t_env *env, SDL_Event *event)
         //création du server
         if (env->server == 1)
         {
-            if (env->socketInfo == 0) {
-                create_Server(defaultportInfo, &(env->socketInfo));
-                create_Server(defaultportResponse, &(env->socketReponse));
-            }
+            init_connect_to_client(env->simple_env);
             env->nb_heroes++;
-            send_info_to_player(env->socketInfo, &(env->nb_heroes));
             SDL_WaitEvent(event);
             play = 0;
         }
@@ -113,9 +106,9 @@ void                launch_menu(t_env *env, SDL_Event *event)
                     switch (event->key.keysym.sym)
                     {
                         case SDLK_RETURN:
-                            connect_to_Server(text,defaultportInfo,&(env->socketInfo));
-                            SDL_Delay(10);
-                            connect_to_Server(text,defaultportResponse,&(env->socketReponse));
+                            init_connect_to_server(env->simple_env, text);
+                            env->nb_heroes = 2;
+                            env->hero = 1;
                             play = 0;
                             break;
                         default:
@@ -138,12 +131,6 @@ void                launch_menu(t_env *env, SDL_Event *event)
         }
     }
     SDL_EnableUNICODE(0);
-    if (!env->server)
-    {
-        while(env->nb_heroes < 2)
-            recv_info_from_server(env->socketInfo, &(env->nb_heroes));
-        env->hero = env->nb_heroes -1;
-    }
 }
 
 /*
@@ -210,33 +197,32 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
 
 void                set_env_to_client(t_env *env)
 {
-    t_simple_env *env_simple = malloc(sizeof(t_simple_env));
+    t_simple_env *env_simple = env->simple_env;
     t_hero_elem *hero_elem = env->heroes->first;
     t_hero *hero;
     for (int i=0; i < WIDTH_MAP; i++)
         for (int y = 0; y < HEIGHT_MAP; y++)
-            env_simple->map[i][y] = env->map->case_tab[i][y].type;
+            env_simple->data_env->map[i][y] = env->map->case_tab[i][y].type;
     for(int i = 0; i < env->heroes->nb_elem && hero_elem && i < MAXHERO; i++)
     {
         hero = hero_elem->hero;
-        env_simple->heroes[i].alive = hero->play;
-        env_simple->heroes[i].direction = hero->direction;
-        env_simple->heroes[i].orientation = hero->orientation;
-        env_simple->heroes[i].numHero = hero->numHero;
-        env_simple->heroes[i].score = hero->score;
-        env_simple->heroes[i].x = hero->positionCase->x;
-        env_simple->heroes[i].y = hero->positionCase->y;
+        env_simple->data_env->heroes[i].alive = hero->play;
+        env_simple->data_env->heroes[i].direction = hero->direction;
+        env_simple->data_env->heroes[i].orientation = hero->orientation;
+        env_simple->data_env->heroes[i].numHero = hero->numHero;
+        env_simple->data_env->heroes[i].score = hero->score;
+        env_simple->data_env->heroes[i].x = hero->positionCase->x;
+        env_simple->data_env->heroes[i].y = hero->positionCase->y;
         t_bomb_elem * bomb_elem = hero->bombes->first;
         for (int y =0; y < hero->bombes->nb_elem && bomb_elem && y < MAXBOMBES; y++)
         {
             t_bomb *bomb = bomb_elem->bomb;
-            env_simple->heroes[i].bombes[y].x = bomb->positionCase->x;
-            env_simple->heroes[i].bombes[y].y = bomb->positionCase->y;
-            env_simple->heroes[i].bombes[y].chrono = bomb->chrono;
+            env_simple->data_env->heroes[i].bombes[y].x = bomb->positionCase->x;
+            env_simple->data_env->heroes[i].bombes[y].y = bomb->positionCase->y;
+            env_simple->data_env->heroes[i].bombes[y].chrono = bomb->chrono;
         }
         hero_elem = hero_elem->next;
     }
-    send_env_to_player(env->socketInfo,env->socketReponse, env_simple);
 }
 
 /*
@@ -245,28 +231,27 @@ void                set_env_to_client(t_env *env)
 
 void                get_env(t_env *env)
 {
-    t_simple_env *env_simple = malloc(sizeof(t_simple_env));
-    recv_env_from_server(env->socketInfo,env->socketReponse, env_simple);
+    //recv_env_from_server(env->socketInfo,env->socketReponse, env_simple);
     t_hero_elem *hero_elem = env->heroes->first;
     t_hero *hero;
     for (int i=0; i < WIDTH_MAP; i++)
         for (int y = 0; y < HEIGHT_MAP; y++)
-            env_simple->map[i][y] = env->map->case_tab[i][y].type;
+            env->simple_env->data_env->map[i][y] = env->map->case_tab[i][y].type;
     for(int i = 0; i < env->heroes->nb_elem && hero_elem && i < MAXHERO; i++)
     {
         hero = hero_elem->hero;
-        hero->play = env_simple->heroes[i].alive;
-        hero->direction = env_simple->heroes[i].direction;
-        hero->numHero = env_simple->heroes[i].numHero;
-        hero->orientation = env_simple->heroes[i].orientation;
-        hero->score = env_simple->heroes[i].score;
+        hero->play = env->simple_env->data_env->heroes[i].alive;
+        hero->direction = env->simple_env->data_env->heroes[i].direction;
+        hero->numHero = env->simple_env->data_env->heroes[i].numHero;
+        hero->orientation = env->simple_env->data_env->heroes[i].orientation;
+        hero->score = env->simple_env->data_env->heroes[i].score;
 /*
         for (int j=0; j < WIDTH_MAP; j++)
             for (int y = 0; y < HEIGHT_MAP; y++)
                 if (env_simple->heroes[i].x == env->map->case_tab[j][y].x && env_simple->heroes[i].y == env->map->case_tab[j][y].y)
                     hero->positionCase = &(env->map->case_tab[j][y]);*/
 
-        hero->positionCase = &(env->map->case_tab[env_simple->heroes[i].x][env_simple->heroes[i].y]);
+        hero->positionCase = &(env->map->case_tab[env->simple_env->data_env->heroes[i].x][env->simple_env->data_env->heroes[i].y]);
         hero->position.x = hero->positionCase->position.x;
         hero->position.y = hero->positionCase->position.y;
         t_bomb_elem *bomb_elem = hero->bombes->first ;
@@ -274,7 +259,7 @@ void                get_env(t_env *env)
         {
             t_bomb *bomb = bomb_elem->bomb;
 
-            bomb->positionCase = &(env->map->case_tab[env_simple->heroes[i].bombes->x][env_simple->heroes[i].bombes->y]);
+            bomb->positionCase = &(env->map->case_tab[env->simple_env->data_env->heroes[i].bombes->x][env->simple_env->data_env->heroes[i].bombes->y]);
 
             /*
             for (int j=0; j < WIDTH_MAP; j++)
@@ -282,7 +267,7 @@ void                get_env(t_env *env)
                     if (env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].x && env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].y)
                         bomb->positionCase = &(env->map->case_tab[j][k]);*/
             bomb->coord = bomb->positionCase->position;
-            bomb->chrono = env_simple->heroes[i].bombes[y].chrono;
+            bomb->chrono = env->simple_env->data_env->heroes[i].bombes[y].chrono;
             bomb_elem = bomb_elem->next;
         }
         hero_elem = hero_elem->next;
@@ -317,7 +302,7 @@ void                set_hero_to_server(t_env *env)
         hero_simple->bombes[i].y = bomb->positionCase->y;
         hero_simple->bombes[i].chrono = bomb->chrono;
     }
-    send_player_to_server(env->socketInfo,env->socketReponse, hero_simple);
+    //send_player_to_server(env->socketInfo,env->socketReponse, hero_simple);
 }
 
 /*
@@ -331,7 +316,7 @@ void                get_hero_from_client(t_env* env)
     //for(int i = 0; i < env->heroes->nb_elem && hero_elem->hero->numHero == i; i++, hero_elem = hero_elem->next);
     hero = hero_elem->hero;
     t_hero_simple *hero_simple = malloc(sizeof(t_hero_simple));
-    recv_player_from_player(env->socketInfo,env->socketReponse, hero_simple);
+    //recv_player_from_player(env->socketInfo,env->socketReponse, hero_simple);
     //hero->positionCase  = &(env->map->case_tab[hero_simple->x][hero_simple->y]);
     //hero->position.x  =    hero->positionCase->position.x;
     //hero->position.y  =    hero->positionCase->position.y;
@@ -354,10 +339,14 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
     int play = 1;
     init_game_resources(env);
     event->key.keysym.sym = 0;
+    start_server(env->simple_env);
     while (play) {
         SDL_PollEvent(event);
         SDL_Delay(100);
+
+        pthread_mutex_lock(&(env->simple_env->mutexSend));
         set_env_to_client(env);
+        pthread_mutex_unlock(&(env->simple_env->mutexSend));
         draw_Game(env);
         t_hero_elem *hero_i = env->heroes->first;
         for (; hero_i; hero_i = hero_i->next) {
@@ -366,6 +355,12 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
                 if (hero_i->hero->numHero == env->hero)
                 {
                     hero_order(hero_i->hero, event);
+                }
+                else
+                {
+                    pthread_mutex_lock(&(env->simple_env->mutexRecv));
+                    other_order(hero_i->hero, env->simple_env->commande);
+                    pthread_mutex_unlock(&(env->simple_env->mutexRecv));
                 }
                 collisionCase(hero_i->hero, env->map->case_tab);
             }
@@ -394,15 +389,24 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
 void                launch_gameClient(t_env *env, SDL_Event *event) {
     int play = 1;
     init_game_resources(env);
+    start_client(env->simple_env);
     event->key.keysym.sym = 0;
     while (play) {
         SDL_PollEvent(event);
+
+        pthread_mutex_lock(&(env->simple_env->mutexRecv));
         get_env(env);
+        pthread_mutex_unlock(&(env->simple_env->mutexRecv));
         SDL_Delay(100);
-        draw_Game(env);
-        t_hero_elem *hero_i = env->heroes->first->next;
-        hero_order(hero_i->hero, event);
-        //set_hero_to_server(env);
+        if (env->heroes != NULL && env->heroes->first != NULL)
+        {
+            draw_Game(env);
+            t_hero_elem *hero_i = env->heroes->first;
+
+            pthread_mutex_lock(&(env->simple_env->mutexSend));
+            env->simple_env->commande = event->key.keysym.sym;
+            pthread_mutex_unlock(&(env->simple_env->mutexSend));
+        }
     }
 }
 
