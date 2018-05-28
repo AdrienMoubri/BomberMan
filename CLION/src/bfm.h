@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
+
 #ifdef WIN32 /* si vous êtes sous Windows */
 
 
@@ -32,7 +33,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-#elif defined (linux) /* si vous êtes sous Linux */
+#else /* si vous êtes sous Linux ou Mac */
 
 #include <sys/types.h>
 #include <sys/socket.h>
