@@ -13,17 +13,11 @@ sys/time.h
 -
 unistd.h
 -
-io.h
--
 stdio.h
 -
 stdlib.h
 -
 windows.h
--
-winsock2.h
--
-ws2tcpip.h
 -
 sys/types.h
 -
