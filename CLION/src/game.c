@@ -227,7 +227,7 @@ void                set_env_to_client(t_env *env)
     t_simple_env *env_simple = env->simple_env;
     t_hero_elem *hero_elem = env->heroes->first;
     t_hero *hero;
-    for (int i=0; i < WIDTH_MAP; i++)
+    for (int i = 0; i < WIDTH_MAP; i++)
         for (int y = 0; y < HEIGHT_MAP; y++)
             env_simple->data_env->map[i][y] = env->map->case_tab[i][y].type;
     for(int i = 0; i < env->heroes->nb_elem && hero_elem && i < MAXHERO; i++)
@@ -258,12 +258,11 @@ void                set_env_to_client(t_env *env)
 
 void                get_env(t_env *env)
 {
-    //recv_env_from_server(env->socketInfo,env->socketReponse, env_simple);
     t_hero_elem *hero_elem = env->heroes->first;
     t_hero *hero;
     for (int i=0; i < WIDTH_MAP; i++)
         for (int y = 0; y < HEIGHT_MAP; y++)
-            env->simple_env->data_env->map[i][y] = env->map->case_tab[i][y].type;
+             env->map->case_tab[i][y].type = env->simple_env->data_env->map[i][y];
     for(int i = 0; i < env->heroes->nb_elem && hero_elem && i < MAXHERO; i++)
     {
         hero = hero_elem->hero;
@@ -272,11 +271,9 @@ void                get_env(t_env *env)
         hero->numHero = env->simple_env->data_env->heroes[i].numHero;
         hero->orientation = env->simple_env->data_env->heroes[i].orientation;
         hero->score = env->simple_env->data_env->heroes[i].score;
-/*
         for (int j=0; j < WIDTH_MAP; j++)
             for (int y = 0; y < HEIGHT_MAP; y++)
-                if (env_simple->heroes[i].x == env->map->case_tab[j][y].x && env_simple->heroes[i].y == env->map->case_tab[j][y].y)
-                    hero->positionCase = &(env->map->case_tab[j][y]);*/
+                    env->map->case_tab[j][y].type = env->simple_env->data_env->map[j][y];
 
         hero->positionCase = &(env->map->case_tab[env->simple_env->data_env->heroes[i].x][env->simple_env->data_env->heroes[i].y]);
         hero->position.x = hero->positionCase->position.x;
@@ -285,75 +282,11 @@ void                get_env(t_env *env)
         for (int y =0; y < hero->bombes->nb_elem && bomb_elem && y < MAXBOMBES; y++)
         {
             t_bomb *bomb = bomb_elem->bomb;
-
             bomb->positionCase = &(env->map->case_tab[env->simple_env->data_env->heroes[i].bombes->x][env->simple_env->data_env->heroes[i].bombes->y]);
-
-            /*
-            for (int j=0; j < WIDTH_MAP; j++)
-                for (int k = 0; k < HEIGHT_MAP; k++)
-                    if (env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].x && env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].y)
-                        bomb->positionCase = &(env->map->case_tab[j][k]);*/
             bomb->chrono = env->simple_env->data_env->heroes[i].bombes[y].chrono;
             bomb_elem = bomb_elem->next;
         }
         hero_elem = hero_elem->next;
-    }
-}
-
-/*
- * envoie les actions du hero client au server
- */
-
-void                set_hero_to_server(t_env *env)
-{
-    t_hero *hero;
-    t_hero_elem * hero_elem = env->heroes->first->next;
-    /*for (int i = 0; i < MAXHERO && hero_elem->hero->numHero != env->hero; i++)
-    {
-        hero_elem = hero_elem->next;
-    }*/
-    hero = hero_elem->hero;
-    t_hero_simple *hero_simple = malloc(sizeof(t_hero_simple));
-    //hero_simple->x = hero->positionCase->x;
-    //hero_simple->y = hero->positionCase->y;
-    hero_simple->numHero = hero->numHero;
-    hero_simple->direction = hero->direction;
-    hero_simple->orientation = hero->orientation;
-    hero_simple->alive = hero->play;
-    t_bomb_elem *bomb_elem= hero->bombes->first;
-    for (int i =0; i < hero->bombes->nb_elem && i < MAXBOMBES; i++)
-    {
-        t_bomb *bomb = bomb_elem->bomb;
-        hero_simple->bombes[i].x = bomb->positionCase->x;
-        hero_simple->bombes[i].y = bomb->positionCase->y;
-        hero_simple->bombes[i].chrono = bomb->chrono;
-    }
-    //send_player_to_server(env->socketInfo,env->socketReponse, hero_simple);
-}
-
-/*
- * le server reçois les infos client
- */
-
-void                get_hero_from_client(t_env* env)
-{
-    t_hero *hero;
-    t_hero_elem * hero_elem = env->heroes->first->next;
-    //for(int i = 0; i < env->heroes->nb_elem && hero_elem->hero->numHero == i; i++, hero_elem = hero_elem->next);
-    hero = hero_elem->hero;
-    t_hero_simple *hero_simple = malloc(sizeof(t_hero_simple));
-    //recv_player_from_player(env->socketInfo,env->socketReponse, hero_simple);
-    //hero->positionCase  = &(env->map->case_tab[hero_simple->x][hero_simple->y]);
-    //hero->position.x  =    hero->positionCase->position.x;
-    //hero->position.y  =    hero->positionCase->position.y;
-    hero->direction =hero_simple->direction ;
-    hero->orientation =hero_simple->orientation ;
-    hero->play =hero_simple->alive ;
-    t_bomb_elem *bomb_elem = hero->bombes->first;
-    for (int i = 0; i < hero->bombes->nb_elem && i < MAXBOMBES; i++) {
-        t_bomb *bomb = bomb_elem->bomb;
-        bomb->positionCase = &(env->map->case_tab[hero_simple->bombes[i].x][hero_simple->bombes[i].y]);
-        bomb->chrono =hero_simple->bombes[i].chrono ;
     }
 }
 
@@ -362,11 +295,11 @@ void                get_hero_from_client(t_env* env)
  * lancement du serveret ouvertur des sockets
  */
 void                launch_gameServer(t_env *env, SDL_Event *event) {
-    int play = 1;
+    env->heroes->first->hero->play = 1;
     init_game_resources(env);
     event->key.keysym.sym = 0;
     start_server(env->simple_env);
-    while (play) {
+    while (env->heroes->first->hero->play) {
         SDL_PollEvent(event);
         SDL_Delay(100);
 
@@ -397,10 +330,12 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
                 move_hero(hero_i->hero);
             t_bomb_elem *bomb_i_y = hero_i->hero->bombes->first;
             for (int y = 0; y < hero_i->hero->bombes->nb_elem; y++, bomb_i_y = bomb_i_y->next) {
-                if ((SDL_GetTicks() - bomb_i_y->bomb->chrono) >= 2000) {
-                    my_putstr("la bombe à explosé");
+                if ((SDL_GetTicks() - bomb_i_y->bomb->chrono) >= 2000 && (SDL_GetTicks() - bomb_i_y->bomb->chrono) < 3000) {
                     explose_bomb(bomb_i_y, env->heroes, env->map->case_tab);
-                    del_bomb_from_list(bomb_i_y, hero_i->hero->bombes);
+                }
+                else if ((SDL_GetTicks() - bomb_i_y->bomb->chrono) >= 3000)
+                {
+                    del_bomb(bomb_i_y, hero_i->hero->bombes, env->map);
                 }
             }
             event->key.keysym.sym = 0;
@@ -417,7 +352,7 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
     init_game_resources(env);
     start_client(env->simple_env);
     event->key.keysym.sym = 0;
-    while (play) {
+    while (env->heroes->first->next->hero->play) {
         SDL_PollEvent(event);
 
         pthread_mutex_lock(&(env->simple_env->mutexRecv));
@@ -427,7 +362,6 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
         if (env->heroes != NULL && env->heroes->first != NULL)
         {
             draw_Game(env);
-            t_hero_elem *hero_i = env->heroes->first;
             pthread_mutex_lock(&(env->simple_env->mutexSend));
             env->simple_env->commande = event->key.keysym.sym;
             pthread_mutex_unlock(&(env->simple_env->mutexSend));

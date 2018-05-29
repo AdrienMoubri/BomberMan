@@ -282,7 +282,7 @@ int		            create_bomb_list(t_hero *env);
 void		        add_bomb_to_list(t_bomb_elem *hero_e, t_bomb_list *hero_l);
 t_env			    *init_game();
 void			    init_game_resources(t_env *env);
-void		        del_bomb_from_list(t_bomb_elem *node, t_bomb_list *hero);
+void		        del_bomb(t_bomb_elem *node, t_bomb_list *hero, t_map *map);
 
 
 void				other_order(t_hero *hero, int commande);

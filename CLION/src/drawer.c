@@ -49,6 +49,9 @@ void draw_Game(t_env *env)
                     case 9:
                         surfaceBomb = env->bomb_image->explo_vertical_img;
                         break;
+                    case 10:
+                        surfaceBomb = env->bomb_image->bomb_img;
+                        break;
                 }
                 SDL_BlitSurface(surfaceBomb, NULL, env->screen->ecran, &(env->map->case_tab[x][y].position));
             }
@@ -68,14 +71,14 @@ void draw_Game(t_env *env)
             env->sizeHero.x = 0;
         else
             env->sizeHero.x += env->sizeHero.w;
-
+        /*
         if (hero_i->hero->bombes->nb_elem != 0)
         {
             bomb_i = hero_i->hero->bombes->first;
             for(int y = 0; y < hero_i->hero->bombes->nb_elem ; bomb_i = bomb_i->next, y++) {
                 SDL_BlitSurface(env->bomb_image->bomb_img, NULL, env->screen->ecran, &(bomb_i->bomb->position));
             }
-        }
+        }*/
     }
     SDL_Flip(env->screen->ecran);
 }

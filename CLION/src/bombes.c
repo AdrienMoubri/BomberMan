@@ -80,10 +80,24 @@ void		del_bomb_from_list(t_bomb_elem *node, t_bomb_list *hero)
   t_bomb_elem	*hero_e;
 
   hero_e = hero->first;
-  while (hero_e != NULL && node != hero_e)
-    {
+  while (hero_e != NULL && node != hero_e) {
       hero_e = hero_e->next;
-    }
+  }
   free(hero_e->bomb);
   del_bomb_elem(hero, hero_e);
+}
+
+void		del_bomb(t_bomb_elem *node, t_bomb_list *hero, t_map *map)
+{
+    for (int x = 0; x < WIDTH_MAP; x++)
+    {
+        for (int y = 0; y < HEIGHT_MAP; y++)
+        {
+            if (map->case_tab[x][y].type >= 3 && map->case_tab[x][y].type != 10)
+            {
+                map->case_tab[x][y].type = 0;
+            }
+        }
+    }
+    del_bomb_from_list(node, hero);
 }

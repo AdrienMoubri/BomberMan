@@ -27,6 +27,7 @@ void                create_bomb(t_hero *hero)
     bomb_e->bomb = malloc(sizeof(t_bomb));
     bomb_e->bomb->positionCase = hero->positionCase;
     bomb_e->bomb->position = hero->positionCase->position;
+    hero->positionCase->type = 10;
     bomb_e->bomb->chrono = SDL_GetTicks();
     bomb_e->bomb->portee = hero->porteeBomb;
     add_bomb_to_list(bomb_e, hero->bombes);
