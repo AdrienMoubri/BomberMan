@@ -84,7 +84,6 @@ void		del_bomb_from_list(t_bomb_elem *node, t_bomb_list *hero)
     {
       hero_e = hero_e->next;
     }
-  free(hero_e->bomb->Sprite);
   free(hero_e->bomb);
   del_bomb_elem(hero, hero_e);
 }

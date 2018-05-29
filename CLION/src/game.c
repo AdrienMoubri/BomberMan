@@ -149,9 +149,11 @@ int exploseCase(t_case *case1, t_hero_list * hero_l)
             resultat +=1;
         }
     }
+    /*
     if (case1->type == 2)
         case1->type = 1;
-    return resultat;
+    */
+     return resultat;
 }
 
 
@@ -160,35 +162,60 @@ int exploseCase(t_case *case1, t_hero_list * hero_l)
  */
 void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WIDTH_MAP][HEIGHT_MAP])
 {
-    int debutX = bomb_i_y->bomb->positionCase->x - bomb_i_y->bomb->portee;
-    int finX = bomb_i_y->bomb->positionCase->x + bomb_i_y->bomb->portee;
+    int debutX;
+    int finX;
+    if (bomb_i_y->bomb->positionCase->x > bomb_i_y->bomb->portee)
+         debutX = bomb_i_y->bomb->positionCase->x - bomb_i_y->bomb->portee;
+    else
+        debutX = 1;
+    if ((bomb_i_y->bomb->positionCase->x + bomb_i_y->bomb->portee) < WIDTH_MAP - 1)
+        finX = bomb_i_y->bomb->positionCase->x + bomb_i_y->bomb->portee;
+    else
+        finX = WIDTH_MAP - 2;
+
+    int debutY;
+    int finY;
+    if (bomb_i_y->bomb->positionCase->y > bomb_i_y->bomb->portee)
+        debutY = bomb_i_y->bomb->positionCase->y - bomb_i_y->bomb->portee;
+    else
+        debutY = 1;
+    if ((bomb_i_y->bomb->positionCase->y + bomb_i_y->bomb->portee) < HEIGHT_MAP -1)
+        finY = bomb_i_y->bomb->positionCase->y + bomb_i_y->bomb->portee;
+    else
+        finY = HEIGHT_MAP - 2;
 
     int x = bomb_i_y->bomb->positionCase->x;
     int y = bomb_i_y->bomb->positionCase->y;
 
-    int debutY = bomb_i_y->bomb->positionCase->y - bomb_i_y->bomb->portee;
-    int finY = bomb_i_y->bomb->positionCase->y + bomb_i_y->bomb->portee;
     //on nétoie le coté
-    for (int i = debutX; i < finX; i++)
+    for (int i = debutX; i <= finX; i++)
     {
         exploseCase(&(case_tab[i][y]), heroes);
-        if (i < x)
-            case_tab[i][y].type = 5;
-        else if(i == x)
+        if (i == debutX)
+            //end left
+            case_tab[i][y].type = 3;
+        else if (i == finX)
+            //end right
             case_tab[i][y].type = 4;
-        else if(i > x)
+        else
+            // horizontal
             case_tab[i][y].type = 6;
     }
-    for (int i = debutY; i < finY; i++)
+    for (int i = debutY; i <= finY; i++)
     {
         exploseCase(&(case_tab[x][i]), heroes);
-        if (i < y)
-            case_tab[x][i].type = 2;
-        else if (i == y)
-            case_tab[x][i].type = 4;
-        else if (i > y)
-            case_tab[x][i].type = 3;
+        if (i == debutY)
+            //end Up
+            case_tab[x][i].type = 7;
+        else if (i == finY)
+            //end Down
+            case_tab[x][i].type = 8;
+        else if(i != y)
+            //vertical
+            case_tab[x][i].type = 9;
     }
+    //middle
+    case_tab[x][y].type = 5;
 }
 
 /*
@@ -266,7 +293,6 @@ void                get_env(t_env *env)
                 for (int k = 0; k < HEIGHT_MAP; k++)
                     if (env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].x && env_simple->heroes[i].bombes[j].x == env->map->case_tab[j][k].y)
                         bomb->positionCase = &(env->map->case_tab[j][k]);*/
-            bomb->coord = bomb->positionCase->position;
             bomb->chrono = env->simple_env->data_env->heroes[i].bombes[y].chrono;
             bomb_elem = bomb_elem->next;
         }
@@ -377,7 +403,7 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
                     del_bomb_from_list(bomb_i_y, hero_i->hero->bombes);
                 }
             }
-            //get_hero_from_client(env);
+            event->key.keysym.sym = 0;
         }
     }
 }
@@ -402,7 +428,6 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
         {
             draw_Game(env);
             t_hero_elem *hero_i = env->heroes->first;
-
             pthread_mutex_lock(&(env->simple_env->mutexSend));
             env->simple_env->commande = event->key.keysym.sym;
             pthread_mutex_unlock(&(env->simple_env->mutexSend));

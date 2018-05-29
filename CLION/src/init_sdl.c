@@ -101,7 +101,7 @@ int             init_map(t_env *env)
 {
     for(int i = 0; i < WIDTH_MAP; i++)
     {
-        for(int y = -1; y < HEIGHT_MAP; y++)
+        for(int y = 0; y < HEIGHT_MAP; y++)
         {
             env->map->case_tab[i][y].x = i;
             env->map->case_tab[i][y].y = y;
@@ -109,7 +109,7 @@ int             init_map(t_env *env)
             env->map->case_tab[i][y].position.y = y * HEIGHT_CASE;
             env->map->case_tab[i][y].position.w = WIDTH_CASE;
             env->map->case_tab[i][y].position.h = HEIGHT_CASE;
-            if (i == 0 || y == -1 ||y == HEIGHT_MAP - 2 || i == WIDTH_MAP - 1 )
+            if (i == 0 || y == 0 || y == HEIGHT_MAP - 1 || i == WIDTH_MAP - 1 )
                 env->map->case_tab[i][y].type = 1;
             else
                 env->map->case_tab[i][y].type = 0;
@@ -132,15 +132,17 @@ void    init_hero_ressources(t_env *env)
  * initialise les ressources des bombes
  */
 
-t_bomb_image    init_bomb_ressources()
-{
-    t_bomb_image *b1 = malloc(sizeof(t_bomb_image));
-    b1->bomb_img = IMG_Load("my_bfm_img/bomb_explosions/bomb.png");
-    b1->explo_center_img = IMG_Load("my_bfm_img/bomb_explosions/explo_center.png");
-    b1->explo_right_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_right.png");
-    b1->explo_left_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_left.png");
-    b1->explo_top_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_top.png");
-    b1->explo_bot_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_bottom.png");
+t_bomb_image    init_bomb_ressources(t_env *env)
+{   env->bomb_image = malloc(sizeof(t_bomb_image));
+    env->bomb_image->bomb_img = IMG_Load("my_bfm_img/bomb_explosions/bomb.png");
+    env->bomb_image->explo_center_img = IMG_Load("my_bfm_img/bomb_explosions/explo_center.png");
+    env->bomb_image->explo_right_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_right.png");
+    env->bomb_image->explo_left_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_left.png");
+    env->bomb_image->explo_top_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_top.png");
+    env->bomb_image->explo_bot_img = IMG_Load("my_bfm_img/bomb_explosions/explo_end_bottom.png");
+    env->bomb_image->explo_horizontal_img = IMG_Load("my_bfm_img/bomb_explosions/explo_extend_hor.png");
+    env->bomb_image->explo_vertical_img = IMG_Load("my_bfm_img/bomb_explosions/explo_extend_vert.png");
+
 }
 
 /*
@@ -149,9 +151,13 @@ t_bomb_image    init_bomb_ressources()
 
 void	init_game_resources(t_env *env) {
     init_hero_ressources(env);
-    init_bomb_ressources();
+    init_bomb_ressources(env);
     init_map(env);
+
+    env->sizeCase.w = WIDTH_CASE;
+    env->sizeCase.h = WIDTH_CASE;
     create_hero_list(env);
+
     for(int i = 0; i < env->nb_heroes; i++)
     {
         t_hero *h1 = malloc(sizeof(t_hero));

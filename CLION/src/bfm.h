@@ -131,10 +131,8 @@ typedef struct      s_case
 
 typedef struct 		s_bomb
 {
-
-    SDL_Surface		*Sprite;
-    SDL_Rect		coord;
     int             portee;
+    SDL_Rect        position;
     unsigned int    chrono;
     t_case          *positionCase;
 }			        t_bomb;
@@ -161,6 +159,8 @@ typedef struct      s_bomb_image
     SDL_Surface		*explo_left_img;
     SDL_Surface		*explo_top_img;
     SDL_Surface		*explo_bot_img;
+    SDL_Surface		*explo_horizontal_img;
+    SDL_Surface		*explo_vertical_img;
 }                   t_bomb_image;
 
 
@@ -170,6 +170,7 @@ typedef struct		s_hero
     int			      score;
     int               porteeBomb;
     SDL_Rect          position;
+    SDL_Rect          positionImg;
     t_case            *positionCase;
     int               direction;
     int               orientation;
@@ -253,6 +254,7 @@ typedef struct		s_env
     int               server;
     t_map             *map;
     SDL_Rect          sizeHero;
+    SDL_Rect          sizeCase;
     t_hero_img_list   *heroes_img;
     t_bomb_image      *bomb_image;
     t_simple_env      *simple_env;
