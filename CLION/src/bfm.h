@@ -249,7 +249,7 @@ typedef struct		s_env
     t_hero_list		  *heroes;
     t_screen		  *screen;
     int               hero;
-    pthread_mutex_t   mutex;
+    int               play;
     int               nb_heroes;
     int               server;
     t_map             *map;

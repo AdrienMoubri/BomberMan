@@ -113,6 +113,10 @@ int             init_map(t_env *env)
                 env->map->case_tab[i][y].type = 1;
             else
                 env->map->case_tab[i][y].type = 0;
+            if (i % 2 ==0 && y % 2 ==0)
+            {
+                env->map->case_tab[i][y].type = 1;
+            }
         }
     }
 }

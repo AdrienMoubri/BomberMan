@@ -13,8 +13,10 @@
 
 void		free_universe(t_env *env)
 {
-  free_sdl(env);
-  free(env);
+    free_sdl(env);
+    pthread_cancel(env->simple_env->thread_recv);
+    pthread_cancel(env->simple_env->thread_send);
+    free(env);
 }
 /*
  * initialisation du jeu puis lancement de la boucle principal
@@ -25,23 +27,21 @@ int		main(int argc, char* argv[])
   t_env		*env;
   char		*name;
   SDL_Event	*event;
-  name = "sacha";
   srand(time(NULL));
   event = malloc (sizeof(SDL_Event));
-  if (argc > 2 && my_strcmp(argv[1], "-n") == 0)
-    {
-      name = argv[2];
-    }
   env = init_game(name);
   if (env && event)
     {
       init(env->simple_env);
       init_screen(env);
-      launch_menu(env, event);
+      while (env->play)
+      {
+        launch_menu(env, event);
         if (env->server)
             launch_gameServer(env, event);
         else
             launch_gameClient(env, event);
+      }
       free(event);
       free_universe(env);
     }

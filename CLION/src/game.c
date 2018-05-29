@@ -20,7 +20,7 @@ t_env			*init_game()
     env = malloc(sizeof(t_env));
     if (env)
     {
-        env->mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+        env->play = 1;
         env->heroes = malloc(sizeof (t_hero_list));
         env->screen = malloc(sizeof(t_screen));
         env->map = malloc(sizeof (t_map));
@@ -54,7 +54,9 @@ void                launch_menu(t_env *env, SDL_Event *event)
                 play = 1;
                 env->hero = 0;
                 break;
-
+            case SDLK_ESCAPE:
+                play = 2;
+                env->play = 0;
             default:
                 change_select(env);
                 break;
@@ -71,16 +73,16 @@ void                launch_menu(t_env *env, SDL_Event *event)
     SDL_EnableUNICODE(1);
     env->server = 0;
     env->nb_heroes = 1;
-    while (play)
+    while (play==1)
     {
         if (env->screen->positionSelector.y == env->screen->positionSelectorBas.y)
         {
-            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Entre une adresse IP ", env->screen->couleurBomber);
+            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Please enter your IP adress", env->screen->couleurBomber);
             env->screen->text = TTF_RenderText_Blended(env->screen->police, text, env->screen->couleurBomber);
         }
         else
         {
-            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Votre adresse IP ", env->screen->couleurBomber);
+            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Your IP  adress is : ", env->screen->couleurBomber);
             env->screen->text = TTF_RenderText_Blended(env->screen->police, get_ip(), env->screen->couleurBomber);
             env->server = 1;
         }
@@ -151,7 +153,7 @@ int exploseCase(t_case *case1, t_hero_list * hero_l)
     }
     /*
     if (case1->type == 2)
-        case1->type = 1;
+        case1->type = 0;
     */
      return resultat;
 }
@@ -253,7 +255,7 @@ void                set_env_to_client(t_env *env)
 }
 
 /*
- * le client recois les ino du server et les interprette
+ * le client reçois les info du server et les interprette
  */
 
 void                get_env(t_env *env)
@@ -302,13 +304,11 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
     while (env->heroes->first->hero->play) {
         SDL_PollEvent(event);
         SDL_Delay(100);
-
         pthread_mutex_lock(&(env->simple_env->mutexSend));
         set_env_to_client(env);
         pthread_mutex_unlock(&(env->simple_env->mutexSend));
         draw_Game(env);
-        t_hero_elem *hero_i = env->heroes->first;
-        for (; hero_i; hero_i = hero_i->next) {
+        for (t_hero_elem *hero_i = env->heroes->first; hero_i; hero_i = hero_i->next) {
             if (hero_i->hero->direction == -1)
             {
                 if (hero_i->hero->numHero == env->hero)
@@ -348,7 +348,6 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
  * lancement du jeu pour un client
  */
 void                launch_gameClient(t_env *env, SDL_Event *event) {
-    int play = 1;
     init_game_resources(env);
     start_client(env->simple_env);
     event->key.keysym.sym = 0;
@@ -366,6 +365,7 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
             env->simple_env->commande = event->key.keysym.sym;
             pthread_mutex_unlock(&(env->simple_env->mutexSend));
         }
+        event->key.keysym.sym = 0;
     }
 }
 
