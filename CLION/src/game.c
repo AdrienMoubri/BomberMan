@@ -40,11 +40,14 @@ char *readStringSDL(char *s_dst, size_t n)
 void                launch_menu(t_env *env, SDL_Event *event)
 {
     int play = 0;
+    env->screen->text = TTF_RenderText_Blended(env->screen->police, "Press enter to start a game ", env->screen->couleurBomber);
+    env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Here to play as Server ", env->screen->couleurBomber);
+    env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "Here to play as Client ", env->screen->couleurBomber);
     while (!play)
     {
         draw_Menu(env);
         SDL_WaitEvent(event);
-        while (event->type != SDL_KEYUP)
+        while (event->type != SDL_KEYUP && event->type != SDL_QUIT)
         {
             SDL_WaitEvent(event);
         }
@@ -60,6 +63,11 @@ void                launch_menu(t_env *env, SDL_Event *event)
             default:
                 change_select(env);
                 break;
+        }
+        if (event->type == SDL_QUIT )
+        {
+            play = 2;
+            env->play = 0;
         }
     }
     char text[SIZE_IP];
@@ -91,7 +99,7 @@ void                launch_menu(t_env *env, SDL_Event *event)
         if (env->server == 1)
         {
             init_connect_to_client(env->simple_env);
-            env->nb_heroes++;
+            env->nb_heroes = 2;
             SDL_WaitEvent(event);
             play = 0;
         }
@@ -166,6 +174,11 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
 {
     int debutX;
     int finX;
+    int debutY;
+    int finY;
+    int x;
+    int y;
+
     if (bomb_i_y->bomb->positionCase->x > bomb_i_y->bomb->portee)
          debutX = bomb_i_y->bomb->positionCase->x - bomb_i_y->bomb->portee;
     else
@@ -175,8 +188,7 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
     else
         finX = WIDTH_MAP - 2;
 
-    int debutY;
-    int finY;
+
     if (bomb_i_y->bomb->positionCase->y > bomb_i_y->bomb->portee)
         debutY = bomb_i_y->bomb->positionCase->y - bomb_i_y->bomb->portee;
     else
@@ -186,11 +198,11 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
     else
         finY = HEIGHT_MAP - 2;
 
-    int x = bomb_i_y->bomb->positionCase->x;
-    int y = bomb_i_y->bomb->positionCase->y;
+    x = bomb_i_y->bomb->positionCase->x;
+    y = bomb_i_y->bomb->positionCase->y;
 
     //on nétoie le coté
-    for (int i = debutX; i <= finX; i++)
+    /*    for (int i = debutX; i <= finX; i++)
     {
         exploseCase(&(case_tab[i][y]), heroes);
         if (i == debutX)
@@ -215,8 +227,64 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
         else if(i != y)
             //vertical
             case_tab[x][i].type = 9;
+    }*/
+    for (int xi = x; xi >= debutX; xi--)
+    {
+        exploseCase(&(case_tab[xi][y]), heroes);
+        if (case_tab[xi-1][y].type == 1 || xi == debutX)
+        {
+            //end left 3
+            //on touche un mur
+            case_tab[xi][y].type = 3;
+            debutX = xi;
+        }
+        else
+            // horizontal 6
+            case_tab[xi][y].type = 6;
     }
-    //middle
+
+    for (int xi = x; xi <= finX; xi++)
+    {
+        exploseCase(&(case_tab[xi][y]), heroes);
+        if (case_tab[xi+1][y].type == 1 || xi == finX)
+        {
+            //end right 4
+            //on touche un mur
+            case_tab[xi][y].type = 4;
+            finX = xi;
+        }else
+            // horizontal
+            case_tab[xi][y].type = 6;
+    }
+
+    for (int yi = y; yi >= debutY; yi--)
+    {
+        exploseCase(&(case_tab[x][yi]), heroes);
+        if (case_tab[x][yi-1].type == 1 || yi == debutY)
+        {
+            //end left 3
+            //on touche un mur
+            case_tab[x][yi].type = 7;
+            debutY = yi;
+        }
+        else
+            case_tab[x][yi].type = 9;
+    }
+
+    for (int yi = y; yi <= finY; yi++)
+    {
+        exploseCase(&(case_tab[x][yi]), heroes);
+        if (case_tab[x][yi+1].type == 1 || yi == finY)
+        {
+            //end left 3
+            //on touche un mur
+            case_tab[x][yi].type = 8;
+            finY = yi;
+        }
+        else
+            case_tab[x][yi].type = 9;
+    }
+    //middle 5
     case_tab[x][y].type = 5;
 }
 
@@ -297,11 +365,9 @@ void                get_env(t_env *env)
  * lancement du serveret ouvertur des sockets
  */
 void                launch_gameServer(t_env *env, SDL_Event *event) {
-    env->heroes->first->hero->play = 1;
     init_game_resources(env);
-    event->key.keysym.sym = 0;
     start_server(env->simple_env);
-    while (env->heroes->first->hero->play) {
+    while (env->heroes->first->hero->play && event->type != SDL_QUIT) {
         SDL_PollEvent(event);
         SDL_Delay(100);
         pthread_mutex_lock(&(env->simple_env->mutexSend));
@@ -351,9 +417,8 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
     init_game_resources(env);
     start_client(env->simple_env);
     event->key.keysym.sym = 0;
-    while (env->heroes->first->next->hero->play) {
+    while (env->heroes->first->next->hero->play && env->simple_env->commande != SDLK_ESCAPE && event->type != SDL_QUIT ) {
         SDL_PollEvent(event);
-
         pthread_mutex_lock(&(env->simple_env->mutexRecv));
         get_env(env);
         pthread_mutex_unlock(&(env->simple_env->mutexRecv));
@@ -367,6 +432,7 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
         }
         event->key.keysym.sym = 0;
     }
+    env->simple_env->commande = 0;
 }
 
 /*

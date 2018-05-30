@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" UpgradeCode="8EBC6631-98D6-4740-B54B-0451026C6535"
+           Name="SARP-Apps" Version="1.0.0" Manufacturer="SARP_SIEGE" Language="1036" >
+    <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" Platform="x86" InstallPrivileges="limited"/>
+    <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+		<Directory Id="INSTALLFOLDER" Name="SARP-Apps">
+		  <Component Id="ApplicationFiles" Guid="6D97E3FC-D817-4437-9C6E-9AEE96D7F88D">
+			<File Id="SARP_Commerce.appxbundle" Source="SARP_Commerce.appxbundle"/>
+			<File Id="SARP_Commerce.cer" Source="SARP_Commerce.cer"/>
+		  </Component>
+      </Directory>
+    </Directory>
+	
+    <Feature Id="DefaultFeature" Level="1">
+      <ComponentRef Id="ApplicationFiles"/>
+      <ComponentRef Id="DependencyFiles"/>
+    </Feature>
+	
+	
+    <SetProperty Id="InstallAppx" Before="InstallFiles" Sequence="execute" Value ="&quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -Command Add-AppxPackage -Path &quot;[INSTALLFOLDER]SARP_Commerce.appxbundle&quot; -DependencyPath  &quot;[DependencyDir]NET.Framework.appx, [DependencyDir]NET.RunTime.appx, [DependencyDir]VCLibs.appx&quot;" />
+    <CustomAction Id="InstallAppx" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="yes"/>
+	
+	 <SetProperty Id="UninstallAppx" Before="InstallFiles" Sequence="execute" Value ="&quot;powershell.exe&quot; Remove-AppxPackage &quot;[INSTALLFOLDER]SARP_Commerce.appxbundle&quot;" />
+    <CustomAction Id="UninstallAppx" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="yes" />
+
+    <InstallExecuteSequence>
+      <Custom Action='InstallAppx' After='InstallFiles'>NOT REMOVE</Custom>
+      <Custom Action='UninstallAppx' After='InstallFiles'>REMOVE~=ALL</Custom>
+    </InstallExecuteSequence>
+	
+  </Product>
+</Wix>

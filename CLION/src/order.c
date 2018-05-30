@@ -89,6 +89,7 @@ static const t_hero_order	g_order[] =
   {
     {SDLK_SPACE, drop_bomb},
     {SDLK_ESCAPE, quit_battle},
+    {SDL_QUIT, quit_battle},
     {SDLK_a, left},
     {SDLK_w, up},
     {SDLK_d, right},

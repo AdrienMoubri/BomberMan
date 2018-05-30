@@ -14,8 +14,6 @@
 void		free_universe(t_env *env)
 {
     free_sdl(env);
-    pthread_cancel(env->simple_env->thread_recv);
-    pthread_cancel(env->simple_env->thread_send);
     free(env);
 }
 /*
@@ -34,13 +32,18 @@ int		main(int argc, char* argv[])
     {
       init(env->simple_env);
       init_screen(env);
-      while (env->play)
-      {
+      while (env->play) {
+        event->key.keysym.sym = 0;
         launch_menu(env, event);
         if (env->server)
             launch_gameServer(env, event);
         else
             launch_gameClient(env, event);
+          SDL_PollEvent(event);
+          pthread_cancel(env->simple_env->thread_recv);
+          pthread_cancel(env->simple_env->thread_send);
+          closesocket(env->simple_env->socket_recv);
+          closesocket(env->simple_env->socket_send);
       }
       free(event);
       free_universe(env);

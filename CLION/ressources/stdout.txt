@@ -1,4 +1,0 @@
-[34mHero creation in progress...
-[0m[34mHero creation done !
-[0m[34mWelcome [0m[34msacha[0m
-waiting_for_orders->[H[2J[0m

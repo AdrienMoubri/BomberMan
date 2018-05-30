@@ -63,16 +63,17 @@
 
 typedef struct		s_screen
 {
-    SDL_Rect		    positionMenu;
-    SDL_Rect		    positionText;
-    SDL_Rect		    positionTextHaut;
-    SDL_Rect		    positionTextBas;
-    SDL_Rect		    positionSelectorHaut;
-    SDL_Rect		    positionSelectorBas;
-    SDL_Rect		    positionSelector;
+    SDL_Rect		positionMenu;
+    SDL_Rect		positionText;
+    SDL_Rect		positionTextHaut;
+    SDL_Rect		positionTextBas;
+    SDL_Rect		positionSelectorHaut;
+    SDL_Rect		positionSelectorBas;
+    SDL_Rect		positionSelector;
     SDL_Rect		    positionBackground;
-    SDL_Surface		*text;
-    SDL_Surface		*selector;
+    SDL_Surface		    *text;
+    SDL_Surface		    *icon;
+    SDL_Surface		    *selector;
     TTF_Font		    *police;
     SDL_Color		    couleurNoire;
     SDL_Color		    couleurBomber;
@@ -294,7 +295,7 @@ void                launch_menu(t_env *env, SDL_Event *event);
 void                launch_gameServer(t_env *env, SDL_Event *event);
 void                launch_gameClient(t_env *env, SDL_Event *event);
 char*               get_ip();
-
+void                end(int socket);
 void                init_connect_to_client(t_simple_env *env);
 void                start_server(t_simple_env *env);
 

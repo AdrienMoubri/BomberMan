@@ -21,9 +21,10 @@
 				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/BomberMan.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="0"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DDEBUG=1"/>
 					<Add directory="C:/Program Files (x86)/libSdl/SDL-1.2.15/include/SDL"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
@@ -44,9 +45,10 @@
 				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/BomberMan.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="0"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DDEBUG=1"/>
 					<Add directory="C:/Program Files (x86)/libSdl/SDL-1.2.15/include/SDL"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
@@ -90,6 +92,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DDEBUG=1"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
@@ -112,6 +115,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DDEBUG=1"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
 					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
@@ -128,6 +132,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/Bomberman.rc">
+			<Option target="BomberMan"/>
+		</Unit>
 		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/Engine.c">
 			<Option target="BomberMan"/>
 		</Unit>

@@ -65,7 +65,7 @@ CMAKE_BINARY_DIR = C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-
 CMakeFiles/BomberMan.dir/all: src/lib/CMakeFiles/my_lib.dir/all
 	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/depend
 	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11 "Built target BomberMan"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target BomberMan"
 .PHONY : CMakeFiles/BomberMan.dir/all
 
 # Include target in all.
@@ -75,7 +75,7 @@ all: CMakeFiles/BomberMan.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/BomberMan.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles 19
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles 20
 	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/BomberMan.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles 0
 .PHONY : CMakeFiles/BomberMan.dir/rule
@@ -120,7 +120,7 @@ src/lib/preinstall:
 src/lib/CMakeFiles/my_lib.dir/all:
 	$(MAKE) -f src\lib\CMakeFiles\my_lib.dir\build.make src/lib/CMakeFiles/my_lib.dir/depend
 	$(MAKE) -f src\lib\CMakeFiles\my_lib.dir\build.make src/lib/CMakeFiles/my_lib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles --progress-num=12,13,14,15,16,17,18,19 "Built target my_lib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\AMO\Documents\ecole\BomberMan\BomberMan\CLION\cmake-build-debug\CMakeFiles --progress-num=13,14,15,16,17,18,19,20 "Built target my_lib"
 .PHONY : src/lib/CMakeFiles/my_lib.dir/all
 
 # Include target in all.

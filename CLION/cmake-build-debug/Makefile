@@ -135,6 +135,15 @@ my_lib/fast:
 	$(MAKE) -f src\lib\CMakeFiles\my_lib.dir\build.make src/lib/CMakeFiles/my_lib.dir/build
 .PHONY : my_lib/fast
 
+Bomberman.obj: Bomberman.rc.obj
+
+.PHONY : Bomberman.obj
+
+# target to build an object file
+Bomberman.rc.obj:
+	$(MAKE) -f CMakeFiles\BomberMan.dir\build.make CMakeFiles/BomberMan.dir/Bomberman.rc.obj
+.PHONY : Bomberman.rc.obj
+
 src/Engine.obj: src/Engine.c.obj
 
 .PHONY : src/Engine.obj
@@ -415,6 +424,7 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... my_lib
+	@echo ... Bomberman.obj
 	@echo ... src/Engine.obj
 	@echo ... src/Engine.i
 	@echo ... src/Engine.s

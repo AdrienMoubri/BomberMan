@@ -31,13 +31,12 @@ void	init_screen(t_env *env)
       env->screen->couleurNoire.g = 0;
       env->screen->couleurNoire.b = 0;
       env->screen->ecran = SDL_SetVideoMode(WIDTH_WINDOW, HEIGHT_WINDOW, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-      SDL_WM_SetCaption("The adventure of sacha", NULL);
+      SDL_WM_SetCaption("Super BomberMan 2", NULL);
+      env->screen->icon = IMG_Load("my_bfm_img/Bomberman-icon.png");
+      SDL_WM_SetIcon(env->screen->icon, NULL);
       env->screen->menu = IMG_Load("my_bfm_img/menu.jpg");
       env->screen->map = IMG_Load("my_bfm_img/map.png");
       env->screen->selector = IMG_Load("my_bfm_img/selector2.png");
-      env->screen->text = TTF_RenderText_Blended(env->screen->police, "Press enter to start a game ", env->screen->couleurBomber);
-      env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Here to play as Server ", env->screen->couleurBomber);
-      env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "Here to play as Client ", env->screen->couleurBomber);
       env->screen->positionMenu.x = 0;
       env->screen->positionMenu.y = 0;
       env->screen->positionBackground.x = 0;
@@ -171,7 +170,7 @@ void	init_game_resources(t_env *env) {
         h1->orientation = 0;
         h1->score = 0;
         h1->image = find_hero_img(0,0,env->heroes_img)->hero;
-        h1->positionCase = &(env->map->case_tab[h1->numHero+1][h1->numHero+1]);
+        h1->positionCase = &(env->map->case_tab[h1->numHero*2 +1][h1->numHero*2 +1]);
         h1->position.x = h1->positionCase->position.x;
         h1->position.y = h1->positionCase->position.y;
         h1->porteeBomb = 4;

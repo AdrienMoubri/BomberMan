@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.7)
 project(BomberMan)
 set(CMAKE_C_STANDARD 99)
-
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG=1)
 add_subdirectory(src/lib)
-
+endif()
 set(SOURCE_FILES
         src/main.c
         src/team.c
@@ -24,8 +25,12 @@ link_libraries (
 
 set(HEADERS src/bfm.h)
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADERS})
-
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/Bomberman.rc
+            )
+    else()
+    add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADERS})
+endif()
 target_link_libraries(${PROJECT_NAME} my_lib)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${project_SOURCE_DIR}/cmake")
