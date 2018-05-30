@@ -32,7 +32,7 @@ void	init_screen(t_env *env)
       env->screen->couleurNoire.b = 0;
       env->screen->ecran = SDL_SetVideoMode(WIDTH_WINDOW, HEIGHT_WINDOW, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
       SDL_WM_SetCaption("Super BomberMan 2", NULL);
-      env->screen->icon = IMG_Load("my_bfm_img/Bomberman-icon.png");
+      env->screen->icon = IMG_Load("my_bfm_img/Bomberman_icon.png");
       SDL_WM_SetIcon(env->screen->icon, NULL);
       env->screen->menu = IMG_Load("my_bfm_img/menu.jpg");
       env->screen->map = IMG_Load("my_bfm_img/map.png");

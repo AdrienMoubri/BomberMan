@@ -1,6 +1,6 @@
-$WixRoot = "..\wix"
+$WixRoot = "$PSScriptRoot\wix"
 $InstallFileswsx = "..\Template.wxs"
-$InstallFilesWixobj = "..\SARP-App.wixobj"
+$InstallFilesWixobj = "..\SuperBomberman2.wixobj"
 
 if(!(Test-Path "$WixRoot\candle.exe"))
 {    
@@ -11,12 +11,12 @@ if(!(Test-Path "$WixRoot\candle.exe"))
 
     Write-Host Extracting Wixtools..
     Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::ExtractToDirectory("..\wix\WixTools.zip", "..\wix")
+    [System.IO.Compression.ZipFile]::ExtractToDirectory("$WixRoot\WixTools.zip", $WixRoot)
 }
 
 pushd "$WixRoot"
-.\candle.exe $InstallFileswsx -ext WixUtilExtension -o "..\SARP-App.wixobj" 
-.\light.exe $InstallFilesWixobj -ext WixUtilExtension -b ".." -o "..\SARP-App.msi" 
+.\candle.exe $InstallFileswsx -ext WixUtilExtension -o "$PSScriptRoot\SuperBomberman2.wixobj" 
+.\light.exe $InstallFilesWixobj -ext WixUtilExtension -b "$PSScriptRoot" -o "$PSScriptRoot\SuperBomberman2.msi" 
 popd
 
 #msiexec.exe /i SARP-App.msi /log log.txt

@@ -1,34 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" UpgradeCode="8EBC6631-98D6-4740-B54B-0451026C6535"
-           Name="SARP-Apps" Version="1.0.0" Manufacturer="SARP_SIEGE" Language="1036" >
+  <Product Id="*" UpgradeCode="084DDD5F-BCC5-4C8E-8B9C-84F240FDB250"
+           Name="SuperBomberMan2" Version="1.0.0" Manufacturer="AdrienMoubriETNA" Language="1036" >
     <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" Platform="x86" InstallPrivileges="limited"/>
     <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
     <Directory Id="TARGETDIR" Name="SourceDir">
-		<Directory Id="INSTALLFOLDER" Name="SARP-Apps">
-		  <Component Id="ApplicationFiles" Guid="6D97E3FC-D817-4437-9C6E-9AEE96D7F88D">
-			<File Id="SARP_Commerce.appxbundle" Source="SARP_Commerce.appxbundle"/>
-			<File Id="SARP_Commerce.cer" Source="SARP_Commerce.cer"/>
+		<Directory Id="INSTALLFOLDER" Name="SuperBomberMan2">
+		  <Component Id="ApplicationFiles" Guid="E0326ACF-25DE-45D7-B8D8-D97D794D9C75">
+			<File Id="bm.ttf" Source="game/bm.ttf"/>
+			<File Id="BomberMan.exe" Source="game/BomberMan.exe"/>
+			<File Id="libfreetype6.dll" Source="game/libfreetype-6.dll"/>
+			<File Id="libgccsdw21.dll" Source="game/libgcc_s_dw2-1.dll"/>
+			<File Id="libjpeg8.dll" Source="game/libjpeg-8.dll"/>
+			<File Id="libpng1515.dll" Source="game/libpng15-15.dll"/>
+			<File Id="pthreadGC3.dll" Source="game/pthreadGC-3.dll"/>
+			<File Id="SDL.dll" Source="game/SDL.dll"/>
+			<File Id="SDLimage.dll" Source="game/SDL_image.dll"/>
+			<File Id="zlib1.dll" Source="game/zlib1.dll"/>
+			<File Id="SDLttf.dll" Source="game/SDL_ttf.dll"/>
 		  </Component>
-      </Directory>
+		  <Directory Id="ImgRessources" Name="my_bfm_img">
+				<Component Id="ImgGlobal" Guid="5718E37D-FC7E-44C1-951B-D00245239B76">
+					<File Id="map.png" Source="game/my_bfm_img/map.png"/>
+					<File Id="selector2.png" Source="game/my_bfm_img/selector2.png"/>
+					<File Id="menu.jpg" Source="game/my_bfm_img/menu.jpg"/>
+					<File Id="Bomberman_icon.png" Source="game/my_bfm_img/Bomberman_icon.png"/>
+				</Component>
+				<Directory Id="PersoRessourcesBlack" Name="Black">
+				  <Component Id="ImgBlack" Guid="E5DC71DD-DD27-4749-89F6-1B29BDB746D6">
+						<File Id="black_back.png" Source="game/my_bfm_img/Black/black_back.png"/>
+						<File Id="black_front.png" Source="game/my_bfm_img/Black/black_front.png"/>
+						<File Id="black_die.png" Source="game/my_bfm_img/Black/black_die.png"/>
+						<File Id="black_front_arms.png" Source="game/my_bfm_img/Black/black_front_arms.png"/>
+						<File Id="black_left.png" Source="game/my_bfm_img/Black/black_left.png"/>
+						<File Id="black_right.png" Source="game/my_bfm_img/Black/black_right.png"/>
+				  </Component>
+				</Directory>
+				<Directory Id="PersoRessourcesGreen" Name="Green">
+				  <Component Id="ImgGreen" Guid="110C11E6-1D3C-4D76-AC3E-F79B303E802A">
+						<File Id="green_back.png" Source="game/my_bfm_img/Green/green_back.png"/>
+						<File Id="green_front.png" Source="game/my_bfm_img/Green/green_front.png"/>
+						<File Id="green_die.png" Source="game/my_bfm_img/Green/green_die.png"/>
+						<File Id="green_front_arms.png" Source="game/my_bfm_img/Green/green_front_arms.png"/>
+						<File Id="green_left.png" Source="game/my_bfm_img/Green/green_left.png"/>
+						<File Id="green_right.png" Source="game/my_bfm_img/Green/green_right.png"/>
+				  </Component>
+				</Directory>
+				<Directory Id="BombRessources" Name="bomb_explosions">
+				  <Component Id="ImgBomb" Guid="C4310120-62BF-484B-A1B4-9A548ED6EE0C">
+						<File Id="bomb.png" Source="game/my_bfm_img/bomb_explosions/bomb.png"/>
+						<File Id="explo_center.png" Source="game/my_bfm_img/bomb_explosions/explo_center.png"/>
+						<File Id="explo_end_bottom.png" Source="game/my_bfm_img/bomb_explosions/explo_end_bottom.png"/>
+						<File Id="explo_end_top.png" Source="game/my_bfm_img/bomb_explosions/explo_end_top.png"/>
+						<File Id="explo_end_left.png" Source="game/my_bfm_img/bomb_explosions/explo_end_left.png"/>
+						<File Id="explo_end_right.png" Source="game/my_bfm_img/bomb_explosions/explo_end_right.png"/>
+				  </Component>
+				</Directory>
+		  </Directory>
     </Directory>
-	
+	</Directory>
     <Feature Id="DefaultFeature" Level="1">
       <ComponentRef Id="ApplicationFiles"/>
-      <ComponentRef Id="DependencyFiles"/>
+      <ComponentRef Id="ImgGlobal"/>
+      <ComponentRef Id="ImgBlack"/>
+      <ComponentRef Id="ImgGreen"/>
+      <ComponentRef Id="ImgBomb"/>
     </Feature>
-	
-	
-    <SetProperty Id="InstallAppx" Before="InstallFiles" Sequence="execute" Value ="&quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -Command Add-AppxPackage -Path &quot;[INSTALLFOLDER]SARP_Commerce.appxbundle&quot; -DependencyPath  &quot;[DependencyDir]NET.Framework.appx, [DependencyDir]NET.RunTime.appx, [DependencyDir]VCLibs.appx&quot;" />
-    <CustomAction Id="InstallAppx" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="yes"/>
-	
-	 <SetProperty Id="UninstallAppx" Before="InstallFiles" Sequence="execute" Value ="&quot;powershell.exe&quot; Remove-AppxPackage &quot;[INSTALLFOLDER]SARP_Commerce.appxbundle&quot;" />
-    <CustomAction Id="UninstallAppx" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="yes" />
-
-    <InstallExecuteSequence>
-      <Custom Action='InstallAppx' After='InstallFiles'>NOT REMOVE</Custom>
-      <Custom Action='UninstallAppx' After='InstallFiles'>REMOVE~=ALL</Custom>
-    </InstallExecuteSequence>
-	
   </Product>
 </Wix>
