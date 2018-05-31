@@ -1,7 +1,7 @@
 # ETNA-bomberman
 # User Section
 ## Windows installation : 
-
+Download the [Msi](https://github.com/AdrienMoubri/BomberMan/raw/develop/installateur/windows/SuperBomberman2.msi) !!!
 ---
 ## Linux Installation : 
 
