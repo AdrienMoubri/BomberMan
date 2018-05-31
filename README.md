@@ -5,6 +5,7 @@ Download the [Msi](https://github.com/AdrienMoubri/BomberMan/raw/develop/install
 ---
 ## Linux Installation : 
 
+Download the [Msi](https://github.com/AdrienMoubri/BomberMan/raw/develop/installateur/linux/bombermanetnaadrien.deb) !!!
 ---
 # Development Section
 ## This project was developped using [CLion](https://www.jetbrains.com/clion/download/)
