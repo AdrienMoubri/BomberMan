@@ -103,8 +103,8 @@ void    connect_to_Server(char *ip, int port, int* socket, struct sockaddr *sin)
 
 void    wait (int ms)
 {
-    pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;
+    pthread_mutex_t fakeMutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t fakeCond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
     struct timespec timeToWait;
     struct timeval now;
     gettimeofday(&now,NULL);
@@ -171,19 +171,17 @@ void*   thread_recv_env (void* arg) {
     struct timeval tv;
     fd_set readfds;
     struct timespec timeToWait;
-    struct timeval now;
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
+    int retval;
     while (1)
     {
-        gettimeofday(&now,NULL);
-        timeToWait.tv_sec = now.tv_sec;
-        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
-
-
-        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
-
-        if (FD_ISSET(env->socket_recv, &readfds))
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_recv, &readfds);
+        timeToWait.tv_sec = 5;
+        timeToWait.tv_nsec = 0;
+        retval = select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+        if (retval == -1)
+            printf("ERROR SELECT.\n");
+        else if (retval)
             recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
         else
             printf("Timed out.\n");
@@ -230,18 +228,13 @@ void*   thread_recv_commande (void* arg) {
     struct timeval tv;
     fd_set readfds;
     struct timespec timeToWait;
-    struct timeval now;
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
     while (1)
     {
-        gettimeofday(&now,NULL);
-        timeToWait.tv_sec = now.tv_sec;
-        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
-
-
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_recv, &readfds);
+        timeToWait.tv_sec = 5;
+        timeToWait.tv_nsec = 0;
         select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
-
         if (FD_ISSET(env->socket_recv, &readfds))
             recv_commande(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), &(env->commande));
         else
