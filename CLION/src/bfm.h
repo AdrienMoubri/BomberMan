@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <netdb.h>
 
 #endif
 
@@ -234,8 +235,8 @@ typedef struct      s_data_env
 typedef struct      s_simple_env
 {
     t_data_env      *data_env;
-    SOCKET          socket_recv;
-    SOCKET          socket_send;
+    int             socket_recv;
+    int             socket_send;
     struct sockaddr_in si_client_recv;
     struct sockaddr_in si_client_send;
     int             commande;

@@ -26,10 +26,9 @@ link_libraries (
 set(HEADERS src/bfm.h)
 
 if(WIN32)
-    add_executable(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/Bomberman.rc
-            )
-    else()
-    add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADERS})
+    add_executable(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/Bomberman.rc)
+else()
+    add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/Bomberman.rc)
 endif()
 target_link_libraries(${PROJECT_NAME} my_lib)
 

@@ -30,10 +30,10 @@ void	init_screen(t_env *env)
       env->screen->couleurNoire.r = 0;
       env->screen->couleurNoire.g = 0;
       env->screen->couleurNoire.b = 0;
-      env->screen->ecran = SDL_SetVideoMode(WIDTH_WINDOW, HEIGHT_WINDOW, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-      SDL_WM_SetCaption("Super BomberMan 2", NULL);
       env->screen->icon = IMG_Load("my_bfm_img/Bomberman_icon.png");
+      SDL_WM_SetCaption("Super BomberMan 2", NULL);
       SDL_WM_SetIcon(env->screen->icon, NULL);
+      env->screen->ecran = SDL_SetVideoMode(WIDTH_WINDOW, HEIGHT_WINDOW, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
       env->screen->menu = IMG_Load("my_bfm_img/menu.jpg");
       env->screen->map = IMG_Load("my_bfm_img/map.png");
       env->screen->selector = IMG_Load("my_bfm_img/selector2.png");

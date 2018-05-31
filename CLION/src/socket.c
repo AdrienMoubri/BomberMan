@@ -28,8 +28,8 @@ void init(t_simple_env *env)
     env->socket_recv = 0;
     env->socket_send = 0;
     env->commande = 0;
-    env->mutexSend = PTHREAD_MUTEX_INITIALIZER;
-    env->mutexRecv = PTHREAD_MUTEX_INITIALIZER;
+    env->mutexSend = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    env->mutexRecv = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
 }
 
 void end(int s)
@@ -51,7 +51,7 @@ char *get_ip()
     close(-1);
     return ip;
 }
-SOCKET     create_server(int port, struct sockaddr_in *si_client);
+int     create_server(int port, struct sockaddr_in *si_client);
 
 void	die(char *str)
 {
@@ -86,8 +86,8 @@ int     sendServeurPort(int port, int portPlayable, int* socket)
 
 int	    connect_to(char *hostname, int port, struct sockaddr_in	*sin)
 {
-    SOCKET sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == SOCKET_ERROR)
+    int sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
         die("socket");
     sin->sin_family = AF_INET;
     sin->sin_port = htons(port);
@@ -115,15 +115,15 @@ void    wait (int ms)
     pthread_mutex_unlock(&fakeMutex);
 }
 
-SOCKET     create_server(int port, struct sockaddr_in *sin)
+int     create_server(int port, struct sockaddr_in *sin)
 {
-    SOCKET sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == INVALID_SOCKET)
+    int sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
         die("sock");
     sin->sin_family = AF_INET;
     sin->sin_port = htons(port);
     sin->sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sock, (struct sockaddr *) sin, sizeof(struct sockaddr)) == SOCKET_ERROR)
+    if (bind(sock, (struct sockaddr *) sin, sizeof(struct sockaddr)) == -1)
         die("bind");
     return (sock);
 }

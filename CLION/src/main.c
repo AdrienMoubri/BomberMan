@@ -42,8 +42,13 @@ int		main(int argc, char* argv[])
           SDL_PollEvent(event);
           pthread_cancel(env->simple_env->thread_recv);
           pthread_cancel(env->simple_env->thread_send);
-          closesocket(env->simple_env->socket_recv);
-          closesocket(env->simple_env->socket_send);
+          #ifdef WIN32
+            closesocket(env->simple_env->socket_recv);
+            closesocket(env->simple_env->socket_send);
+          #else
+            close(env->simple_env->socket_recv);
+            close(env->simple_env->socket_send);
+          #endif
       }
       free(event);
       free_universe(env);
