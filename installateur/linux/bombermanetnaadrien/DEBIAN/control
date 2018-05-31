@@ -1,0 +1,9 @@
+Package : bombermanetnaadrien
+Version : 1.0.0
+Section : base
+Priority : optional
+Architecture : all
+Depends : bash
+Maintainer : moubri_a@etna-alternance.net
+Description : Super BomberMan 2 developped in c
+Homepage : https://github.com/AdrienMoubri/BomberMan

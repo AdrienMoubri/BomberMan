@@ -177,11 +177,11 @@ void*   thread_recv_env (void* arg) {
         FD_ZERO(&readfds);
         FD_SET(env->socket_recv, &readfds);
         timeToWait.tv_sec = 5;
-        timeToWait.tv_nsec = 0;
+        timeToWait.tv_nsec = 50;
         retval = select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
         if (retval == -1)
             printf("ERROR SELECT.\n");
-        else if (retval)
+        else if (env->socket_recv, &readfds)
             recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
         else
             printf("Timed out.\n");
