@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <afxres.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -61,19 +62,19 @@ typedef struct      s_data_env
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
-/*
-typedef struct      s_player
+
+typedef struct      s_socketinfo
 {
-    int             socket_recv;
-    int             socket_send;
-    int             commande;
-};*/
+    int             socket_i;
+    struct sockaddr_in si_client_i;
+    pthread_mutex_t mutex_i;
+}                   t_socketinfo;
 
 typedef struct      s_simple_env
 {
     t_data_env      *data_env;
-    SOCKET          socket_recv;
-    SOCKET          socket_send;
+    int             socket_recv;
+    int             socket_send;
     struct sockaddr_in si_client_recv;
     struct sockaddr_in si_client_send;
     int             commande;
@@ -81,14 +82,15 @@ typedef struct      s_simple_env
     pthread_t       thread_send;
     pthread_mutex_t mutexSend;
     pthread_mutex_t mutexRecv;
+    t_socketinfo    socketinfo[4];
 }                   t_simple_env;
 
-typedef struct info
+typedef struct      info
 {
     int     *i;
     int     socket;
     void    *info;
-}   t_info;
+}                   t_info;
 
 static void init(t_simple_env *env)
 {
@@ -140,38 +142,14 @@ void*   thread_send_commande (void* arg);
 void*   thread_recv_commande (void* arg);
 void*   thread_send_env (void* arg);
 void*   thread_recv_env (void* arg);
-SOCKET     create_server(int port, struct sockaddr_in *si_client);
+
+int     create_server(int port, struct sockaddr_in *si_client);
 
 void	die(char *str)
 {
     perror(str);
     exit(1);
 }
-
-int     sendServeurPort(int port, int portPlayable, int* socket);
-
-
-void    send_port_to_player(int s, int port)
-{
-    int size = sizeof(int);
-    unsigned char data [size];
-    myMemCpy(data, &port, size);
-    if (send(s, data, size, 0) < 0)
-        die("send");
-}
-/*
-int     sendServeurPort(int port, int portPlayable, int* socket)
-{
-    init();
-    *socket = accept_client(create_server(port));
-    send_port_to_player(*socket, portPlayable);
-    end(*socket);
-}*/
-
-
-/*
- * trust me im a  an ingeneer
- */
 
 int	    connect_to(char *hostname, int port, struct sockaddr_in	*sin)
 {
@@ -204,15 +182,15 @@ void    wait (int ms)
     pthread_mutex_unlock(&fakeMutex);
 }
 
-SOCKET     create_server(int port, struct sockaddr_in *sin)
+int     create_server(int port, struct sockaddr_in *sin)
 {
-    SOCKET sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == INVALID_SOCKET)
+    int sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
         die("sock");
     sin->sin_family = AF_INET;
     sin->sin_port = htons(port);
     sin->sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sock, (struct sockaddr *) sin, sizeof(struct sockaddr)) == SOCKET_ERROR)
+    if (bind(sock, (struct sockaddr *) sin, sizeof(struct sockaddr)) == -1)
         die("bind");
     return (sock);
 }
@@ -260,19 +238,17 @@ void*   thread_recv_env (void* arg) {
     struct timeval tv;
     fd_set readfds;
     struct timespec timeToWait;
-    struct timeval now;
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
+    int retval;
     while (1)
     {
-        gettimeofday(&now,NULL);
-        timeToWait.tv_sec = now.tv_sec;
-        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
-
-
-        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
-
-        if (FD_ISSET(env->socket_recv, &readfds))
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_recv, &readfds);
+        timeToWait.tv_sec = 5;
+        timeToWait.tv_nsec = 50;
+        retval = select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+        if (retval == -1)
+            printf("ERROR SELECT.\n");
+        else if (env->socket_recv, &readfds)
             recv_env(env->socket_recv, (struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), env->data_env);
         else
             printf("Timed out.\n");
@@ -291,6 +267,8 @@ void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_da
         pthread_mutex_unlock(mutex);
     }
 }
+
+
 
 void*   thread_send_commande (void* arg) {
     t_simple_env *env = arg;
@@ -319,18 +297,13 @@ void*   thread_recv_commande (void* arg) {
     struct timeval tv;
     fd_set readfds;
     struct timespec timeToWait;
-    struct timeval now;
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
     while (1)
     {
-        gettimeofday(&now,NULL);
-        timeToWait.tv_sec = now.tv_sec;
-        timeToWait.tv_nsec = (now.tv_usec+1000UL*500)*1000UL;
-
-
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_recv, &readfds);
+        timeToWait.tv_sec = 5;
+        timeToWait.tv_nsec = 0;
         select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
-
         if (FD_ISSET(env->socket_recv, &readfds))
             recv_commande(env->socket_recv,(struct sockaddr *) &(env->si_client_recv), &(env->mutexRecv), &(env->commande));
         else
@@ -353,12 +326,18 @@ void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex,
 
 void init_connect_to_client(t_simple_env *env)
 {
+    // init
+
     char buffer[1024];
     int size_si = sizeof(env->si_client_send);
     printf("creation du server :\n");
     create_Server(PORT_SERV_SEND, &(env->socket_send), &(env->si_client_send));
     int fin = 0;
-
+    char buff;
+    int port = PORT_SERV_RECV;
+    int size = sizeof(int);
+    unsigned char data [size];
+    myMemCpy(data, &port, size);
     printf("waiting on 4343 :\n");
     while (!fin) {
         int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
@@ -366,6 +345,8 @@ void init_connect_to_client(t_simple_env *env)
                                 &size_si);
         if (nb_octet > 0) {
             fin = 1;
+            wait (25);
+            sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->si_client_send), size_si);
         }
     }
     create_Server(PORT_SERV_RECV, &(env->socket_recv), &(env->si_client_recv));

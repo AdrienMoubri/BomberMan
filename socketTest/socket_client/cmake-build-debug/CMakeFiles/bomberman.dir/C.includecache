@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/main.c
+C:/Users/AMO/Documents/ecole/BomberManTest/BomberMan/socketTest/socket_client/main.c
 pthread.h
 -
 sys/time.h

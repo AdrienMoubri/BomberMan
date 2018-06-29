@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket-server/main.c
+C:/Users/AMO/Documents/ecole/BomberManTest/BomberMan/socketTest/socket-server/main.c
 pthread.h
 -
 sys/time.h
@@ -18,6 +18,8 @@ stdio.h
 stdlib.h
 -
 windows.h
+-
+afxres.h
 -
 sys/types.h
 -

@@ -361,6 +361,7 @@ void init_connect_to_client(t_simple_env *env)
 
     printf("waiting on 4343 :\n");
     while (!fin) {
+
         int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
                                 (struct sockaddr *) &(env->si_client_send),
                                 &size_si);
@@ -429,14 +430,32 @@ void server(t_simple_env *env)
 
 void init_connect_to_server(t_simple_env *env, char ip[])
 {
+    char buffer[1024];
+    char port_serv;
+    char buff;
+    struct timeval tv;
+    struct timespec timeToWait;
     int size_si = sizeof(env->si_client_send);
+    int nb_octet=0;
+    fd_set readfds;
     printf("ecoute de la socket 4343 :\n");
     connect_to_Server(ip, PORT_SERV_SEND, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
-    int nb_octet = sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
-    if ( nb_octet < 0)
-    {
-        die("send_recv()");
-    }
+    sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
+    int port = 0;
+    int size = sizeof(int);
+    unsigned char data [size];
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
+    timeToWait.tv_sec = 5;
+    timeToWait.tv_nsec = 0;
+    select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
+    if (FD_ISSET(env->socket_recv, &readfds))
+        recvfrom(env->socket_recv, data, size, 0,
+                                (struct sockaddr *) &(env->si_client_recv),
+                                &size_si);
+    myMemCpy(&port, data, size);
+    printf("port :: %d", port);
+
     printf("ecoute de la socket 4444 :\n");
     connect_to_Server(ip, PORT_SERV_RECV, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
     nb_octet = sendto(env->socket_send, "salut2", strlen("salut2"), 0,(struct sockaddr *) &(env->si_client_send), size_si);

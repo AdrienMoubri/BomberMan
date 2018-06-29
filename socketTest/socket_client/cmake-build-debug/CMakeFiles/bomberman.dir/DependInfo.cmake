@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/main.c" "C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/socketTest/socket_client/cmake-build-debug/CMakeFiles/bomberman.dir/main.c.obj"
+  "C:/Users/AMO/Documents/ecole/BomberManTest/BomberMan/socketTest/socket_client/main.c" "C:/Users/AMO/Documents/ecole/BomberManTest/BomberMan/socketTest/socket_client/cmake-build-debug/CMakeFiles/bomberman.dir/main.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
