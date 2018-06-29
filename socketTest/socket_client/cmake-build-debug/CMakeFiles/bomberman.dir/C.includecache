@@ -19,6 +19,8 @@ stdlib.h
 -
 windows.h
 -
+afxres.h
+-
 sys/types.h
 -
 sys/socket.h
