@@ -10,7 +10,7 @@
 
 
 #define         MAXBOMBES       4
-#define         MAXHERO         2
+#define         MAXHERO         3
 #define         WIDTH_MAP       15
 #define         HEIGHT_MAP      13
 #define         PORT_SERV_SEND  4444
@@ -89,7 +89,6 @@ typedef struct      s_simple_env
     t_socketinfo    socketinfo[MAXHERO];
 }                   t_simple_env;
 
-
 void    myMemCpy(void *dest, void *src, size_t n);
 void    send_env(int s, struct sockaddr *si_server, pthread_mutex_t *mutex, t_data_env* env);
 void    recv_env(int s, struct sockaddr *si_client, pthread_mutex_t *mutex, t_data_env *env);
@@ -113,7 +112,7 @@ static void init(t_simple_env *env) {
 #endif
     struct sockaddr_in si_recv = {0};
     struct sockaddr_in si_send = {0};
-    for (int i=0; i < MAXHERO; i++)
+    for (int i=1; i < MAXHERO; i++)
         env->usable_port[i] = 3000 + i*10;
     env->si_client_send = si_send;
     env->si_client_recv = si_recv;
@@ -217,7 +216,7 @@ void*   thread_send_env (void* arg) {
     while (1)
     {
         wait (250);
-        for (int i =0; i < MAXHERO; i++) {
+        for (int i =1; i < MAXHERO; i++) {
             env->num_cli = i;
             send_env(env->socket_send, (struct sockaddr *) &(env->socketinfo[i].si_client_out), &(env->mutexSend),
                      env->data_env);
@@ -298,17 +297,23 @@ void*   thread_recv_commande (void* arg) {
     struct timeval tv;
     fd_set readfds;
     struct timespec timeToWait;
+    FD_ZERO(&readfds);
+    FD_SET(env->socketinfo[num].socket_in, &readfds);
+    timeToWait.tv_sec = 5;
+    timeToWait.tv_nsec = 0;
     while (1)
     {
-        FD_ZERO(&readfds);
-        FD_SET(env->socketinfo[num].socket_in, &readfds);
-        timeToWait.tv_sec = 5;
-        timeToWait.tv_nsec = 0;
-        select(env->socket_recv+1, &readfds, NULL, NULL, &tv);
-        if (FD_ISSET(env->socketinfo[env->num_cli].socket_in, &readfds))
+
+        select(env->socketinfo[num].socket_in+1, &readfds, NULL, NULL, &tv);
+        if (FD_ISSET(env->socketinfo[num].socket_in, &readfds))
+        {
             recv_commande(env->socketinfo[num].socket_in,(struct sockaddr *) &(env->socketinfo[num].si_client_in), &(env->socketinfo[num].mutex_in), &(env->commandes[num]));
-        else
+            printf("received : %d for client number : %d \n", env->commandes[num], num);
+        }
+        else{
             printf("Timed out.\n");
+        }
+
     }
 }
 
@@ -321,7 +326,6 @@ void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex,
         pthread_mutex_lock(mutex);
         myMemCpy(commande, data, sizedata);
         pthread_mutex_unlock(mutex);
-        printf("received : %d \n", *commande);
     }
 }
 
@@ -333,11 +337,10 @@ void    init_connect_to_client(t_simple_env *env) {
     char buffer[1024];
     int size_si = sizeof(env->si_client_send);
     int fin = 0;
-    int nb_cli = 0;
     int size = sizeof(int);
     unsigned char data [size];
     create_Server(PORT_SERV_SEND, &(env->socket_send), &(env->si_client_send));
-    while(nb_cli < MAXHERO)
+    for(int nb_cli = 1; nb_cli < MAXHERO; nb_cli++)
     {
         myMemCpy(data, &(env->usable_port[nb_cli]), size);
         printf("waiting on 4343 :\n");
@@ -355,11 +358,11 @@ void    init_connect_to_client(t_simple_env *env) {
         create_Server(env->usable_port[nb_cli], &(env->socketinfo[nb_cli].socket_in), &(env->socketinfo[nb_cli].si_client_in));
         printf("wait receving :\n");
         FD_ZERO(&readfds);
-        FD_SET(env->socketinfo[nb_cli].socket_out, &readfds);
+        FD_SET(env->socketinfo[nb_cli].socket_in, &readfds);
         timeToWait.tv_sec = 150;
         timeToWait.tv_nsec = 0;
-        select(env->socketinfo[nb_cli].socket_out + 1, &readfds, NULL, NULL, &tv);
-        if (FD_ISSET(env->socketinfo[nb_cli].socket_out, &readfds)) {
+        select(env->socketinfo[nb_cli].socket_in + 1, &readfds, NULL, NULL, &tv);
+        if (FD_ISSET(env->socketinfo[nb_cli].socket_in, &readfds)) {
             int nb_octet = recvfrom(env->socketinfo[nb_cli].socket_in, data, size, 0,
                                     (struct sockaddr *) &(env->socketinfo[nb_cli].si_client_in), &size_si);
             if (nb_octet < 0) {
@@ -367,14 +370,13 @@ void    init_connect_to_client(t_simple_env *env) {
                 die("send_send()");
             } else{
                 printf("Received\n");
-                nb_cli++;
             }
         }
     }
     int port = 4444;
     myMemCpy(data, &(port), size);
     printf("start send Final\n");
-    for(int i = 0; i < MAXHERO; i++)
+    for(int i = 1; i < MAXHERO; i++)
     {
         printf("send Final\n");
         sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
@@ -386,13 +388,12 @@ void    start_server(t_simple_env *env) {
 
     printf("start SERVER\n");
     pthread_create(&(env->thread_send), NULL, thread_send_env, (void *) env);
-    for (int i = 0; i < MAXHERO; i++){
+    for (int i = 1; i < MAXHERO; i++){
         printf("start Recv Commande \n");
         env->num_cli = i;
         pthread_create(&(env->thread_recv), NULL, thread_recv_commande, (void *) env);
         wait(25);
     }
-
 }
 
 void    server(t_simple_env *env) {
@@ -404,9 +405,11 @@ void    server(t_simple_env *env) {
 
     t_hero_simple *hero;
     //lancement
+
     printf("envoie des info sur la socket s \n");
     start_server(env);
     //lecture
+
     for (int i = 0; i < MAXHERO; i++) {
         env->commandes[i] = 0;
         env->data_env->heroes[i].alive = 100;
@@ -423,6 +426,7 @@ void    server(t_simple_env *env) {
                    hero->bombes[i].chrono);
         }
     }
+
     while (1) {
         wait(500);
         pthread_mutex_lock(&(env->mutexSend));
@@ -548,6 +552,6 @@ int     main(int argv, char **argc) {
     t_simple_env *env;
     env = malloc(sizeof(t_simple_env));
     env->data_env = malloc(sizeof(t_data_env));
-    server(env);
-    //client(env);
+    //server(env);
+    client(env);
 }
