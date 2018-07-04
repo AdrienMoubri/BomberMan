@@ -1,4 +1,0 @@
-#!/bin/bash 
-echo "Fini ! Fais bien mumuse ! :D"
-cd /usr/bin/bomberman
-./BomberMan
