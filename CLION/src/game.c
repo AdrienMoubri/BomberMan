@@ -384,7 +384,7 @@ void                launch_gameServer(t_env *env, SDL_Event *event) {
                 else
                 {
                     pthread_mutex_lock(&(env->simple_env->mutexRecv));
-                    other_order(hero_i->hero, env->simple_env->commande);
+                    other_order(hero_i->hero, env->simple_env->commandes[hero_i->hero->numHero]);
                     pthread_mutex_unlock(&(env->simple_env->mutexRecv));
                 }
                 collisionCase(hero_i->hero, env->map->case_tab);
@@ -417,7 +417,7 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
     init_game_resources(env);
     start_client(env->simple_env);
     event->key.keysym.sym = 0;
-    while (env->heroes->first->next->hero->play && env->simple_env->commande != SDLK_ESCAPE && event->type != SDL_QUIT ) {
+    while (env->heroes->first->next->hero->play && env->simple_env->commandeClient != SDLK_ESCAPE && event->type != SDL_QUIT ) {
         SDL_PollEvent(event);
         pthread_mutex_lock(&(env->simple_env->mutexRecv));
         get_env(env);
@@ -427,12 +427,12 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
         {
             draw_Game(env);
             pthread_mutex_lock(&(env->simple_env->mutexSend));
-            env->simple_env->commande = event->key.keysym.sym;
+            env->simple_env->commandeClient = event->key.keysym.sym;
             pthread_mutex_unlock(&(env->simple_env->mutexSend));
         }
         event->key.keysym.sym = 0;
     }
-    env->simple_env->commande = 0;
+    env->simple_env->commandeClient = 0;
 }
 
 /*

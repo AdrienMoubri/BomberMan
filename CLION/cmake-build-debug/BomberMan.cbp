@@ -8,198 +8,194 @@
 		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\src\lib\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug"/>
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="rebuild_cache">
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="BomberMan">
-				<Option output="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/BomberMan" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug"/>
+				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/BomberMan.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="0"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DDEBUG=1"/>
-					<Add directory="/usr/include/SDL"/>
-					<Add directory="/usr/include/c++/6"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
-					<Add directory="/usr/include/c++/6/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="C:/Program Files (x86)/libSdl/SDL-1.2.15/include/SDL"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 BomberMan"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 BomberMan"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="BomberMan/fast">
-				<Option output="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/BomberMan" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug"/>
+				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/BomberMan.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
 				<Option object_output="./"/>
-				<Option type="1"/>
+				<Option type="0"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DDEBUG=1"/>
-					<Add directory="/usr/include/SDL"/>
-					<Add directory="/usr/include/c++/6"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
-					<Add directory="/usr/include/c++/6/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="C:/Program Files (x86)/libSdl/SDL-1.2.15/include/SDL"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 BomberMan/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 BomberMan/fast"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="my_lib">
-				<Option output="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/libmy_lib.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib"/>
+				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/libmy_lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DDEBUG=1"/>
-					<Add directory="/usr/include/c++/6"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
-					<Add directory="/usr/include/c++/6/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 my_lib"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 my_lib"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="my_lib/fast">
-				<Option output="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/libmy_lib.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib"/>
+				<Option output="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/libmy_lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DDEBUG=1"/>
-					<Add directory="/usr/include/c++/6"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
-					<Add directory="/usr/include/c++/6/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 my_lib/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/amo/Bureau/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 my_lib/fast"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/Bomberman.rc">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/Bomberman.rc">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/Engine.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/Engine.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/bfm.h">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/bfm.h">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/bombes.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/bombes.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/drawer.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/drawer.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/game.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/game.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/heroes_images.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/heroes_images.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/init_sdl.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/init_sdl.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/lib.h">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/lib.h">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_getnbr.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_getnbr.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_put_nbr.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_put_nbr.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_putchar.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_putchar.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_rand.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_rand.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_strcat.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_strcat.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/my_string.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/my_string.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/readline.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/readline.c">
 			<Option target="my_lib"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/main.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/main.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/order.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/order.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/socket.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/socket.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/team.c">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/team.c">
 			<Option target="BomberMan"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/CMakeLists.txt">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/amo/Bureau/BomberMan/CLION/src/lib/CMakeLists.txt">
+		<Unit filename="C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/src/lib/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\src\lib\"/>
 		</Unit>
 	</Project>

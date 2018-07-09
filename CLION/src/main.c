@@ -36,19 +36,31 @@ int		main(int argc, char* argv[])
         event->key.keysym.sym = 0;
         launch_menu(env, event);
         if (env->server)
-            launch_gameServer(env, event);
-        else
-            launch_gameClient(env, event);
+        {
+          launch_gameServer(env, event);
           SDL_PollEvent(event);
           pthread_cancel(env->simple_env->thread_recv);
           pthread_cancel(env->simple_env->thread_send);
-          #ifdef WIN32
-            closesocket(env->simple_env->socket_recv);
-            closesocket(env->simple_env->socket_send);
-          #else
-            close(env->simple_env->socket_recv);
-            close(env->simple_env->socket_send);
-          #endif
+          closesocket(env->simple_env->socket_send);
+          for (int i = 1; i < env->simple_env->data_env->nb_hero; i++)
+          {
+            my_closesocket(env->simple_env->socket_recv);
+            my_closesocket(env->simple_env->socket_send);
+          }
+          my_closesocket(env->simple_env->socket_recv);
+          my_closesocket(env->simple_env->socket_send);
+        }
+        else
+        {
+          launch_gameClient(env, event);
+          SDL_PollEvent(event);
+          pthread_cancel(env->simple_env->thread_recv);
+          pthread_cancel(env->simple_env->thread_send);
+          close(env->simple_env->socket_recv);
+          my_closesocket(env->simple_env->socket_recv);
+          my_closesocket(env->simple_env->socket_send);
+
+        }
       }
       free(event);
       free_universe(env);

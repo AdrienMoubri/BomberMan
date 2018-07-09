@@ -16,13 +16,15 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <pthread.h>
-
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
 
 #ifdef WIN32 /* si vous êtes sous Windows */
 
+
+#define wait(msec) Sleep ((msec))
+#define my_closesocket(socket) closesocket(socket)
 
 #include <io.h>
 #include <stdio.h>
@@ -35,10 +37,13 @@
 
 #else /* si vous êtes sous Linux ou Mac */
 
+#define  wait(msec) usleep ((msec) * 1000)
+#define my_closesocket(socket) close(socket)
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <afxres.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,7 +52,6 @@
 
 #endif
 
-#define         PORT_SERV_RECV  4343
 #define         PORT_SERV_SEND  4444
 #define         WIDTH_CASE     16
 #define         SPEED_HERO     4
@@ -182,6 +186,15 @@ typedef struct		s_hero
     t_bomb_list		  *bombes;
 }			        t_hero;
 
+typedef struct      s_socketinfo
+{
+    int             socket_out;
+    int             socket_in;
+    struct sockaddr_in si_client_in;
+    struct sockaddr_in si_client_out;
+    pthread_mutex_t mutex_in;
+}                   t_socketinfo;
+
 typedef struct		s_hero_elem
 {
     t_hero		        *hero;
@@ -226,8 +239,10 @@ typedef struct		s_hero_simple
     int             orientation;
     t_bomb_simple	bombes[MAXBOMBES];
 }			        t_hero_simple;
+
 typedef struct      s_data_env
 {
+    int             nb_hero;
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
@@ -237,13 +252,17 @@ typedef struct      s_simple_env
     t_data_env      *data_env;
     int             socket_recv;
     int             socket_send;
+    int             num_cli;
     struct sockaddr_in si_client_recv;
     struct sockaddr_in si_client_send;
-    int             commande;
+    int             commandeClient;
+    int             commandes[MAXHERO];
+    int             usable_port[MAXHERO];
     pthread_t       thread_recv;
     pthread_t       thread_send;
     pthread_mutex_t mutexSend;
     pthread_mutex_t mutexRecv;
+    t_socketinfo    socketinfo[MAXHERO];
 }                   t_simple_env;
 
 typedef struct		s_env
