@@ -1,6 +1,6 @@
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/BomberMan.dir
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/my_lib.dir
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/edit_cache.dir
-C:/Users/AMO/Documents/ecole/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/rebuild_cache.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/BomberMan.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/my_lib.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/edit_cache.dir
+C:/Users/Tozh/Documents/BomberMan/BomberMan/CLION/cmake-build-debug/src/lib/CMakeFiles/rebuild_cache.dir

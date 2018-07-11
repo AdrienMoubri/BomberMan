@@ -161,7 +161,7 @@ void	init_game_resources(t_env *env) {
     env->sizeCase.h = WIDTH_CASE;
     create_hero_list(env);
 
-    for(int i = 0; i < env->nb_heroes; i++)
+    for(int i = 0; i < env->simple_env->data_env->nb_hero; i++)
     {
         t_hero *h1 = malloc(sizeof(t_hero));
         h1->numHero = i;

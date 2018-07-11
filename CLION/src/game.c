@@ -71,6 +71,7 @@ void                launch_menu(t_env *env, SDL_Event *event)
         }
     }
     char text[SIZE_IP];
+    char nbPlayer;
     //initialise le tableau
     for (int i =0; i < SIZE_IP; i++)
     {
@@ -90,18 +91,56 @@ void                launch_menu(t_env *env, SDL_Event *event)
         }
         else
         {
-            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Your IP  adress is : ", env->screen->couleurBomber);
-            env->screen->text = TTF_RenderText_Blended(env->screen->police, get_ip(), env->screen->couleurBomber);
+            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Choose Number of player between 2 and 4 ", env->screen->couleurBomber);
+            env->screen->text = TTF_RenderText_Blended(env->screen->police, text, env->screen->couleurBomber);
             env->server = 1;
         }
         draw_Menu(env);
         //création du server
         if (env->server == 1)
         {
-            init_connect_to_client(env->simple_env);
-            env->nb_heroes = 2;
+
+
+
             SDL_WaitEvent(event);
-            play = 0;
+            while (event->type != SDL_KEYDOWN)
+            {
+                SDL_WaitEvent(event);
+            }
+            switch (event->type)
+            {
+                case SDL_KEYDOWN:
+                    switch (event->key.keysym.sym)
+                    {
+                        case SDLK_RETURN:
+                            env->simple_env->data_env->nb_hero = nbPlayer - '0';
+                            env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Your IP  adress is : ", env->screen->couleurBomber);
+                            env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "You are waiting for players", env->screen->couleurBomber);
+                            env->screen->text = TTF_RenderText_Blended(env->screen->police, get_ip(), env->screen->couleurBomber);
+                            draw_Menu(env);
+                            init_connect_to_client(env->simple_env);
+                            env->nb_heroes = nbPlayer - '0';
+                            SDL_WaitEvent(event);
+                            play = 0;
+                            break;
+                        default:
+                            unicode = event->key.keysym.unicode;
+                            if (unicode == 8 && pos > 0)
+                            {
+                                nbPlayer = '\0';
+                                pos--;
+                            }
+                            else
+                            if (unicode >= 32 && unicode <= 127 && pos < 20)
+                            {
+                                nbPlayer = (char)unicode;
+                                text [0]= nbPlayer;
+                                pos++;
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
         //TODO créer des méthode pour mieux visualiser les échanges
         else{
@@ -117,7 +156,7 @@ void                launch_menu(t_env *env, SDL_Event *event)
                     {
                         case SDLK_RETURN:
                             init_connect_to_server(env->simple_env, text);
-                            env->nb_heroes = 2;
+                            env->nb_heroes = env->simple_env->data_env->nb_hero;
                             env->hero = 1;
                             play = 0;
                             break;
@@ -202,32 +241,7 @@ void explose_bomb(t_bomb_elem *bomb_i_y,t_hero_list *heroes, t_case case_tab[WID
     y = bomb_i_y->bomb->positionCase->y;
 
     //on nétoie le coté
-    /*    for (int i = debutX; i <= finX; i++)
-    {
-        exploseCase(&(case_tab[i][y]), heroes);
-        if (i == debutX)
-            //end left
-            case_tab[i][y].type = 3;
-        else if (i == finX)
-            //end right
-            case_tab[i][y].type = 4;
-        else
-            // horizontal
-            case_tab[i][y].type = 6;
-    }
-    for (int i = debutY; i <= finY; i++)
-    {
-        exploseCase(&(case_tab[x][i]), heroes);
-        if (i == debutY)
-            //end Up
-            case_tab[x][i].type = 7;
-        else if (i == finY)
-            //end Down
-            case_tab[x][i].type = 8;
-        else if(i != y)
-            //vertical
-            case_tab[x][i].type = 9;
-    }*/
+
     for (int xi = x; xi >= debutX; xi--)
     {
         exploseCase(&(case_tab[xi][y]), heroes);

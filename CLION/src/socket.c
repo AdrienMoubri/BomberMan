@@ -215,7 +215,7 @@ void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex,
 }
 
 void    init_connect_to_client(t_simple_env *env) {
-    // init
+    init(env);
     fd_set readfds;
     char buffer[1024];
     int size_si = sizeof(env->si_client_send);
@@ -253,8 +253,7 @@ void    init_connect_to_client(t_simple_env *env) {
             }
         }
     }
-    int port = 4444;
-    myMemCpy(data, &(port), size);
+    myMemCpy(data, &(env->data_env->nb_hero), size);
     printf("start send Final\n");
     for(int i = 1; i < env->data_env->nb_hero; i++)
     {
@@ -276,6 +275,7 @@ void    start_server(t_simple_env *env) {
 }
 
 void    init_connect_to_server(t_simple_env *env, char ip[]) {
+    init(env);
     int size_si = sizeof(env->si_client_send);
     int nb_octet=0;
     fd_set readfds;
@@ -316,16 +316,18 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
             recvfrom(env->socket_recv, data, size, 0,
                      (struct sockaddr *) &(env->si_client_recv),
                      &size_si);
-
+            myMemCpy(&(env->data_env->nb_hero), &data,size);
         }
         test=0;
     }
+
 }
 
 void start_client(t_simple_env *env)
 {
     pthread_create(&(env->thread_recv), NULL, thread_recv_env, (void *) env);
     pthread_create(&(env->thread_send), NULL, thread_send_commande, (void *) env);
+    wait(200);
 }
 
 
