@@ -28,6 +28,7 @@ t_env			*init_game()
         env->map = malloc(sizeof (t_map));
         env->simple_env = malloc(sizeof(t_simple_env));
         env->simple_env->data_env = malloc(sizeof(t_data_env));
+        env->simple_env->data_env->nb_hero = 0;
     }
     return (env);
 }
