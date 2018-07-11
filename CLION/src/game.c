@@ -42,6 +42,9 @@ char *readStringSDL(char *s_dst, size_t n)
 void                launch_menu(t_env *env, SDL_Event *event)
 {
     int play = 0;
+    env->server = 0;
+    env->client = 0;
+    event->key.keysym.sym = 0;
     env->screen->text = TTF_RenderText_Blended(env->screen->police, "Press enter to start a game ", env->screen->couleurBomber);
     env->screen->rect_text_haut = TTF_RenderText_Blended(env->screen->police, "Here to play as Server ", env->screen->couleurBomber);
     env->screen->rect_text_bas = TTF_RenderText_Blended(env->screen->police, "Here to play as Client ", env->screen->couleurBomber);

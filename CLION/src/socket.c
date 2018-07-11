@@ -225,6 +225,7 @@ void    init_connect_to_client(t_simple_env *env) {
     int fin = 0;
     int clef = CLEF;
     int size = sizeof(int);
+    unsigned char data2 [size];
     unsigned char data [size];
     unsigned char clefChar [size];
     myMemCpy(clefChar, &(clef), size);
@@ -279,9 +280,9 @@ void    init_connect_to_client(t_simple_env *env) {
                 printf("Received\n");
             }
         }
-        myMemCpy(data, &(hero_num), size);
+        myMemCpy(data2, &(hero_num), size);
         printf("send num_hero\n");
-        sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
+        sendto(env->socket_send, data2, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
     }
 }
 
@@ -302,12 +303,14 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
     int size_si = sizeof(env->si_client_send);
     int nb_octet=0;
     fd_set readfds;
+    fd_set readfds2;
     printf("ecoute de la socket 4343 :\n");
     connect_to_Server(ip, PORT_SERV_SEND, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
     sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
     int port = 0;
     int clef=0;
     int size = sizeof(int);
+    unsigned char data2 [size];
     unsigned char data [size];
     FD_ZERO(&readfds);
     FD_SET(env->socket_recv, &readfds);
@@ -350,14 +353,14 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
         myMemCpy(&(env->data_env->nb_hero), data, size);
     }
     sendto(env->socket_recv, data, size, 0,(struct sockaddr *) &(env->si_client_recv), size_si);
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
-    select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
-    if (FD_ISSET(env->socket_recv, &readfds)) {
-        recvfrom(env->socket_recv, data, size, 0,
+    FD_ZERO(&readfds2);
+    FD_SET(env->socket_recv, &readfds2);
+    select(env->socket_recv+1, &readfds2, NULL, NULL, NULL);
+    if (FD_ISSET(env->socket_recv, &readfds2)) {
+        recvfrom(env->socket_recv, data2, size, 0,
                  (struct sockaddr *) &(env->si_client_recv),
                  &size_si);
-        myMemCpy(&(env->data_env->num_hero), data, size);
+        myMemCpy(&(env->data_env->num_hero), data2, size);
     }
 }
 
