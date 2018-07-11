@@ -267,7 +267,18 @@ void    init_connect_to_client(t_simple_env *env) {
         printf("send Final\n");
         myMemCpy(data, &(env->data_env->nb_hero), size);
         sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
-        wait(200);
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_send, &readfds);
+        select(env->socket_send + 1, &readfds, NULL, NULL, NULL);
+        if (FD_ISSET(env->socket_send, &readfds)) {
+            int nb_octet = recvfrom(env->socket_send, data, size, 0,
+                                    (struct sockaddr *) &(env->socketinfo[i].si_client_out), &size_si);
+            if (nb_octet < 0) {
+                die("send_send()");
+            } else{
+                printf("Received\n");
+            }
+        }
         myMemCpy(data, &(hero_num), size);
         printf("send num_hero\n");
         sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
@@ -338,7 +349,7 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
                  &size_si);
         myMemCpy(&(env->data_env->nb_hero), data, size);
     }
-    wait(20);
+    sendto(env->socket_recv, data, size, 0,(struct sockaddr *) &(env->si_client_recv), size_si);
     FD_ZERO(&readfds);
     FD_SET(env->socket_recv, &readfds);
     select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
