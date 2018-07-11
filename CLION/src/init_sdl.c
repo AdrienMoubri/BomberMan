@@ -201,9 +201,6 @@ void	free_sdl(t_env *env)
   SDL_FreeSurface(env->screen->menu);
   //SDL_FreeSurface(env->screen->hero);
   SDL_FreeSurface(env->screen->selector);
-  SDL_FreeSurface(env->screen->text);
- // SDL_FreeSurface(env->screen->creature);
-  SDL_FreeSurface(env->screen->background);
   SDL_FreeSurface(env->screen->ecran);
   TTF_Quit();
   SDL_Quit();

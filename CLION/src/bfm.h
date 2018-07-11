@@ -43,7 +43,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <afxres.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -61,6 +60,7 @@
 #define			WIDTH_WINDOW  1280
 #define			HEIGHT_WINDOW 720
 #define			WIDTH_HERO  20
+#define			CLEF  2222
 #define			HEIGHT_HERO 33
 #define         SIZE_IP 20
 #define         MAXBOMBES 4
@@ -190,6 +190,7 @@ typedef struct      s_socketinfo
 {
     int             socket_out;
     int             socket_in;
+    pthread_t       thread_recv;
     struct sockaddr_in si_client_in;
     struct sockaddr_in si_client_out;
     pthread_mutex_t mutex_in;
@@ -243,6 +244,7 @@ typedef struct		s_hero_simple
 typedef struct      s_data_env
 {
     int             nb_hero;
+    int             num_hero;
     t_hero_simple   heroes[MAXHERO];
     int             map[WIDTH_MAP][HEIGHT_MAP];
 }                   t_data_env;
@@ -271,7 +273,7 @@ typedef struct		s_env
     t_screen		  *screen;
     int               hero;
     int               play;
-    int               nb_heroes;
+    int               client;
     int               server;
     t_map             *map;
     SDL_Rect          sizeHero;

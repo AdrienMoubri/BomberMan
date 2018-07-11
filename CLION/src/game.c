@@ -21,6 +21,8 @@ t_env			*init_game()
     if (env)
     {
         env->play = 1;
+        env->server = 0;
+        env->client = 0;
         env->heroes = malloc(sizeof (t_hero_list));
         env->screen = malloc(sizeof(t_screen));
         env->map = malloc(sizeof (t_map));
@@ -80,8 +82,6 @@ void                launch_menu(t_env *env, SDL_Event *event)
     size_t pos = 0;
     int unicode;
     SDL_EnableUNICODE(1);
-    env->server = 0;
-    env->nb_heroes = 1;
     while (play==1)
     {
         if (env->screen->positionSelector.y == env->screen->positionSelectorBas.y)
@@ -119,7 +119,6 @@ void                launch_menu(t_env *env, SDL_Event *event)
                             env->screen->text = TTF_RenderText_Blended(env->screen->police, get_ip(), env->screen->couleurBomber);
                             draw_Menu(env);
                             init_connect_to_client(env->simple_env);
-                            env->nb_heroes = nbPlayer - '0';
                             SDL_WaitEvent(event);
                             play = 0;
                             break;
@@ -155,9 +154,9 @@ void                launch_menu(t_env *env, SDL_Event *event)
                     switch (event->key.keysym.sym)
                     {
                         case SDLK_RETURN:
+                            env->simple_env->data_env->nb_hero=0;
                             init_connect_to_server(env->simple_env, text);
-                            env->nb_heroes = env->simple_env->data_env->nb_hero;
-                            env->hero = 1;
+                            env->client=1;
                             play = 0;
                             break;
                         default:
@@ -376,7 +375,7 @@ void                get_env(t_env *env)
 
 
 /*
- * lancement du serveret ouvertur des sockets
+ * lancement du server et ouverture des sockets
  */
 void                launch_gameServer(t_env *env, SDL_Event *event) {
     init_game_resources(env);
@@ -431,20 +430,26 @@ void                launch_gameClient(t_env *env, SDL_Event *event) {
     init_game_resources(env);
     start_client(env->simple_env);
     event->key.keysym.sym = 0;
-    while (env->heroes->first->next->hero->play && env->simple_env->commandeClient != SDLK_ESCAPE && event->type != SDL_QUIT ) {
-        SDL_PollEvent(event);
-        pthread_mutex_lock(&(env->simple_env->mutexRecv));
-        get_env(env);
-        pthread_mutex_unlock(&(env->simple_env->mutexRecv));
-        SDL_Delay(100);
-        if (env->heroes != NULL && env->heroes->first != NULL)
-        {
-            draw_Game(env);
-            pthread_mutex_lock(&(env->simple_env->mutexSend));
-            env->simple_env->commandeClient = event->key.keysym.sym;
-            pthread_mutex_unlock(&(env->simple_env->mutexSend));
+    t_hero_elem *my_hero = env->heroes->first;
+    while (my_hero != NULL && my_hero->hero->numHero != env->simple_env->data_env->num_hero)
+        my_hero = my_hero->next;
+    if (my_hero != NULL)
+    {
+        while (my_hero->hero->play && env->simple_env->commandeClient != SDLK_ESCAPE && event->type != SDL_QUIT ) {
+            SDL_PollEvent(event);
+            pthread_mutex_lock(&(env->simple_env->mutexRecv));
+            get_env(env);
+            pthread_mutex_unlock(&(env->simple_env->mutexRecv));
+            SDL_Delay(100);
+            if (env->heroes != NULL && env->heroes->first != NULL)
+            {
+                draw_Game(env);
+                pthread_mutex_lock(&(env->simple_env->mutexSend));
+                env->simple_env->commandeClient = event->key.keysym.sym;
+                pthread_mutex_unlock(&(env->simple_env->mutexSend));
+            }
+            event->key.keysym.sym = 0;
         }
-        event->key.keysym.sym = 0;
     }
     env->simple_env->commandeClient = 0;
 }

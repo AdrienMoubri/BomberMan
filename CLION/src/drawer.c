@@ -63,9 +63,8 @@ void draw_Game(t_env *env)
         hero_i->hero->positionImg = hero_i->hero->position;
         hero_i->hero->positionImg.y -= 16;
         t_hero_img_elem *img = find_hero_img(hero_i->hero->numHero, hero_i->hero->orientation, env->heroes_img);
-        if ( img != NULL)
+        if ( img != NULL && hero_i->hero->play)
             SDL_BlitSurface(img->hero->hero_img, &(env->sizeHero), env->screen->ecran, &(hero_i->hero->positionImg));
-
         // annimate player
         if (env->sizeHero.x + env->sizeHero.w >= env->heroes->first->hero->image->hero_img->w)
             env->sizeHero.x = 0;

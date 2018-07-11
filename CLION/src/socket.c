@@ -34,6 +34,8 @@ void init(t_simple_env *env) {
     env->mutexRecv = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     for (int i=0; i < env->data_env->nb_hero; i++)
     {
+        struct sockaddr_in si_recv = {0};
+        struct sockaddr_in si_send = {0};
         env->socketinfo[i].mutex_in = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
         env->socketinfo[i].si_client_out = si_recv;
         env->socketinfo[i].si_client_in = si_send;
@@ -219,9 +221,13 @@ void    init_connect_to_client(t_simple_env *env) {
     fd_set readfds;
     char buffer[1024];
     int size_si = sizeof(env->si_client_send);
+    int hero_num = 0;
     int fin = 0;
+    int clef = CLEF;
     int size = sizeof(int);
     unsigned char data [size];
+    unsigned char clefChar [size];
+    myMemCpy(clefChar, &(clef), size);
     create_Server(PORT_SERV_SEND, &(env->socket_send), &(env->si_client_send));
     for(int nb_cli = 1; nb_cli < env->data_env->nb_hero; nb_cli++)
     {
@@ -233,6 +239,7 @@ void    init_connect_to_client(t_simple_env *env) {
                                     &size_si);
             if (nb_octet > 0) {
                 fin = 1;
+                sendto(env->socket_send, clefChar, size, 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out), size_si);
                 sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out), size_si);
             }
         }
@@ -253,11 +260,16 @@ void    init_connect_to_client(t_simple_env *env) {
             }
         }
     }
-    myMemCpy(data, &(env->data_env->nb_hero), size);
-    printf("start send Final\n");
+    printf("start send nb_heroes\n");
     for(int i = 1; i < env->data_env->nb_hero; i++)
     {
+        hero_num = i;
         printf("send Final\n");
+        myMemCpy(data, &(env->data_env->nb_hero), size);
+        sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
+        wait(200);
+        myMemCpy(data, &(hero_num), size);
+        printf("send num_hero\n");
         sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
     }
 }
@@ -269,7 +281,7 @@ void    start_server(t_simple_env *env) {
     for (int i = 1; i < env->data_env->nb_hero; i++){
         printf("start Recv Commande \n");
         env->num_cli = i;
-        pthread_create(&(env->thread_recv), NULL, thread_recv_commande, (void *) env);
+        pthread_create(&(env->socketinfo[i].thread_recv), NULL, thread_recv_commande, (void *) env);
         wait(25);
     }
 }
@@ -283,6 +295,7 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
     connect_to_Server(ip, PORT_SERV_SEND, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
     sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
     int port = 0;
+    int clef=0;
     int size = sizeof(int);
     unsigned char data [size];
     FD_ZERO(&readfds);
@@ -294,11 +307,20 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
             recvfrom(env->socket_recv, data, size, 0,
                      (struct sockaddr *) &(env->si_client_recv),
                      &size_si);
-
+            myMemCpy(&clef, data, size);
+            if (clef == CLEF)
+            {
+                select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
+                if (FD_ISSET(env->socket_recv, &readfds)) {
+                    recvfrom(env->socket_recv, data, size, 0,
+                             (struct sockaddr *) &(env->si_client_recv),
+                             &size_si);
+                    myMemCpy(&port, data, size);
+                    test=0;
+                }
+            }
         }
-        test=0;
     }
-    myMemCpy(&port, data, size);
     printf("port :: %d", port);
     printf("ecoute de la socket 4444 :\n");
     connect_to_Server(ip, port, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
@@ -309,18 +331,23 @@ void    init_connect_to_server(t_simple_env *env, char ip[]) {
     }
     FD_ZERO(&readfds);
     FD_SET(env->socket_recv, &readfds);
-    test = 1;
-    while (test){
-        select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
-        if (FD_ISSET(env->socket_recv, &readfds)) {
-            recvfrom(env->socket_recv, data, size, 0,
-                     (struct sockaddr *) &(env->si_client_recv),
-                     &size_si);
-            myMemCpy(&(env->data_env->nb_hero), &data,size);
-        }
-        test=0;
+    select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
+    if (FD_ISSET(env->socket_recv, &readfds)) {
+        recvfrom(env->socket_recv, data, size, 0,
+                 (struct sockaddr *) &(env->si_client_recv),
+                 &size_si);
+        myMemCpy(&(env->data_env->nb_hero), data, size);
     }
-
+    wait(20);
+    FD_ZERO(&readfds);
+    FD_SET(env->socket_recv, &readfds);
+    select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
+    if (FD_ISSET(env->socket_recv, &readfds)) {
+        recvfrom(env->socket_recv, data, size, 0,
+                 (struct sockaddr *) &(env->si_client_recv),
+                 &size_si);
+        myMemCpy(&(env->data_env->num_hero), data, size);
+    }
 }
 
 void start_client(t_simple_env *env)

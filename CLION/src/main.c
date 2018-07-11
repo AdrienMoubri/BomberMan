@@ -39,27 +39,29 @@ int		main(int argc, char* argv[])
         {
           launch_gameServer(env, event);
           SDL_PollEvent(event);
-          pthread_cancel(env->simple_env->thread_recv);
+          event->key.keysym.sym = 0;
           pthread_cancel(env->simple_env->thread_send);
-          closesocket(env->simple_env->socket_send);
+          my_closesocket(env->simple_env->socket_send);
           for (int i = 1; i < env->simple_env->data_env->nb_hero; i++)
           {
-            my_closesocket(env->simple_env->socket_recv);
-            my_closesocket(env->simple_env->socket_send);
+            pthread_cancel(env->simple_env->socketinfo[i].thread_recv);
+            my_closesocket(env->simple_env->socketinfo[i].socket_in);
+            my_closesocket(env->simple_env->socketinfo[i].socket_out);
           }
           my_closesocket(env->simple_env->socket_recv);
           my_closesocket(env->simple_env->socket_send);
+          wait (250);
         }
-        else
+        else if (env->client)
         {
           launch_gameClient(env, event);
           SDL_PollEvent(event);
+          event->key.keysym.sym = 0;
           pthread_cancel(env->simple_env->thread_recv);
           pthread_cancel(env->simple_env->thread_send);
-          close(env->simple_env->socket_recv);
           my_closesocket(env->simple_env->socket_recv);
           my_closesocket(env->simple_env->socket_send);
-
+          wait (250);
         }
       }
       free(event);
