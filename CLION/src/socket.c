@@ -114,9 +114,9 @@ void*   thread_send_env (void* arg) {
     printf("debut thread send \n");
     while (1)
     {
-        wait(250);
+        wait(100);
         for (int i =1; i < env->data_env->nb_hero; i++) {
-            env->num_cli = i;
+            env->data_env->num_hero = i;
             send_env(env->socket_send, (struct sockaddr *) &(env->socketinfo[i].si_client_out), &(env->mutexSend),
                      env->data_env);
         }
@@ -166,7 +166,7 @@ void*   thread_send_commande (void* arg) {
     t_simple_env *env = arg;
     while (1)
     {
-        wait (250);
+        wait (50);
         send_commande(env->socket_send, (struct sockaddr *) &env->si_client_send, &(env->mutexSend), &(env->commandeClient));
     }
 }
@@ -219,70 +219,43 @@ void    recv_commande(int s, struct sockaddr *si_client, pthread_mutex_t *mutex,
 void    init_connect_to_client(t_simple_env *env) {
     init(env);
     fd_set readfds;
-    char buffer[1024];
+    char buffer[124];
     int size_si = sizeof(env->si_client_send);
-    int hero_num = 0;
+    t_initpack packet = {0};
+    packet.nb_heroes = env->data_env->nb_hero;
+    packet.key = CLEF;
     int fin = 0;
-    int clef = CLEF;
-    int size = sizeof(int);
-    unsigned char data2 [size];
-    unsigned char data [size];
-    unsigned char clefChar [size];
-    myMemCpy(clefChar, &(clef), size);
+    int size_packet = sizeof(t_initpack);
+    unsigned char data_packet [size_packet];
     create_Server(PORT_SERV_SEND, &(env->socket_send), &(env->si_client_send));
     for(int nb_cli = 1; nb_cli < env->data_env->nb_hero; nb_cli++)
     {
-        myMemCpy(data, &(env->usable_port[nb_cli]), size);
+        packet.num_hero = nb_cli;
+        packet.private_port = env->usable_port[nb_cli];
         printf("waiting on 4343 :\n");
-        while (!fin) {
-            int nb_octet = recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
-                                    (struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out),
-                                    &size_si);
-            if (nb_octet > 0) {
-                fin = 1;
-                sendto(env->socket_send, clefChar, size, 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out), size_si);
-                sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out), size_si);
-            }
-        }
-        fin = 0;
-        printf("create server :\n");
-        create_Server(env->usable_port[nb_cli], &(env->socketinfo[nb_cli].socket_in), &(env->socketinfo[nb_cli].si_client_in));
-        printf("wait receving :\n");
         FD_ZERO(&readfds);
         FD_SET(env->socketinfo[nb_cli].socket_in, &readfds);
-        select(env->socketinfo[nb_cli].socket_in + 1, &readfds, NULL, NULL, NULL);
         if (FD_ISSET(env->socketinfo[nb_cli].socket_in, &readfds)) {
-            int nb_octet = recvfrom(env->socketinfo[nb_cli].socket_in, data, size, 0,
-                                    (struct sockaddr *) &(env->socketinfo[nb_cli].si_client_in), &size_si);
-            if (nb_octet < 0) {
-                die("send_send()");
-            } else{
-                printf("Received\n");
-            }
+        recvfrom(env->socket_send, buffer, sizeof buffer - 1, 0,
+                                    (struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out),
+                                    &size_si);
+            wait(100);
+        }
+        myMemCpy(data_packet, &packet, size_packet);
+        create_Server(env->usable_port[nb_cli], &(env->socketinfo[nb_cli].socket_in), &(env->socketinfo[nb_cli].si_client_in));
+        sendto(env->socket_send, data_packet, size_packet, 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_out), size_si);
+        FD_ZERO(&readfds);
+        FD_SET(env->socketinfo[nb_cli].socket_in, &readfds);
+        if (FD_ISSET(env->socketinfo[nb_cli].socket_in, &readfds)) {
+            recvfrom(env->socketinfo[nb_cli].socket_in, buffer, sizeof buffer - 1, 0,
+                     (struct sockaddr *) &(env->socketinfo[nb_cli].si_client_in),
+                     &size_si);
+            wait(100);
         }
     }
-    printf("start send nb_heroes\n");
-    for(int i = 1; i < env->data_env->nb_hero; i++)
+    for (int nb_cli = 1; nb_cli < env->data_env->nb_hero; nb_cli++)
     {
-        hero_num = i;
-        printf("send Final\n");
-        myMemCpy(data, &(env->data_env->nb_hero), size);
-        sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
-        FD_ZERO(&readfds);
-        FD_SET(env->socket_send, &readfds);
-        select(env->socket_send + 1, &readfds, NULL, NULL, NULL);
-        if (FD_ISSET(env->socket_send, &readfds)) {
-            int nb_octet = recvfrom(env->socket_send, data, size, 0,
-                                    (struct sockaddr *) &(env->socketinfo[i].si_client_out), &size_si);
-            if (nb_octet < 0) {
-                die("send_send()");
-            } else{
-                printf("Received\n");
-            }
-        }
-        myMemCpy(data2, &(hero_num), size);
-        printf("send num_hero\n");
-        sendto(env->socket_send, data2, size, 0,(struct sockaddr *) &(env->socketinfo[i].si_client_out), size_si);
+        sendto(env->socketinfo[nb_cli].socket_in, "GO", strlen("GO"), 0,(struct sockaddr *) &(env->socketinfo[nb_cli].si_client_in), size_si);
     }
 }
 
@@ -300,67 +273,50 @@ void    start_server(t_simple_env *env) {
 
 void    init_connect_to_server(t_simple_env *env, char ip[]) {
     init(env);
+    char buffer[124];
     int size_si = sizeof(env->si_client_send);
-    int nb_octet=0;
+    int nb_octet = 0;
     fd_set readfds;
-    fd_set readfds2;
     printf("ecoute de la socket 4343 :\n");
     connect_to_Server(ip, PORT_SERV_SEND, &(env->socket_recv), (struct sockaddr *) &(env->si_client_recv));
-    sendto(env->socket_recv, "salut", strlen("salut"), 0,(struct sockaddr *) &(env->si_client_recv), size_si);
     int port = 0;
-    int clef=0;
+    t_initpack packet = {0};
     int size = sizeof(int);
-    unsigned char data2 [size];
-    unsigned char data [size];
-    FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
+    int size_packet = sizeof(t_initpack);
+    unsigned char data_packet[size_packet];
     int test = 1;
     while (test){
-        select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
+        sendto(env->socket_recv, "salut", strlen("salut"), 0, (struct sockaddr *) &(env->si_client_recv), size_si);
+        FD_ZERO(&readfds);
+        FD_SET(env->socket_recv, &readfds);
+        select(env->socket_recv + 1, &readfds, NULL, NULL, NULL);
         if (FD_ISSET(env->socket_recv, &readfds)) {
-            recvfrom(env->socket_recv, data, size, 0,
+            recvfrom(env->socket_recv, data_packet, size_packet, 0,
                      (struct sockaddr *) &(env->si_client_recv),
                      &size_si);
-            myMemCpy(&clef, data, size);
-            if (clef == CLEF)
-            {
-                select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
-                if (FD_ISSET(env->socket_recv, &readfds)) {
-                    recvfrom(env->socket_recv, data, size, 0,
-                             (struct sockaddr *) &(env->si_client_recv),
-                             &size_si);
-                    myMemCpy(&port, data, size);
-                    test=0;
-                }
-            }
+            myMemCpy(&packet, data_packet, size_packet);
+            if (packet.key == CLEF)
+                test = 0;
         }
     }
+    port = packet.private_port;
+    env->data_env->num_hero = packet.num_hero;
+    env->data_env->nb_hero = packet.nb_heroes;
     printf("port :: %d", port);
     printf("ecoute de la socket 4444 :\n");
     connect_to_Server(ip, port, &(env->socket_send), (struct sockaddr *) &(env->si_client_send));
-    wait(1000);
-    sendto(env->socket_send, data, size, 0,(struct sockaddr *) &(env->si_client_send), size_si);
+    wait(100);
+    sendto(env->socket_send, "OK", strlen("ok"), 0,(struct sockaddr *) &(env->si_client_send), size_si);
     if (nb_octet < 0) {
         die("send_send()");
     }
     FD_ZERO(&readfds);
-    FD_SET(env->socket_recv, &readfds);
-    select(env->socket_recv+1, &readfds, NULL, NULL, NULL);
-    if (FD_ISSET(env->socket_recv, &readfds)) {
-        recvfrom(env->socket_recv, data, size, 0,
-                 (struct sockaddr *) &(env->si_client_recv),
+    FD_SET(env->socket_send, &readfds);
+    select(env->socket_send+1, &readfds, NULL, NULL, NULL);
+    if (FD_ISSET(env->socket_send, &readfds)) {
+        recvfrom(env->socket_send, buffer, sizeof buffer -1, 0,
+                 (struct sockaddr *) &(env->si_client_send),
                  &size_si);
-        myMemCpy(&(env->data_env->nb_hero), data, size);
-    }
-    sendto(env->socket_recv, data, size, 0,(struct sockaddr *) &(env->si_client_recv), size_si);
-    FD_ZERO(&readfds2);
-    FD_SET(env->socket_recv, &readfds2);
-    select(env->socket_recv+1, &readfds2, NULL, NULL, NULL);
-    if (FD_ISSET(env->socket_recv, &readfds2)) {
-        recvfrom(env->socket_recv, data2, size, 0,
-                 (struct sockaddr *) &(env->si_client_recv),
-                 &size_si);
-        myMemCpy(&(env->data_env->num_hero), data2, size);
     }
 }
 

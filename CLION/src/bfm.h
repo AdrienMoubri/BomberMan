@@ -267,8 +267,17 @@ typedef struct      s_simple_env
     t_socketinfo    socketinfo[MAXHERO];
 }                   t_simple_env;
 
+typedef struct      s_initpack
+{
+    int             private_port;
+    int             nb_heroes;
+    int             num_hero;
+    int             key;
+}                   t_initpack;
+
 typedef struct		s_env
 {
+    t_tile_image      des_case;
     t_hero_list		  *heroes;
     t_screen		  *screen;
     int               hero;

@@ -18,7 +18,6 @@ void draw_Game(t_env *env)
     SDL_BlitSurface(env->screen->map, NULL, env->screen->ecran, &(env->screen->positionMenu));
     // utiliser la liste à la place
     t_hero_elem *hero_i = env->heroes->first;
-    t_bomb_elem *bomb_i;
     // draw MAP
     for (int x = 0; x < WIDTH_MAP; x++)
     {
@@ -26,34 +25,37 @@ void draw_Game(t_env *env)
         {
             if (env->map->case_tab[x][y].type > 2)
             {
-                SDL_Surface *surfaceBomb;
+                SDL_Surface *surfaceItem;
                 switch(env->map->case_tab[x][y].type) {
                     case 3:
-                        surfaceBomb = env->bomb_image->explo_left_img;
+                        surfaceItem = env->bomb_image->explo_left_img;
                         break;
                     case 4:
-                        surfaceBomb = env->bomb_image->explo_right_img;
+                        surfaceItem = env->bomb_image->explo_right_img;
                         break;
                     case 5:
-                        surfaceBomb = env->bomb_image->explo_center_img;
+                        surfaceItem = env->bomb_image->explo_center_img;
                         break;
                     case 6:
-                        surfaceBomb = env->bomb_image->explo_horizontal_img;
+                        surfaceItem = env->bomb_image->explo_horizontal_img;
                         break;
                     case 7:
-                        surfaceBomb = env->bomb_image->explo_top_img;
+                        surfaceItem = env->bomb_image->explo_top_img;
                         break;
                     case 8:
-                        surfaceBomb = env->bomb_image->explo_bot_img;
+                        surfaceItem = env->bomb_image->explo_bot_img;
                         break;
                     case 9:
-                        surfaceBomb = env->bomb_image->explo_vertical_img;
+                        surfaceItem = env->bomb_image->explo_vertical_img;
                         break;
                     case 10:
-                        surfaceBomb = env->bomb_image->bomb_img;
+                        surfaceItem = env->bomb_image->bomb_img;
+                        break;
+                    case 22:
+                        surfaceItem = env->des_case.tile_img;
                         break;
                 }
-                SDL_BlitSurface(surfaceBomb, NULL, env->screen->ecran, &(env->map->case_tab[x][y].position));
+                SDL_BlitSurface(surfaceItem, NULL, env->screen->ecran, &(env->map->case_tab[x][y].position));
             }
         }
     }
@@ -70,14 +72,6 @@ void draw_Game(t_env *env)
             env->sizeHero.x = 0;
         else
             env->sizeHero.x += env->sizeHero.w;
-        /*
-        if (hero_i->hero->bombes->nb_elem != 0)
-        {
-            bomb_i = hero_i->hero->bombes->first;
-            for(int y = 0; y < hero_i->hero->bombes->nb_elem ; bomb_i = bomb_i->next, y++) {
-                SDL_BlitSurface(env->bomb_image->bomb_img, NULL, env->screen->ecran, &(bomb_i->bomb->position));
-            }
-        }*/
     }
     SDL_Flip(env->screen->ecran);
 }

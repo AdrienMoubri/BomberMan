@@ -201,10 +201,10 @@ int exploseCase(t_case *case1, t_hero_list * hero_l)
             resultat +=1;
         }
     }
-    /*
-    if (case1->type == 2)
+
+    if (case1->type == 22)
         case1->type = 0;
-    */
+
      return resultat;
 }
 

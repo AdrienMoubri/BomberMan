@@ -110,11 +110,16 @@ int             init_map(t_env *env)
             env->map->case_tab[i][y].position.h = HEIGHT_CASE;
             if (i == 0 || y == 0 || y == HEIGHT_MAP - 1 || i == WIDTH_MAP - 1 )
                 env->map->case_tab[i][y].type = 1;
-            else
-                env->map->case_tab[i][y].type = 0;
-            if (i % 2 ==0 && y % 2 ==0)
+            else if (i % 2 ==0 && y % 2 ==0)
             {
                 env->map->case_tab[i][y].type = 1;
+            }
+            else
+            {
+                if (my_rand() < 33)
+                    env->map->case_tab[i][y].type = 22;
+                else
+                    env->map->case_tab[i][y].type = 0;
             }
         }
     }
@@ -156,7 +161,7 @@ void	init_game_resources(t_env *env) {
     init_hero_ressources(env);
     init_bomb_ressources(env);
     init_map(env);
-
+    env->des_case.tile_img = IMG_Load("my_bfm_img/des_case.png");
     env->sizeCase.w = WIDTH_CASE;
     env->sizeCase.h = WIDTH_CASE;
     create_hero_list(env);
