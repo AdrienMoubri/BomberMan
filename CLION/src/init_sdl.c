@@ -132,7 +132,7 @@ void    init_hero_ressources(t_env *env)
     create_hero_img_list(env);
     load_hero_img(env->heroes_img,0 , strdup("Black/black"));
     load_hero_img(env->heroes_img,1 , strdup("Green/green"));
-    load_hero_img(env->heroes_img,2 , strdup("Red/Red"));
+    load_hero_img(env->heroes_img,2 , strdup("Red/red"));
     load_hero_img(env->heroes_img,3 , strdup("White/white"));
 }
 
