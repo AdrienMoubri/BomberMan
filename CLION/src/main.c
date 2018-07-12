@@ -33,23 +33,37 @@ int		main(int argc, char* argv[])
       init(env->simple_env);
       init_screen(env);
       while (env->play) {
-        event->key.keysym.sym = 0;
-        launch_menu(env, event);
-        if (env->server)
+          event->key.keysym.sym = 0;
+          launch_menu(env, event);
+          if (env->server)
+          {
             launch_gameServer(env, event);
-        else
+            SDL_PollEvent(event);
+            event->key.keysym.sym = 0;
+            pthread_cancel(env->simple_env->thread_send);
+            my_closesocket(env->simple_env->socket_send);
+            for (int i = 1; i < env->simple_env->data_env->nb_hero; i++)
+            {
+              pthread_cancel(env->simple_env->socketinfo[i].thread_recv);
+              my_closesocket(env->simple_env->socketinfo[i].socket_in);
+              my_closesocket(env->simple_env->socketinfo[i].socket_out);
+            }
+            my_closesocket(env->simple_env->socket_recv);
+            my_closesocket(env->simple_env->socket_send);
+            wait (250);
+          }
+          else if (env->client)
+          {
             launch_gameClient(env, event);
-          SDL_PollEvent(event);
-          pthread_cancel(env->simple_env->thread_recv);
-          pthread_cancel(env->simple_env->thread_send);
-          #ifdef WIN32
-            closesocket(env->simple_env->socket_recv);
-            closesocket(env->simple_env->socket_send);
-          #else
-            close(env->simple_env->socket_recv);
-            close(env->simple_env->socket_send);
-          #endif
-      }
+            SDL_PollEvent(event);
+            event->key.keysym.sym = 0;
+            pthread_cancel(env->simple_env->thread_recv);
+            pthread_cancel(env->simple_env->thread_send);
+            my_closesocket(env->simple_env->socket_recv);
+            my_closesocket(env->simple_env->socket_send);
+            wait (250);
+          }
+        }
       free(event);
       free_universe(env);
     }

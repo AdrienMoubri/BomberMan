@@ -93,7 +93,7 @@ void		del_bomb(t_bomb_elem *node, t_bomb_list *hero, t_map *map)
     {
         for (int y = 0; y < HEIGHT_MAP; y++)
         {
-            if (map->case_tab[x][y].type >= 3 && map->case_tab[x][y].type != 10)
+            if (map->case_tab[x][y].type >= 3 && map->case_tab[x][y].type != 10 && map->case_tab[x][y].type != 22)
             {
                 map->case_tab[x][y].type = 0;
             }

@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
 project(BomberMan)
 set(CMAKE_C_STANDARD 99)
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DDEBUG=1)
 add_subdirectory(src/lib)
-endif()
 set(SOURCE_FILES
         src/main.c
         src/team.c
