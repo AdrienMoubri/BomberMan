@@ -1,7 +1,3 @@
 #!/bin/bash 
-<<<<<<< HEAD
 cd /usr/bin/bombermanSources
-=======
-cd /usr/bin/bomberman
->>>>>>> parent of 07a2771... 1
 ./BomberMan
