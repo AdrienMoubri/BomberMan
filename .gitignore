@@ -4,7 +4,7 @@ CLION/.idea/*
 #DEBUG
 CLION/cmake-build-debug/src/**
 CLION/cmake-build-debug/CMakeFiles/**
-CLION/cmake-build-debug/
+CLION/cmake-build-debug/stdout
 
 #install
 installateur/windows/wix/
