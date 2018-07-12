@@ -11,6 +11,8 @@
       <ComponentRef Id="ImgGlobal"/>
       <ComponentRef Id="ImgBlack"/>
       <ComponentRef Id="ImgGreen"/>
+      <ComponentRef Id="ImgRed"/>
+      <ComponentRef Id="ImgWhite"/>
       <ComponentRef Id="ImgBomb"/>
     </Feature>
   </Product>
@@ -37,6 +39,7 @@
 					<File Id="selector2.png" Source="game/my_bfm_img/selector2.png"/>
 					<File Id="menu.jpg" Source="game/my_bfm_img/menu.jpg"/>
 					<File Id="Bomberman_icon.png" Source="game/my_bfm_img/Bomberman_icon.png"/>
+					<File Id="des_case.png" Source="game/my_bfm_img/des_case.png"/>
 				</Component>
 				<Directory Id="PersoRessourcesBlack" Name="Black">
 				  <Component Id="ImgBlack" Guid="E5DC71DD-DD27-4749-89F6-1B29BDB746D6">
@@ -56,6 +59,26 @@
 						<File Id="green_front_arms.png" Source="game/my_bfm_img/Green/green_front_arms.png"/>
 						<File Id="green_left.png" Source="game/my_bfm_img/Green/green_left.png"/>
 						<File Id="green_right.png" Source="game/my_bfm_img/Green/green_right.png"/>
+				  </Component>
+				</Directory>
+				<Directory Id="PersoRessourcesRed" Name="Red">
+				  <Component Id="ImgRed" Guid="1B6EBA1B-6B04-4C85-974D-951E8617A9BC">
+						<File Id="red_back.png" Source="game/my_bfm_img/Red/red_back.png"/>
+						<File Id="red_front.png" Source="game/my_bfm_img/Red/red_front.png"/>
+						<File Id="red_die.png" Source="game/my_bfm_img/Red/red_die.png"/>
+						<File Id="red_front_arms.png" Source="game/my_bfm_img/Red/red_front_arms.png"/>
+						<File Id="red_left.png" Source="game/my_bfm_img/Red/red_left.png"/>
+						<File Id="red_right.png" Source="game/my_bfm_img/Red/red_right.png"/>
+				  </Component>
+				</Directory>
+				<Directory Id="PersoRessourcesWhite" Name="White">
+				  <Component Id="ImgWhite" Guid="F353F80F-F62A-4002-9E49-E9A3D71B79C0">
+						<File Id="white_back.png" Source="game/my_bfm_img/White/white_back.png"/>
+						<File Id="white_front.png" Source="game/my_bfm_img/White/white_front.png"/>
+						<File Id="white_die.png" Source="game/my_bfm_img/White/white_die.png"/>
+						<File Id="white_front_arms.png" Source="game/my_bfm_img/White/white_front_arms.png"/>
+						<File Id="white_left.png" Source="game/my_bfm_img/White/white_left.png"/>
+						<File Id="white_right.png" Source="game/my_bfm_img/White/white_right.png"/>
 				  </Component>
 				</Directory>
 				<Directory Id="BombRessources" Name="bomb_explosions">
